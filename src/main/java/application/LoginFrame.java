@@ -6,14 +6,18 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import UISwing.recursos.GradientPanel;
+import UISwing.ventanas.RecuperarCuenta;
 import UISwing.ventanas.RegistrosLogin;
+import model.Authentication;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -29,37 +33,35 @@ import java.awt.geom.RoundRectangle2D;
 
 public class LoginFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textUsuario;
-	private JTextField textcontraseña;
-	private JLabel lblusuario;
-	private JLabel lblcontraseña;
-	private JLabel lblNewLabel_2;
-	private JLabel lblNewLabel_3;
-	
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField textUsuario;
+    private JPasswordField textcontraseña;
+    private JLabel lblusuario;
+    private JLabel lblcontraseña;
+    private JLabel lblNewLabel_2;
+    private JLabel lblNewLabel_3;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginFrame frame = new LoginFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    LoginFrame frame = new LoginFrame();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-	/**
-	 * Create the frame.
-	 */
-	public LoginFrame() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    /**
+     * Create the frame.
+     */
+    public LoginFrame() {
         setBounds(100, 100, 497, 524);
         setUndecorated(true);
         GradientPanel gradientPanel = new GradientPanel();
@@ -69,36 +71,38 @@ public class LoginFrame extends JFrame {
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
 
         JLabel lblLogoVertical = new JLabel("");
-        lblLogoVertical.setIcon(new ImageIcon("C:\\Users\\escob\\eclipse-workspace\\PawCloud\\src\\main\\resources\\imagenes\\logo_vertical.png"));
+        lblLogoVertical.setIcon(new ImageIcon(getClass().getResource("/imagenes/logo_vertical.png")));
         lblLogoVertical.setBounds(173, 76, 165, 111);
         gradientPanel.add(lblLogoVertical);
-        
+
         Border roundedBorder = BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.WHITE, 1, true), // Borde blanco
                 BorderFactory.createEmptyBorder(5, 10, 5, 10) // Espacio interno
         );
 
-        JTextField textUsuario = new JTextField();
+        textUsuario = new JTextField();
         textUsuario.setBounds(148, 218, 204, 30);
         gradientPanel.add(textUsuario);
         textUsuario.setColumns(10);
         textUsuario.setBorder(roundedBorder);
         textUsuario.setOpaque(false);
+        textUsuario.setForeground(Color.WHITE);
 
-        JTextField textcontraseña = new JTextField();
+        textcontraseña = new JPasswordField();
         textcontraseña.setBounds(148, 277, 204, 30);
         gradientPanel.add(textcontraseña);
         textcontraseña.setColumns(10);
         textcontraseña.setBorder(roundedBorder);
         textcontraseña.setOpaque(false);
+        textcontraseña.setForeground(Color.WHITE);
 
-        JLabel lblusuario = new JLabel("Usuario");
+        lblusuario = new JLabel("Usuario");
         lblusuario.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblusuario.setForeground(new Color(255, 255, 255));
         lblusuario.setBounds(148, 198, 46, 14);
         gradientPanel.add(lblusuario);
 
-        JLabel lblcontraseña = new JLabel("Contraseña");
+        lblcontraseña = new JLabel("Contraseña");
         lblcontraseña.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblcontraseña.setForeground(new Color(255, 255, 255));
         lblcontraseña.setBounds(148, 259, 84, 14);
@@ -112,9 +116,9 @@ public class LoginFrame extends JFrame {
         btnLogin.setBorder(new LineBorder(new Color(30, 144, 255), 2, true));
         btnLogin.addActionListener(e -> iniciarSesion());
         gradientPanel.add(btnLogin);
-        
+
         JLabel lbllogocerrar = new JLabel("");
-        lbllogocerrar.setIcon(new ImageIcon("C:\\Users\\escob\\eclipse-workspace\\PawCloud\\src\\main\\resources\\imagenes\\cerrar.png"));
+        lbllogocerrar.setIcon(new ImageIcon(getClass().getResource("/imagenes/cerrar.png")));
         lbllogocerrar.setBounds(445, 11, 26, 30);
         gradientPanel.add(lbllogocerrar);
         // Añade un MouseListener a lbllogocerrar para cerrar la aplicación
@@ -125,13 +129,22 @@ public class LoginFrame extends JFrame {
                 System.exit(0); // O puedes usar LoginFrame.this.dispose(); si prefieres solo cerrar la ventana
             }
         });
-        
+
 
         JLabel lblolvidaste = new JLabel("¿Olvidaste la contraseña?");
         lblolvidaste.setForeground(new Color(255, 255, 255));
         lblolvidaste.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblolvidaste.setBounds(186, 390, 166, 21);
         gradientPanel.add(lblolvidaste);
+        lblolvidaste.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                RecuperarCuenta recuperarCuenta = new RecuperarCuenta(); // Crear una instancia de RegistrosLogin
+                recuperarCuenta.setVisible(true); // Hacer visible RegistrosLogin
+                LoginFrame.this.setVisible(false); // Ocultar LoginFrame
+            }
+        });
+
 
         JLabel lblnotienescuenta = new JLabel("¿No tienes cuenta?");
         lblnotienescuenta.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -152,7 +165,7 @@ public class LoginFrame extends JFrame {
                 LoginFrame.this.setVisible(false); // Ocultar LoginFrame
             }
         });
-		JPanel centerPanel = new JPanel() {
+        JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 // Personaliza aquí tu componente
@@ -168,15 +181,23 @@ public class LoginFrame extends JFrame {
         centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
         centerPanel.setBounds(95, 53, 308, 392);
         gradientPanel.add(centerPanel);
-        
-	}
-	  private void iniciarSesion() {
-          // Aquí es donde añadirías la lógica para verificar las credenciales de inicio de sesión
-          // Si las credenciales son correctas, procede a cerrar LoginFrame y abrir MainFrame
-          
-          this.dispose(); // Cierra y libera los recursos de LoginFrame
-          
-          MainFrame mainFrame = new MainFrame();
-          mainFrame.setVisible(true); // Muestra MainFrame
-      }
+    }
+
+    private void iniciarSesion() {
+        String username = textUsuario.getText().trim();
+        // Asegúrate de que esta conversión se haga correctamente.
+        String password = new String((textcontraseña).getPassword()).trim();
+
+        Authentication auth = new Authentication();
+
+        if (auth.authenticateUser(username, password)) {
+            JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+            // Va a la ventana MainFrame
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error de Inicio de Sesión", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

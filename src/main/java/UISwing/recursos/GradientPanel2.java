@@ -45,5 +45,6 @@ public class GradientPanel2 extends JPanel {
         GradientPaint gp = new GradientPaint(0, 0, Color.decode("#0081FF"), 0, getHeight(), Color.decode("#94A1FF"));
         g2.setPaint(gp);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+        g2.fillRect(getWidth() - 20, 0, getWidth(), getHeight());
     }
 }

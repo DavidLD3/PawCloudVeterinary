@@ -15,7 +15,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -23,6 +25,7 @@ import javax.swing.border.LineBorder;
 
 import UISwing.recursos.GradientPanel;
 import application.LoginFrame;
+import model.UserModel;
 
 public class RegistrosLogin extends JFrame {
 
@@ -60,7 +63,7 @@ public class RegistrosLogin extends JFrame {
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
 
         JLabel lblLogoVertical = new JLabel("");
-        lblLogoVertical.setIcon(new ImageIcon("C:\\Users\\escob\\eclipse-workspace\\PawCloud\\src\\main\\resources\\imagenes\\logo_vertical.png"));
+        lblLogoVertical.setIcon(new ImageIcon(getClass().getResource("/imagenes/logo_vertical.png")));
         lblLogoVertical.setBounds(170, 36, 165, 111);
         gradientPanel.add(lblLogoVertical);
         
@@ -75,6 +78,7 @@ public class RegistrosLogin extends JFrame {
         textUsuario.setColumns(10);
         textUsuario.setBorder(roundedBorder);
         textUsuario.setOpaque(false);
+        textUsuario.setForeground(Color.white);
         
         JTextField textcorreo = new JTextField();
         textcorreo.setOpaque(false);
@@ -82,24 +86,27 @@ public class RegistrosLogin extends JFrame {
         textcorreo.setBounds(148, 239, 204, 30);
         gradientPanel.add(textcorreo);
         textcorreo.setBorder(roundedBorder);
-        textcorreo.setOpaque(false); 
+        textcorreo.setOpaque(false);
+        textcorreo.setForeground(Color.WHITE);
         
-        JTextField textcontraseña = new JTextField();
+        JPasswordField textcontraseña = new JPasswordField();
         textcontraseña.setOpaque(false);
         textcontraseña.setColumns(10);
         textcontraseña.setBounds(148, 299, 204, 30);
         gradientPanel.add(textcontraseña);
         textcontraseña.setBorder(roundedBorder);
-        textcontraseña.setOpaque(false);
-        
+        textcontraseña.setForeground(Color.WHITE);
 
-        JTextField textrepeatcontraseña = new JTextField();
+        JPasswordField textrepeatcontraseña = new JPasswordField();
         textrepeatcontraseña.setBounds(148, 359, 204, 30);
         gradientPanel.add(textrepeatcontraseña);
         textrepeatcontraseña.setColumns(10);
         textrepeatcontraseña.setBorder(roundedBorder);
         textrepeatcontraseña.setOpaque(false);
-
+        textrepeatcontraseña.setForeground(Color.WHITE);
+        
+        
+        
         JLabel lblusuario = new JLabel("Usuario");
         lblusuario.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblusuario.setForeground(new Color(255, 255, 255));
@@ -131,6 +138,47 @@ public class RegistrosLogin extends JFrame {
         btnRegistrarse.setBackground(new Color(0, 87, 255));
         btnRegistrarse.setBounds(148, 407, 204, 34);
         gradientPanel.add(btnRegistrarse);
+        btnRegistrarse.addActionListener(e -> {
+            String username = textUsuario.getText().trim();
+            String email = textcorreo.getText().trim();
+            String password = new String(textcontraseña.getPassword()).trim();
+            String repeatPassword = new String(textrepeatcontraseña.getPassword()).trim();
+
+            // Verifica campos vacíos
+            if (username.isEmpty() || email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(RegistrosLogin.this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Verifica que el email contenga "@"
+            if (!email.contains("@")) {
+                JOptionPane.showMessageDialog(RegistrosLogin.this, "Introduce un email válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Verifica la longitud mínima de la contraseña
+            if (password.length() < 8) {
+                JOptionPane.showMessageDialog(RegistrosLogin.this, "La contraseña debe tener al menos 8 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!password.equals(repeatPassword)) {
+                JOptionPane.showMessageDialog(RegistrosLogin.this, "Las contraseñas no coinciden.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            UserModel userModel = new UserModel();
+            boolean success = userModel.registerUser(username, email, password);
+
+            if (success) {
+                JOptionPane.showMessageDialog(RegistrosLogin.this, "Registro exitoso. Por favor, inicie sesión.", "Registro", JOptionPane.INFORMATION_MESSAGE);
+                // Opcional: limpiar campos o cerrar ventana de registro aquí
+            } else {
+                JOptionPane.showMessageDialog(RegistrosLogin.this, "Error al registrar el usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+
         
         JLabel lblVolver = new JLabel("Volver");
         lblVolver.setForeground(new Color(255, 255, 255));
@@ -148,7 +196,7 @@ public class RegistrosLogin extends JFrame {
 
       
         JLabel lbllogocerrar = new JLabel("");
-        lbllogocerrar.setIcon(new ImageIcon("C:\\Users\\escob\\eclipse-workspace\\PawCloud\\src\\main\\resources\\imagenes\\cerrar.png"));
+        lbllogocerrar.setIcon(new ImageIcon(getClass().getResource("/imagenes/cerrar.png")));
         lbllogocerrar.setBounds(445, 11, 26, 30);
         gradientPanel.add(lbllogocerrar);
         // Añade un MouseListener a lbllogocerrar para cerrar la aplicación
