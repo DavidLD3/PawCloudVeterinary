@@ -15,12 +15,8 @@ public class PanelCitas extends JPanel {
 		setOpaque(false);
 		setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("PRUEBAAAAAAAA");
-		lblNewLabel.setBounds(10, 11, 315, 14);
-		add(lblNewLabel);
-		
 		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(1004, 620, 89, 23);
+		btnNewButton.setBounds(1013, 620, 89, 23);
 		add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("New button");
@@ -28,12 +24,16 @@ public class PanelCitas extends JPanel {
 		add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("New button");
-		btnNewButton_2.setBounds(1004, 7, 89, 23);
+		btnNewButton_2.setBounds(1013, 7, 89, 23);
 		add(btnNewButton_2);
 		
 		JButton btnNewButton_3 = new JButton("New button");
 		btnNewButton_3.setBounds(463, 304, 89, 23);
 		add(btnNewButton_3);
+		
+		JButton btnNewButton_4 = new JButton("New button");
+		btnNewButton_4.setBounds(10, 7, 89, 23);
+		add(btnNewButton_4);
 
 	}
 }

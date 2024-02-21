@@ -52,22 +52,21 @@ public class MainFrame extends JFrame {
         getContentPane().setLayout(null);
         // Configuración de cardPanel
         cardPanel = new JPanel(cardLayout);
-        cardPanel.setOpaque(false); // Hacer el panel de tarjetas transparente si es necesario
-        cardPanel.setBounds(244, 104, 1102, 653);
+        cardPanel.setOpaque(false); // Si quieres transparencia
+        cardPanel.setBounds(234, 104, 1112, 653);
         getContentPane().add(cardPanel);
-
-        // Inicialización y adición de PanelHome
-        PanelHome panelHome = new PanelHome(); // Asegúrate de que esta es la clase correcta y está importada
+        
+        // Inicialización y adición de PanelHome al cardPanel
+        PanelHome panelHome = new PanelHome(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelHome, "PanelHome");
 
-        // Inicialización y adición de PanelCitas
+        // Inicialización y adición de PanelCitas al cardPanel
         PanelCitas panelCitas = new PanelCitas(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelCitas, "PanelCitas");
 
         // Muestra inicialmente el PanelHome
         cardLayout.show(cardPanel, "PanelHome");
-      
-
+        
         GradientPanel2 gradientPanel = new GradientPanel2();
         gradientPanel.setBounds(0, 0, 215, 768);
         getContentPane().add(gradientPanel);
@@ -196,7 +195,6 @@ public class MainFrame extends JFrame {
         panelHeader.setBounds(234, 11, 1112, 82);
         panelHeader.setBackground(new Color(255, 255, 255, 123)); // Establece el color de fondo y la opacidad
         getContentPane().add(panelHeader);
-
         
         // Agrega el listener para cerrar la aplicación al hacer clic en Logout
         lbllogout.addMouseListener(new MouseAdapter() {
