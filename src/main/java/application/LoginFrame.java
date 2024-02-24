@@ -185,7 +185,6 @@ public class LoginFrame extends JFrame {
 
     private void iniciarSesion() {
         String username = textUsuario.getText().trim();
-        // Asegúrate de que esta conversión se haga correctamente.
         String password = new String((textcontraseña).getPassword()).trim();
 
         Authentication auth = new Authentication();
@@ -195,9 +194,11 @@ public class LoginFrame extends JFrame {
             this.dispose();
             // Va a la ventana MainFrame
             MainFrame mainFrame = new MainFrame();
+            mainFrame.setNombreUsuario(username);
             mainFrame.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error de Inicio de Sesión", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
 }

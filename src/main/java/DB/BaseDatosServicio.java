@@ -25,7 +25,7 @@ public class BaseDatosServicio {
                 return affectedRows > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Error al guardar el token: " + e.getMessage());
             return false;
         }
     }
@@ -41,7 +41,7 @@ public class BaseDatosServicio {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+        	System.err.println("Error al verificar el token: " + e.getMessage());
         }
         return false;
     }

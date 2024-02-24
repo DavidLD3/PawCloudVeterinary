@@ -25,7 +25,7 @@ public class Authentication {
             }
             
         } catch (SQLException e) {
-            e.printStackTrace();
+        	 System.err.println("Error al autenticar al usuario: " + e.getMessage());
         }
         
         return false;
