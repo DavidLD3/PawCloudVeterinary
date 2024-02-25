@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 
 import UISwing.recursos.GradientPanel2;
 import UISwing.recursos.RoundedPanel;
+import UISwing.ventanas.PanelCalendario;
 import UISwing.ventanas.PanelCitas;
 import UISwing.ventanas.PanelHome;
 
@@ -72,6 +73,8 @@ public class MainFrame extends JFrame {
         // Inicialización y adición de PanelCitas al cardPanel
         PanelCitas panelCitas = new PanelCitas(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelCitas, "PanelCitas");
+        PanelCalendario panelCalendario = new PanelCalendario(); // Asume que esta clase ya está definida correctamente
+        cardPanel.add(panelCalendario, "PanelCalendario");
 
         // Muestra inicialmente el PanelHome
         cardLayout.show(cardPanel, "PanelHome");
@@ -149,6 +152,13 @@ public class MainFrame extends JFrame {
         lblcalendario.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblcalendario.setBounds(55, 222, 102, 28);
         panelMenu.add(lblcalendario);
+        lblcalendario.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(cardPanel, "PanelCalendario");
+            }
+        });
+
         
         JLabel lblNewLabel_3 = new JLabel("");
         lblNewLabel_3.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoAlmacen.png")));

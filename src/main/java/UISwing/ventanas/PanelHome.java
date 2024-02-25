@@ -35,11 +35,11 @@ public class PanelHome extends JPanel {
         panelCitas.add(panelOpacoCitas);
         panelOpacoCitas.setLayout(null);
         
-        JLabel lblNewLabel = new JLabel("Próximas Citas");
-        lblNewLabel.setForeground(new Color(255, 255, 255));
-        lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblNewLabel.setBounds(20, 24, 113, 14);
-        panelOpacoCitas.add(lblNewLabel);
+        JLabel lblProximasCitas = new JLabel("Próximas Citas");
+        lblProximasCitas.setForeground(new Color(255, 255, 255));
+        lblProximasCitas.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        lblProximasCitas.setBounds(20, 24, 113, 14);
+        panelOpacoCitas.add(lblProximasCitas);
         
         JLabel lblHoraCita = new JLabel("19:30");
         lblHoraCita.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -234,7 +234,7 @@ public class PanelHome extends JPanel {
         	}
         });
         btnAñadirHospita.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAñadirHospita.setBounds(41, 289, 240, 31);
+        btnAñadirHospita.setBounds(41, 297, 240, 31);
         btnAñadirHospita.setBackground(Color.WHITE);
         btnAñadirHospita.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnAñadirHospita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -261,12 +261,12 @@ public class PanelHome extends JPanel {
         JLabel lblListadoHospitalizaciones = new JLabel("Ver Listado");
         lblListadoHospitalizaciones.setForeground(Color.WHITE);
         lblListadoHospitalizaciones.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblListadoHospitalizaciones.setBounds(129, 351, 71, 14);
+        lblListadoHospitalizaciones.setBounds(129, 359, 71, 14);
         panelHospitalizados.add(lblListadoHospitalizaciones);
         
         JLabel lblLogoHospita = new JLabel("");
         lblLogoHospita.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoHospita.png")));
-        lblLogoHospita.setBounds(250, 11, 27, 45);
+        lblLogoHospita.setBounds(250, 11, 35, 45);
         panelHospitalizados.add(lblLogoHospita);
         
         JLabel lbltextoHospitapendientes = new JLabel("Hospitalizados");
@@ -287,7 +287,7 @@ public class PanelHome extends JPanel {
         JLabel lblListadoVentas = new JLabel("Ver Listado");
         lblListadoVentas.setForeground(Color.WHITE);
         lblListadoVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblListadoVentas.setBounds(183, 361, 74, 14);
+        lblListadoVentas.setBounds(183, 359, 74, 14);
         panelVentas.add(lblListadoVentas);
         
         JButton btnAñadirVentas = new JButton("Añadir Venta");
@@ -321,18 +321,18 @@ public class PanelHome extends JPanel {
         
         CustomPanelOpaco panelOpacoVentas = new CustomPanelOpaco();
         panelOpacoVentas.setLayout(null);
-        panelOpacoVentas.setBounds(33, 77, 359, 197);
+        panelOpacoVentas.setBounds(33, 77, 359, 192);
         panelVentas.add(panelOpacoVentas);
           
         JLabel lbltextoVentas = new JLabel("Últimas ventas");
         lbltextoVentas.setForeground(Color.WHITE);
         lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoVentas.setBounds(33, 17, 117, 31);
+        lbltextoVentas.setBounds(33, 17, 120, 31);
         panelVentas.add(lbltextoVentas);
         
         JLabel lblLogoPanelVentas = new JLabel("");
         lblLogoPanelVentas.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoPanelVentas.png")));
-        lblLogoPanelVentas.setBounds(353, 11, 38, 45);
+        lblLogoPanelVentas.setBounds(353, 11, 35, 45);
         panelVentas.add(lblLogoPanelVentas);
         
         JPanel panelEncabezadosVentas = crearPanelEncabezadosVentas();
@@ -390,7 +390,7 @@ public class PanelHome extends JPanel {
         
         JLabel lblLogoUltimosFarmacos = new JLabel("");
         lblLogoUltimosFarmacos.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoFarmacos.png")));
-        lblLogoUltimosFarmacos.setBounds(1048, 11, 38, 28);
+        lblLogoUltimosFarmacos.setBounds(1048, 11, 35, 28);
         panelFarmacos.add(lblLogoUltimosFarmacos);
 
         // Agregar algunos datos de ejemplo
