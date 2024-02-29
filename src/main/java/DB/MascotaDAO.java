@@ -50,7 +50,7 @@ public class MascotaDAO {
     public List<Mascota> obtenerMascotasPorClienteId(int clienteId) {
         return buscarMascotasPorCliente(clienteId); // Reutiliza el método existente para evitar duplicación de código
     }
-//Hola esto es una prueba
+
     private Mascota crearMascotaDesdeResultSet(ResultSet rs) throws SQLException {
         // Asumiendo que Mascota ahora usa LocalDate para fechaNacimiento
         return new Mascota(
