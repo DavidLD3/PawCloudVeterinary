@@ -2,22 +2,35 @@ package UISwing.ventanas;
 
 import javax.swing.*;
 
+import DB.CitaDAO;
 import UISwing.recursos.CustomPanelOpaco;
 import UISwing.recursos.RoundedPanel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import model.Cita;
+import java.util.List;
 
 public class PanelHome extends JPanel {
 	
 	private JPanel panelDatos;
+	private JLabel lblHoraCita;
+	private JLabel lblDiaCita;
+	private JLabel lblMascotaCita;
+	private JLabel lblClienteCita;
+	private JLabel lblHoraCita_2;
+	private JLabel lblDiaCita_2;
+	private JLabel lblMascotaCita_2;
+	private JLabel lblNombreCliente2;
+	private CustomPanelOpaco panelOpacoCitas;
 
     public PanelHome() {
         setLayout(null); // Usando layout nulo para control total sobre la posición de los componentes
         setOpaque(false);
 
         inicializarPanelCitas();
+        mostrarCitasProximas(); // Luego puedes llamar a mostrarCitasProximas()
         inicializarPanelHospitalizados();
         inicializarPanelVentas(); // Lo mismo que farmacos pero mas corto
         inicializarPanelFarmacos(); // Panel fármacos sin bordes ni scrollbar visible
@@ -30,7 +43,7 @@ public class PanelHome extends JPanel {
         add(panelCitas);
         panelCitas.setLayout(null);
         
-        CustomPanelOpaco panelOpacoCitas = new CustomPanelOpaco();
+        panelOpacoCitas = new CustomPanelOpaco();
         panelOpacoCitas.setBounds(41, 83, 240, 192);
         panelCitas.add(panelOpacoCitas);
         panelOpacoCitas.setLayout(null);
@@ -41,22 +54,26 @@ public class PanelHome extends JPanel {
         lblProximasCitas.setBounds(20, 24, 113, 14);
         panelOpacoCitas.add(lblProximasCitas);
         
-        JLabel lblHoraCita = new JLabel("19:30");
+        lblHoraCita = new JLabel("");
+        lblHoraCita.setForeground(new Color(255, 255, 255));
         lblHoraCita.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblHoraCita.setBounds(21, 63, 46, 14);
         panelOpacoCitas.add(lblHoraCita);
         
-        JLabel lblDiaCita = new JLabel("24/02/2024");
+        lblDiaCita = new JLabel("");
+        lblDiaCita.setForeground(new Color(255, 255, 255));
         lblDiaCita.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblDiaCita.setBounds(96, 63, 71, 14);
         panelOpacoCitas.add(lblDiaCita);
         
-        JLabel lblMascotaCita = new JLabel("Yara");
+        lblMascotaCita = new JLabel("");
+        lblMascotaCita.setForeground(new Color(255, 255, 255));
         lblMascotaCita.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblMascotaCita.setBounds(40, 88, 58, 14);
         panelOpacoCitas.add(lblMascotaCita);
         
-        JLabel lblClienteCita = new JLabel("David");
+        lblClienteCita = new JLabel("");
+        lblClienteCita.setForeground(new Color(255, 255, 255));
         lblClienteCita.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblClienteCita.setBounds(121, 88, 84, 14);
         panelOpacoCitas.add(lblClienteCita);
@@ -71,30 +88,34 @@ public class PanelHome extends JPanel {
         lblLogoCitaCliente.setBounds(96, 88, 20, 14);
         panelOpacoCitas.add(lblLogoCitaCliente);
         
-        JLabel lblHoraCita_2 = new JLabel("gsdgsdgsdg");
+        lblHoraCita_2 = new JLabel("");
+        lblHoraCita_2.setForeground(new Color(255, 255, 255));
         lblHoraCita_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblHoraCita_2.setBounds(21, 126, 46, 14);
-        panelOpacoCitas.add(lblHoraCita_2);
+        panelOpacoCitas.add(lblHoraCita_2);	
         
         JLabel lblLogoCitaMascota2 = new JLabel("");
         lblLogoCitaMascota2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasMascota.png")));
         lblLogoCitaMascota2.setBounds(20, 151, 20, 14);
         panelOpacoCitas.add(lblLogoCitaMascota2);
         
-        JLabel lblMascotaCita_2 = new JLabel("New label");
+        lblMascotaCita_2 = new JLabel("");
+        lblMascotaCita_2.setForeground(new Color(255, 255, 255));
         lblMascotaCita_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblMascotaCita_2.setBounds(40, 151, 58, 14);
         panelOpacoCitas.add(lblMascotaCita_2);
         
-        JLabel lblDiaCita_2 = new JLabel("gdsgsdgsdg");
+        lblDiaCita_2 = new JLabel("");
+        lblDiaCita_2.setForeground(new Color(255, 255, 255));
         lblDiaCita_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblDiaCita_2.setBounds(96, 126, 71, 14);
         panelOpacoCitas.add(lblDiaCita_2);
         
-        JLabel lblNobreCliente2 = new JLabel("New label");
-        lblNobreCliente2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblNobreCliente2.setBounds(121, 151, 84, 14);
-        panelOpacoCitas.add(lblNobreCliente2);
+        lblNombreCliente2 = new JLabel("");
+        lblNombreCliente2.setForeground(new Color(255, 255, 255));
+        lblNombreCliente2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblNombreCliente2.setBounds(121, 151, 84, 14);
+        panelOpacoCitas.add(lblNombreCliente2);
         
         JLabel lblLogoCitaCliente2 = new JLabel("");
         lblLogoCitaCliente2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasCliente.png")));
@@ -127,13 +148,25 @@ public class PanelHome extends JPanel {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnAñadirCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnAñadirCita.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnAñadirCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnAñadirCita.setForeground(Color.decode("#0057FF"));
             }
         });
+        
+        btnAñadirCita.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                VentanaCitasDialog dialog = new VentanaCitasDialog(null, true);
+                dialog.setTitle("Añadir Cita");
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+            }
+        });
+
 
         panelCitas.add(btnAñadirCita);
         
@@ -147,6 +180,8 @@ public class PanelHome extends JPanel {
         lbltextoCitaspendientes.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lbltextoCitaspendientes.setBounds(41, 19, 120, 37);
         panelCitas.add(lbltextoCitaspendientes);
+        
+      
 
     }
 
@@ -350,7 +385,7 @@ public class PanelHome extends JPanel {
         agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:00", "Alimento para perros", "2", "$20.00"});
         agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$15.00"});
         agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$15.00"});
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$15.00"});
+        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$150.00"});
        
     }
 
@@ -398,6 +433,34 @@ public class PanelHome extends JPanel {
         agregarFilaDatos(new String[]{"11:00", "2024-02-23", "Dr. Jones", "Rex", "Ibuprofeno", "1", "200mg", "67890"});
         
     }
+    
+    private void mostrarCitasProximas() {
+        CitaDAO citaDAO = new CitaDAO();
+        List<Cita> citasProximas = citaDAO.recuperarCitasHome();
+
+        if (!citasProximas.isEmpty()) {
+            Cita primeraCita = citasProximas.get(0);
+            lblHoraCita.setText(primeraCita.getHora() != null ? primeraCita.getHora().toString() : "Hora no disponible");
+            lblDiaCita.setText(primeraCita.getFecha() != null ? primeraCita.getFecha().toString() : "Fecha no disponible");
+            lblMascotaCita.setText(primeraCita.getNombreMascota());
+            lblClienteCita.setText(primeraCita.getNombreCliente());
+
+            if (citasProximas.size() > 1) {
+                Cita segundaCita = citasProximas.get(1);
+                lblHoraCita_2.setText(segundaCita.getHora() != null ? segundaCita.getHora().toString() : "Hora no disponible");
+                lblDiaCita_2.setText(segundaCita.getFecha() != null ? segundaCita.getFecha().toString() : "Fecha no disponible");
+                lblMascotaCita_2.setText(segundaCita.getNombreMascota());
+                lblNombreCliente2.setText(segundaCita.getNombreCliente());
+            }
+        }
+
+        panelOpacoCitas.revalidate();
+        panelOpacoCitas.repaint();
+    }
+
+
+  
+
 
     private JPanel crearPanelEncabezados() {
         JPanel panelEncabezados = new JPanel();
@@ -464,7 +527,7 @@ public class PanelHome extends JPanel {
         panelDatosVentas.revalidate();
         panelDatosVentas.repaint();
     }
-    
+   
 
 
 }

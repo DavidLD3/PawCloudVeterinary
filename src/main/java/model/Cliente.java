@@ -1,67 +1,155 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Cliente {
-    private int id;
+   
+	private int id; // Cambiado a int para un manejo más estándar de IDs.
     private String nombre;
-    private String telefono;
-    private String correo;
+    private String apellidos;
+    private LocalDate fechaNacimiento; // Usamos LocalDate para manejar la fecha
+    private String dni;
+    private String nif;
     private String direccion;
+    private String poblacion;
+    private String provincia;
+    private String telefonoFijo;
+    private String telefonoMovil;
+    private String email;
 
-    // Constructor vacío
-    public Cliente() {}
-
-    // Constructor con todos los campos
-    public Cliente(int id, String nombre, String telefono, String correo, String direccion) {
-        this.id = id;
-        this.nombre = nombre;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.direccion = direccion;
+    // Constructor modificado para incluir el email y recibir LocalDate directamente
+    public Cliente(int id, String nombre, String apellidos, LocalDate fechaNacimiento, String dni, String nif,
+            String direccion, String poblacion, String provincia, String telefonoFijo,
+            String telefonoMovil, String email) {
+		 this.id = id; // Asumiendo que quieres mantener un id numérico
+		 this.nombre = nombre;
+		 this.apellidos = apellidos;
+		 this.fechaNacimiento = fechaNacimiento;
+		 this.dni = dni;
+		 this.nif = nif;
+		 this.direccion = direccion;
+		 this.poblacion = poblacion;
+		 this.provincia = provincia;
+		 this.telefonoFijo = telefonoFijo;
+		 this.telefonoMovil = telefonoMovil;
+		 this.email = email;
     }
+    
+    
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                ", dni='" + dni + '\'' +
+                ", nif='" + nif + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", poblacion='" + poblacion + '\'' +
+                ", provincia='" + provincia + '\'' +
+                ", telefonoFijo='" + telefonoFijo + '\'' +
+                ", telefonoMovil='" + telefonoMovil + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+    
+    
+  
 
-    // Getters y Setters
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id) { // Ajustado para aceptar int
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
+	public String getNombre() {
+		return nombre;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public String getTelefono() {
-        return telefono;
-    }
+	public String getApellidos() {
+		return apellidos;
+	}
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
+	}
 
-    public String getCorreo() {
-        return correo;
-    }
+	public LocalDate getFechaNacimiento() {
+		return fechaNacimiento;
+	}
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
+	public void setFechaNacimiento(LocalDate fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
 
-    public String getDireccion() {
-        return direccion;
-    }
+	public String getDni() {
+		return dni;
+	}
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-    
-    @Override
-    public String toString() {
-        return this.nombre; // Esto hará que solo el nombre del cliente se muestre en el combobox
-    }
-}
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	public String getNif() {
+		return nif;
+	}
+
+	public void setNif(String nif) {
+		this.nif = nif;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getPoblacion() {
+		return poblacion;
+	}
+
+	public void setPoblacion(String poblacion) {
+		this.poblacion = poblacion;
+	}
+
+	public String getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(String provincia) {
+		this.provincia = provincia;
+	}
+
+	public String getTelefonoFijo() {
+		return telefonoFijo;
+	}
+
+	public void setTelefonoFijo(String telefonoFijo) {
+		this.telefonoFijo = telefonoFijo;
+	}
+
+	public String getTelefonoMovil() {
+		return telefonoMovil;
+	}
+
+	public void setTelefonoMovil(String telefonoMovil) {
+		this.telefonoMovil = telefonoMovil;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}}

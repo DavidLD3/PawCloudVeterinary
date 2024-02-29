@@ -147,6 +147,13 @@ public class RecuperarCuenta extends JFrame {
         lbllogocerrar.setIcon(new ImageIcon(getClass().getResource("/imagenes/cerrar.png")));
         lbllogocerrar.setBounds(445, 11, 26, 30);
         gradientPanel.add(lbllogocerrar);
+        lbllogocerrar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Cierra la ventana y termina la aplicación
+                System.exit(0); // O puedes usar LoginFrame.this.dispose(); si prefieres solo cerrar la ventana
+            }
+        });
         
         JLabel lblNewLabel = new JLabel("Introduce tu email a continuación y te");
         lblNewLabel.setForeground(new Color(255, 255, 255));
@@ -167,13 +174,7 @@ public class RecuperarCuenta extends JFrame {
         lblNewLabel_2.setBounds(211, 240, 105, 14);
         gradientPanel.add(lblNewLabel_2);
         // Añade un MouseListener a lbllogocerrar para cerrar la aplicación
-        lbllogocerrar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Cierra la ventana y termina la aplicación
-                System.exit(0); // O puedes usar LoginFrame.this.dispose(); si prefieres solo cerrar la ventana
-            }
-        });
+        
         
         JPanel centerPanel = new JPanel() {
             @Override
