@@ -31,9 +31,8 @@ public class VentanaCitasDialog extends JDialog {
     
     private JComboBox<Cliente> comboBoxClientes;
     private JComboBox<Mascota> comboBoxMascotas;
-    private AutoCompleteComboBox<Cliente> autoCompleteClientes;
-    private AutoCompleteComboBox<Mascota> autoCompleteMascotas;
     
+    private boolean cargaInicialCompleta = false;
     private RoundedPanel roundedPanel;
 
     public VentanaCitasDialog(Frame owner, boolean modal) {
@@ -55,6 +54,7 @@ public class VentanaCitasDialog extends JDialog {
         mascotaDAO = new MascotaDAO();
         
         inicializarComponentesUI();
+        cargarClientesInicialmente();
         configurarSeleccionFechaHora();
         
         // Agrega el RoundedPanel al JDialog
@@ -99,7 +99,7 @@ public class VentanaCitasDialog extends JDialog {
         roundedPanel.add(lblMascota);
         
      // Dentro de tu método inicializarComponentesUI
-        comboBoxClientes = new JComboBox<>();
+        comboBoxClientes = new JComboBox<Cliente>();
         comboBoxClientes.setEditable(true);
         comboBoxClientes.setBounds(420, 74, 179, 25);
         JTextField textEditorClientes = (JTextField) comboBoxClientes.getEditor().getEditorComponent();
@@ -107,63 +107,42 @@ public class VentanaCitasDialog extends JDialog {
             @Override
             public void keyReleased(KeyEvent e) {
                 String text = textEditorClientes.getText();
-                // Cambia la condición para activar la búsqueda con 4 o más caracteres
                 if (text.trim().length() >= 4) {
-                    actualizarListaClientes(text);
+                   
+                    List<Cliente> filtrado = clienteDAO.buscarClientesPorApellido(text); 
+                    comboBoxClientes.removeAllItems();
+                    for (Cliente cliente : filtrado) {
+                        comboBoxClientes.addItem(cliente);
+                    }
+                    if (!filtrado.isEmpty()) {
+                        comboBoxClientes.showPopup();
+                    }
                 } else if (text.trim().isEmpty()) {
-                    // Opcional: puedes decidir limpiar el listado de clientes si el usuario borra el texto
+                    comboBoxClientes.hidePopup();
                     comboBoxClientes.removeAllItems();
                 }
             }
         });
-        comboBoxClientes.addItemListener(new ItemListener() {
+        comboBoxClientes.setRenderer(new DefaultListCellRenderer() {
             @Override
-            public void itemStateChanged(ItemEvent event) {
-                if (event.getStateChange() == ItemEvent.SELECTED) {
-                    Object item = comboBoxClientes.getSelectedItem();
-                    if (item instanceof Cliente) {
-                        Cliente clienteSeleccionado = (Cliente) item;
-                        actualizarMascotasPorCliente(clienteSeleccionado.getId());
-                    } else {
-                        // Limpia el comboBox de mascotas si no hay un cliente seleccionado correctamente
-                        comboBoxMascotas.removeAllItems();
-                    }
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Cliente) {
+                    Cliente cliente = (Cliente) value;
+                    setText(cliente.getApellidos() + ", " + cliente.getNombre()); // Formato apellidos, nombre
                 }
+                return this;
             }
         });
         roundedPanel.add(comboBoxClientes);
-        cargarClientes();
+   
 
         comboBoxMascotas = new JComboBox<>();
         comboBoxMascotas.setEditable(true);
         comboBoxMascotas.setBounds(660, 74, 179, 25);
         roundedPanel.add(comboBoxMascotas);
         
-        
-        
-        autoCompleteClientes = new AutoCompleteComboBox<>(new Vector<Cliente>(clienteDAO.obtenerTodosLosClientes()));
-        autoCompleteClientes.setBounds(420, 74, 179, 25);
-        roundedPanel.add(autoCompleteClientes);
-        
-        autoCompleteClientes.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent event) {
-                if (event.getStateChange() == ItemEvent.SELECTED) {
-                    Cliente clienteSeleccionado = (Cliente) event.getItem();
-                    if (clienteSeleccionado != null) {
-                        actualizarMascotasPorCliente(clienteSeleccionado.getId());
-                    } else {
-                        autoCompleteMascotas.removeAllItems(); // Limpia el comboBox de mascotas si no hay un cliente seleccionado
-                    }
-                }
-            }
-        });
 
-
-        autoCompleteMascotas = new AutoCompleteComboBox<>(new Vector<>());
-        autoCompleteMascotas.setBounds(660, 74, 179, 25);
-        roundedPanel.add(autoCompleteMascotas);
-        
         JLabel lblFecha = new JLabel("Fecha:");
         lblFecha.setForeground(new Color(255, 255, 255));
         lblFecha.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -236,8 +215,7 @@ public class VentanaCitasDialog extends JDialog {
             	dispose(); // para cerrar solo el dialog	
             }
         });
-        
-        
+ 
         JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -256,108 +234,132 @@ public class VentanaCitasDialog extends JDialog {
         roundedPanel.add(centerPanel);
  
     }
-	public static class AutoCompleteComboBox<E> extends JComboBox<E> {
-        public AutoCompleteComboBox(Vector<E> items) {
-            super(items);
-            setEditable(true);
-            JTextComponent editorComponent = (JTextComponent) getEditor().getEditorComponent();
-            editorComponent.addKeyListener(new KeyAdapter() {
-                public void keyReleased(KeyEvent evt) {
-                    if (evt.getKeyChar() == KeyEvent.CHAR_UNDEFINED) {
-                        return;
+	
+	private void configurarSeleccionFechaHora() {
+	    dateSpinner = new JSpinner(new SpinnerDateModel());
+	    JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
+	    dateSpinner.setEditor(dateEditor);
+	    dateSpinner.setBounds(420, 168, 153, 25);
+	    roundedPanel.add(dateSpinner);
+
+	    calendarButton = new JButton(new ImageIcon(getClass().getResource("/imagenes/logoBotonCalendario.png")));
+	    calendarButton.setBounds(574, 168, 25, 25);
+	    calendarButton.addActionListener(e -> mostrarCalendario());
+	    roundedPanel.add(calendarButton);
+
+	    timeSpinner = new JSpinner(new SpinnerDateModel());
+	    JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
+	    timeSpinner.setEditor(timeEditor);
+	    timeSpinner.setBounds(660, 167, 179, 25);
+	    roundedPanel.add(timeSpinner);
+	}
+
+	private void mostrarCalendario() {
+	    JDialog dialog = new JDialog();
+	    dialog.setModal(true); // Hacer el diálogo modal para mantener el foco
+	    dialog.setTitle("Seleccionar Fecha");
+	    dialog.setSize(300, 300);
+	    dialog.setLocationRelativeTo(null); // Centrar respecto a la pantalla o usar dialog.setLocationRelativeTo(this) para centrar respecto a la ventana principal
+	    JCalendar calendar = new JCalendar();
+	    dialog.getContentPane().add(calendar, BorderLayout.CENTER);
+	    
+	    JButton okButton = new JButton("OK");
+	    okButton.addActionListener(e -> {
+	        dateSpinner.setValue(calendar.getDate());
+	        dialog.dispose(); // Cierra el diálogo una vez seleccionada la fecha
+	    });
+	    dialog.getContentPane().add(okButton, BorderLayout.SOUTH);
+
+	    dialog.setVisible(true);
+	}
+	
+
+
+    
+   
+  
+	private void actualizarMascotasPorCliente(int clienteId) {
+        new SwingWorker<List<Mascota>, Void>() {
+            @Override
+            protected List<Mascota> doInBackground() throws Exception {
+                return mascotaDAO.obtenerMascotasPorClienteId(clienteId);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    List<Mascota> mascotas = get();
+                    comboBoxMascotas.removeAllItems();
+                    for (Mascota mascota : mascotas) {
+                        comboBoxMascotas.addItem(mascota);
                     }
-                    int caretPosition = editorComponent.getCaretPosition();
-                    String text = editorComponent.getText();
-                    for (int i = 0; i < getItemCount(); i++) {
-                        String item = getItemAt(i).toString();
-                        if (item.toLowerCase().startsWith(text.toLowerCase())) {
-                            setSelectedIndex(i);
-                            editorComponent.setText(item);
-                            editorComponent.setCaretPosition(item.length());
-                            editorComponent.moveCaretPosition(caretPosition);
-                            break;
-                        }
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-        }
+            }
+        }.execute();
     }
-    
-   
-    
-   
-    
-	public void actualizarMascotasPorCliente(int clienteId) {
-	    comboBoxMascotas.removeAllItems(); // Asume que esto es un JComboBox
-	    List<Mascota> mascotas = mascotaDAO.obtenerMascotasPorClienteId(clienteId);
-	    for (Mascota mascota : mascotas) {
-	        comboBoxMascotas.addItem(mascota);
-	    }
+
+
+	private void cargarClientesInicialmente() {
+	    new SwingWorker<List<Cliente>, Void>() {
+	        @Override
+	        protected List<Cliente> doInBackground() throws Exception {
+	            return clienteDAO.obtenerTodosLosClientes();
+	        }
+
+	        @Override
+	        protected void done() {
+	            try {
+	                List<Cliente> clientes = get();
+	                comboBoxClientes.removeAllItems(); // Asegúrate de limpiar antes de añadir
+	                for (Cliente cliente : clientes) {
+	                	comboBoxClientes.setSelectedIndex(-1);
+	                    comboBoxClientes.addItem(cliente);
+	                }
+	                cargaInicialCompleta = true; // Indica que la carga inicial ha terminado
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }.execute();
 	}
 
-
-
     
     
-	private void cargarClientes() {
-	    List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
-	    comboBoxClientes.removeAllItems();
-	    for (Cliente cliente : clientes) {
-	        comboBoxClientes.addItem(cliente);
-	    }
+
+	private void actualizarListaClientes(String texto) {
+	    // Verifica si la carga inicial aún no se ha completado para evitar ejecución innecesaria
+	    if (!cargaInicialCompleta) return;
+
+	    new SwingWorker<List<Cliente>, Void>() {
+	        @Override
+	        protected List<Cliente> doInBackground() throws Exception {
+	            // Simula una búsqueda en base al texto ingresado por el usuario
+	            return clienteDAO.buscarClientesPorNombre(texto);
+	        }
+
+	        @Override
+	        protected void done() {
+	            try {
+	                // Obtiene el resultado de la búsqueda
+	                List<Cliente> clientes = get();
+	                // Limpia el JComboBox antes de añadir nuevos elementos
+	                comboBoxClientes.removeAllItems();
+	                for (Cliente cliente : clientes) {
+	                    // Añade cada cliente encontrado al JComboBox
+	                    comboBoxClientes.addItem(cliente);
+	                }
+	                // Si hay clientes encontrados, muestra el popup del JComboBox
+	                if (!clientes.isEmpty()) {
+	                    comboBoxClientes.showPopup();
+	                }
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }.execute();
 	}
-
-    
-    
-
-    private void actualizarListaClientes(String texto) {
-        List<Cliente> clientes = clienteDAO.buscarClientesPorNombre(texto);
-        comboBoxClientes.removeAllItems();
-        for (Cliente cliente : clientes) {
-            comboBoxClientes.addItem(cliente);
-        }
-        if (!clientes.isEmpty()) {
-            comboBoxClientes.showPopup();
-        }
-    }
-
-
-    private void configurarSeleccionFechaHora() {
-        dateSpinner = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
-        dateSpinner.setEditor(dateEditor);
-        dateSpinner.setBounds(420, 168, 153, 25);
-        roundedPanel.add(dateSpinner);
-
-        calendarButton = new JButton(new ImageIcon(getClass().getResource("/imagenes/logoBotonCalendario.png")));
-        calendarButton.setBounds(574, 168, 25, 25);
-        calendarButton.addActionListener(e -> mostrarCalendario());
-        roundedPanel.add(calendarButton);
-
-        timeSpinner = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
-        timeSpinner.setEditor(timeEditor);
-        timeSpinner.setBounds(660, 167, 179, 25);
-        roundedPanel.add(timeSpinner);
-
-        
-    }
-
-    private void mostrarCalendario() {
-        JDialog dialog = new JDialog();
-        dialog.setTitle("Seleccionar Fecha");
-        dialog.setSize(300, 300);
-        dialog.setLocationRelativeTo(this);
-        JCalendar calendar = new JCalendar();
-        dialog.getContentPane().add(calendar);
-        JButton okButton = new JButton("OK");
-        okButton.addActionListener(e -> {
-            dateSpinner.setValue(calendar.getDate());
-            dialog.dispose();
-        });
-        dialog.getContentPane().add(okButton, BorderLayout.SOUTH);
-        dialog.setVisible(true);
-    }
 
     private void guardarCita() {
         try {
@@ -385,6 +387,8 @@ public class VentanaCitasDialog extends JDialog {
             JOptionPane.showMessageDialog(this, "Error al guardar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+   
 	
 	public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
