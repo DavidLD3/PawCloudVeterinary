@@ -43,9 +43,7 @@ public class Cliente {
         return nombre + " " + apellidos;
     }
     
-    public String toDisplayName() {
-        return apellidos + ", " + nombre; // Formato para UI Ventanacitas en este caso
-    }
+   
 
 
     public int getId() {

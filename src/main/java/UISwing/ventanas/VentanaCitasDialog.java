@@ -14,6 +14,7 @@ import DB.MascotaDAO;
 import model.Cita;
 import model.Cliente;
 import model.Mascota;
+import model.Mascota.MascotaContenedor;
 import UISwing.recursos.RoundedPanel;
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class VentanaCitasDialog extends JDialog {
     private JTextPane textPaneNotas;
     
     private JComboBox<Cliente> comboBoxClientes;
-    private JComboBox<Mascota> comboBoxMascotas;
-    
+    private JComboBox<Mascota.MascotaContenedor> comboBoxMascotas;
+
     private boolean cargaInicialCompleta = false;
     private RoundedPanel roundedPanel;
 
@@ -98,7 +99,7 @@ public class VentanaCitasDialog extends JDialog {
         lblMascota.setBounds(663, 50, 80, 25);
         roundedPanel.add(lblMascota);
         
-     // Dentro de tu método inicializarComponentesUI
+     // ComboBox CLientes
         comboBoxClientes = new JComboBox<Cliente>();
         comboBoxClientes.setEditable(true);
         comboBoxClientes.setBounds(420, 74, 179, 25);
@@ -123,6 +124,17 @@ public class VentanaCitasDialog extends JDialog {
                 }
             }
         });
+     // Agregar ItemListener para cargar mascotas del cliente seleccionado
+        comboBoxClientes.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent event) {
+                if (event.getStateChange() == ItemEvent.SELECTED) {
+                    Cliente clienteSeleccionado = (Cliente) event.getItem();
+                    actualizarMascotasPorCliente(clienteSeleccionado.getId());
+                }
+            }
+        });
+
         comboBoxClientes.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -136,10 +148,23 @@ public class VentanaCitasDialog extends JDialog {
         });
         roundedPanel.add(comboBoxClientes);
    
-
+        // Combobox de Mascotas
         comboBoxMascotas = new JComboBox<>();
         comboBoxMascotas.setEditable(true);
         comboBoxMascotas.setBounds(660, 74, 179, 25);
+        comboBoxMascotas.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof MascotaContenedor) {
+                    MascotaContenedor contenedor = (MascotaContenedor) value;
+                    setText(contenedor.getMascota().getNombre()); // Ahora correctamente obtiene el nombre de la mascota a través del contenedor
+                }
+                return this;
+            }
+        });
+
+
         roundedPanel.add(comboBoxMascotas);
         
 
@@ -279,26 +304,28 @@ public class VentanaCitasDialog extends JDialog {
    
   
 	private void actualizarMascotasPorCliente(int clienteId) {
-        new SwingWorker<List<Mascota>, Void>() {
-            @Override
-            protected List<Mascota> doInBackground() throws Exception {
-                return mascotaDAO.obtenerMascotasPorClienteId(clienteId);
-            }
+	    new SwingWorker<List<Mascota>, Void>() {
+	        @Override
+	        protected List<Mascota> doInBackground() throws Exception {
+	            return mascotaDAO.obtenerMascotasPorClienteId(clienteId);
+	        }
 
-            @Override
-            protected void done() {
-                try {
-                    List<Mascota> mascotas = get();
-                    comboBoxMascotas.removeAllItems();
-                    for (Mascota mascota : mascotas) {
-                        comboBoxMascotas.addItem(mascota);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.execute();
-    }
+	        @Override
+	        protected void done() {
+	            try {
+	                List<Mascota> mascotas = get();
+	                comboBoxMascotas.removeAllItems();
+	                for (Mascota mascota : mascotas) {
+	                    comboBoxMascotas.addItem(new Mascota.MascotaContenedor(mascota)); // Uso correcto con la clase estática
+	                }
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }.execute();
+	}
+
+
 
 
 	private void cargarClientesInicialmente() {
@@ -361,32 +388,39 @@ public class VentanaCitasDialog extends JDialog {
 	    }.execute();
 	}
 
-    private void guardarCita() {
-        try {
-            String titulo = textFieldTituloVisita.getText();
-            Date fecha = (Date) dateSpinner.getValue();
-            Calendar cal = Calendar.getInstance();
-            cal.setTime((Date) timeSpinner.getValue());
-            LocalTime hora = LocalTime.of(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-            
-            String notas = (textPaneNotas != null) ? textPaneNotas.getText() : "";
-            Cliente cliente = (Cliente) comboBoxClientes.getSelectedItem();
-            Mascota mascota = (Mascota) comboBoxMascotas.getSelectedItem();
+	private void guardarCita() {
+	    try {
+	        String titulo = textFieldTituloVisita.getText();
+	        java.util.Date fechaUtil = (java.util.Date) dateSpinner.getValue();
+	        java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime()); // Convertir a java.sql.Date
+	        Calendar cal = Calendar.getInstance();
+	        cal.setTime((java.util.Date) timeSpinner.getValue());
+	        LocalTime hora = LocalTime.of(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 
-            if (cliente == null || mascota == null) {
-                JOptionPane.showMessageDialog(this, "Seleccione un cliente y una mascota.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+	        String notas = textPaneNotas.getText(); // No es necesario el operador ternario si textPaneNotas no es nulo.
 
-            Cita cita = new Cita(0, titulo, fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), hora, notas, cliente.getId(), mascota.getId());
-            new CitaDAO().insertarCita(cita);
+	        // Para Cliente, asumimos que el JComboBox directamente almacena objetos Cliente
+	        Cliente clienteSeleccionado = (Cliente) comboBoxClientes.getSelectedItem();
 
-            JOptionPane.showMessageDialog(this, "Cita guardada con éxito", "Exito", JOptionPane.INFORMATION_MESSAGE);
-            dispose();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al guardar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+	        // Para Mascota, obtenemos el contenedor y luego la Mascota
+	        Mascota.MascotaContenedor contenedorMascota = (Mascota.MascotaContenedor) comboBoxMascotas.getSelectedItem();
+	        Mascota mascotaSeleccionada = contenedorMascota.getMascota();
+
+	        if (clienteSeleccionado == null || mascotaSeleccionada == null) {
+	            JOptionPane.showMessageDialog(this, "Seleccione un cliente y una mascota.", "Error", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+
+	        Cita cita = new Cita(0, titulo, fechaSql.toLocalDate(), hora, notas, clienteSeleccionado.getId(), mascotaSeleccionada.getId());
+	        new CitaDAO().insertarCita(cita);
+
+	        JOptionPane.showMessageDialog(this, "Cita guardada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	        dispose(); // Cierra el diálogo
+	    } catch (Exception ex) {
+	        JOptionPane.showMessageDialog(this, "Error al guardar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+
     
    
 	
