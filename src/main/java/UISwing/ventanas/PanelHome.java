@@ -8,6 +8,8 @@ import UISwing.recursos.RoundedPanel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import model.Cita;
 import java.util.List;
@@ -44,82 +46,82 @@ public class PanelHome extends JPanel {
         panelCitas.setLayout(null);
         
         panelOpacoCitas = new CustomPanelOpaco();
-        panelOpacoCitas.setBounds(41, 83, 240, 192);
+        panelOpacoCitas.setBounds(24, 77, 274, 192);
         panelCitas.add(panelOpacoCitas);
         panelOpacoCitas.setLayout(null);
         
         JLabel lblProximasCitas = new JLabel("Próximas Citas");
         lblProximasCitas.setForeground(new Color(255, 255, 255));
         lblProximasCitas.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblProximasCitas.setBounds(20, 24, 113, 14);
+        lblProximasCitas.setBounds(46, 11, 113, 27);
         panelOpacoCitas.add(lblProximasCitas);
         
         lblHoraCita = new JLabel("");
         lblHoraCita.setForeground(new Color(255, 255, 255));
         lblHoraCita.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblHoraCita.setBounds(21, 63, 46, 14);
+        lblHoraCita.setBounds(66, 49, 46, 28);
         panelOpacoCitas.add(lblHoraCita);
         
         lblDiaCita = new JLabel("");
         lblDiaCita.setForeground(new Color(255, 255, 255));
         lblDiaCita.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblDiaCita.setBounds(96, 63, 71, 14);
+        lblDiaCita.setBounds(147, 49, 71, 28);
         panelOpacoCitas.add(lblDiaCita);
         
         lblMascotaCita = new JLabel("");
         lblMascotaCita.setForeground(new Color(255, 255, 255));
         lblMascotaCita.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblMascotaCita.setBounds(40, 88, 58, 14);
+        lblMascotaCita.setBounds(66, 76, 58, 26);
         panelOpacoCitas.add(lblMascotaCita);
         
         lblClienteCita = new JLabel("");
         lblClienteCita.setForeground(new Color(255, 255, 255));
         lblClienteCita.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblClienteCita.setBounds(121, 88, 84, 14);
+        lblClienteCita.setBounds(147, 76, 84, 26);
         panelOpacoCitas.add(lblClienteCita);
         
         JLabel lblLogoCitaMascota = new JLabel("");
         lblLogoCitaMascota.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasMascota.png")));
-        lblLogoCitaMascota.setBounds(20, 88, 20, 14);
+        lblLogoCitaMascota.setBounds(46, 76, 20, 26);
         panelOpacoCitas.add(lblLogoCitaMascota);
         
         JLabel lblLogoCitaCliente = new JLabel("");
         lblLogoCitaCliente.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasCliente.png")));
-        lblLogoCitaCliente.setBounds(96, 88, 20, 14);
+        lblLogoCitaCliente.setBounds(122, 76, 20, 26);
         panelOpacoCitas.add(lblLogoCitaCliente);
         
         lblHoraCita_2 = new JLabel("");
         lblHoraCita_2.setForeground(new Color(255, 255, 255));
         lblHoraCita_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblHoraCita_2.setBounds(21, 126, 46, 14);
+        lblHoraCita_2.setBounds(66, 113, 46, 27);
         panelOpacoCitas.add(lblHoraCita_2);	
         
         JLabel lblLogoCitaMascota2 = new JLabel("");
         lblLogoCitaMascota2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasMascota.png")));
-        lblLogoCitaMascota2.setBounds(20, 151, 20, 14);
+        lblLogoCitaMascota2.setBounds(46, 139, 20, 26);
         panelOpacoCitas.add(lblLogoCitaMascota2);
         
         lblMascotaCita_2 = new JLabel("");
         lblMascotaCita_2.setForeground(new Color(255, 255, 255));
         lblMascotaCita_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblMascotaCita_2.setBounds(40, 151, 58, 14);
+        lblMascotaCita_2.setBounds(66, 139, 58, 26);
         panelOpacoCitas.add(lblMascotaCita_2);
         
         lblDiaCita_2 = new JLabel("");
         lblDiaCita_2.setForeground(new Color(255, 255, 255));
         lblDiaCita_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblDiaCita_2.setBounds(96, 126, 71, 14);
+        lblDiaCita_2.setBounds(147, 113, 71, 27);
         panelOpacoCitas.add(lblDiaCita_2);
         
         lblNombreCliente2 = new JLabel("");
         lblNombreCliente2.setForeground(new Color(255, 255, 255));
         lblNombreCliente2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblNombreCliente2.setBounds(121, 151, 84, 14);
+        lblNombreCliente2.setBounds(147, 139, 84, 26);
         panelOpacoCitas.add(lblNombreCliente2);
         
         JLabel lblLogoCitaCliente2 = new JLabel("");
         lblLogoCitaCliente2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasCliente.png")));
-        lblLogoCitaCliente2.setBounds(96, 151, 20, 14);
+        lblLogoCitaCliente2.setBounds(122, 139, 20, 26);
         panelOpacoCitas.add(lblLogoCitaCliente2);
         
         JLabel lblListadoCitas = new JLabel("Ver Listado");
@@ -127,6 +129,18 @@ public class PanelHome extends JPanel {
         lblListadoCitas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblListadoCitas.setBounds(129, 359, 71, 14);
         panelCitas.add(lblListadoCitas);
+        // Hacer que el cursor cambie a la forma de mano al pasar sobre el JLabel
+        lblListadoCitas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        // Agregar MouseListener al JLabel
+        lblListadoCitas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Crea y muestra el diálogo de listado de citas al hacer clic en el JLabel
+                DialogoListaCitas dialogoListaCitas = new DialogoListaCitas(JFrame.getFrames()[0]); // Asume que este es el frame principal
+                dialogoListaCitas.setVisible(true);
+            }
+        });
+
         
         JButton btnAñadirCita = new JButton("Añadir Cita");
         btnAñadirCita.addActionListener(new ActionListener() {
@@ -134,7 +148,7 @@ public class PanelHome extends JPanel {
         	}
         });
         btnAñadirCita.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAñadirCita.setBounds(41, 297, 240, 31);
+        btnAñadirCita.setBounds(24, 297, 274, 31);
         btnAñadirCita.setBackground(Color.WHITE);
         btnAñadirCita.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnAñadirCita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -171,14 +185,14 @@ public class PanelHome extends JPanel {
         panelCitas.add(btnAñadirCita);
         
         JLabel lblLogoCitas = new JLabel("");
-        lblLogoCitas.setBounds(250, 11, 35, 45);
+        lblLogoCitas.setBounds(263, 11, 35, 45);
         lblLogoCitas.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoPanelCitas.png")));
         panelCitas.add(lblLogoCitas);
         
         JLabel lbltextoCitaspendientes = new JLabel("Citas Pendientes");
         lbltextoCitaspendientes.setForeground(new Color(255, 255, 255));
         lbltextoCitaspendientes.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoCitaspendientes.setBounds(41, 19, 120, 37);
+        lbltextoCitaspendientes.setBounds(24, 19, 120, 37);
         panelCitas.add(lbltextoCitaspendientes);
         
       
@@ -188,79 +202,79 @@ public class PanelHome extends JPanel {
     private void inicializarPanelHospitalizados() {
         RoundedPanel panelHospitalizados = new RoundedPanel(20);
         panelHospitalizados.setBackground(Color.decode("#0483FF"));
-        panelHospitalizados.setBounds(347, 0, 319, 402);
+        panelHospitalizados.setBounds(347, 0, 321, 402);
         panelHospitalizados.setLayout(null);
         add(panelHospitalizados);
         
         CustomPanelOpaco panelOpacoHospita = new CustomPanelOpaco();
         panelOpacoHospita.setLayout(null);
-        panelOpacoHospita.setBounds(40, 75, 240, 192);
+        panelOpacoHospita.setBounds(24, 77, 274, 192);
         panelHospitalizados.add(panelOpacoHospita);
         
         JLabel lbltextoHospitalizados = new JLabel("Últimas hospitalizaciones");
         lbltextoHospitalizados.setForeground(Color.WHITE);
         lbltextoHospitalizados.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lbltextoHospitalizados.setBounds(20, 24, 185, 14);
+        lbltextoHospitalizados.setBounds(46, 11, 185, 27);
         panelOpacoHospita.add(lbltextoHospitalizados);
         
         JLabel lblHoraHospitalizacion = new JLabel("19:30");
         lblHoraHospitalizacion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblHoraHospitalizacion.setBounds(21, 63, 46, 14);
+        lblHoraHospitalizacion.setBounds(66, 49, 46, 28);
         panelOpacoHospita.add(lblHoraHospitalizacion);
         
         JLabel lblDiaHospitalizacion = new JLabel("24/02/2024");
         lblDiaHospitalizacion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblDiaHospitalizacion.setBounds(96, 63, 71, 14);
+        lblDiaHospitalizacion.setBounds(147, 49, 71, 28);
         panelOpacoHospita.add(lblDiaHospitalizacion);
         
         JLabel lblMascotaHospitalizacion = new JLabel("Yara");
         lblMascotaHospitalizacion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblMascotaHospitalizacion.setBounds(40, 88, 58, 14);
+        lblMascotaHospitalizacion.setBounds(66, 74, 58, 28);
         panelOpacoHospita.add(lblMascotaHospitalizacion);
         
         JLabel lblClienteHospitalizacion = new JLabel("David");
         lblClienteHospitalizacion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblClienteHospitalizacion.setBounds(121, 88, 84, 14);
+        lblClienteHospitalizacion.setBounds(147, 74, 84, 28);
         panelOpacoHospita.add(lblClienteHospitalizacion);
         
         JLabel lblLogoHospitalizacionMascota = new JLabel("");
         lblLogoHospitalizacionMascota.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasMascota.png")));
-        lblLogoHospitalizacionMascota.setBounds(20, 88, 20, 14);
+        lblLogoHospitalizacionMascota.setBounds(46, 74, 20, 28);
         panelOpacoHospita.add(lblLogoHospitalizacionMascota);
         
         JLabel lblLogoHospitalizacionCliente = new JLabel("");
-        lblLogoHospitalizacionCliente.setBounds(96, 88, 20, 14);
+        lblLogoHospitalizacionCliente.setBounds(122, 74, 20, 28);
         lblLogoHospitalizacionCliente.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasCliente.png")));
         panelOpacoHospita.add(lblLogoHospitalizacionCliente);
         
         JLabel lblHoraHospitalizacion_2 = new JLabel("gsdgsdgsdg");
         lblHoraHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblHoraHospitalizacion_2.setBounds(21, 126, 46, 14);
+        lblHoraHospitalizacion_2.setBounds(66, 113, 46, 27);
         panelOpacoHospita.add(lblHoraHospitalizacion_2);
         
         JLabel lblLogolblDiaHospitalizacionMascota_2 = new JLabel("");
         lblLogolblDiaHospitalizacionMascota_2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasMascota.png")));
-        lblLogolblDiaHospitalizacionMascota_2.setBounds(20, 151, 20, 14);
+        lblLogolblDiaHospitalizacionMascota_2.setBounds(46, 137, 20, 28);
         panelOpacoHospita.add(lblLogolblDiaHospitalizacionMascota_2);
         
         JLabel lblMascotaHospitalizacion_2 = new JLabel("New label");
         lblMascotaHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblMascotaHospitalizacion_2.setBounds(40, 151, 58, 14);
+        lblMascotaHospitalizacion_2.setBounds(66, 137, 58, 28);
         panelOpacoHospita.add(lblMascotaHospitalizacion_2);
         
         JLabel lblDiaHospitalizacion_2 = new JLabel("gdsgsdgsdg");
         lblDiaHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblDiaHospitalizacion_2.setBounds(96, 126, 71, 14);
+        lblDiaHospitalizacion_2.setBounds(147, 113, 71, 27);
         panelOpacoHospita.add(lblDiaHospitalizacion_2);
         
         JLabel lblClienteHospitalizacion_2 = new JLabel("New label");
         lblClienteHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblClienteHospitalizacion_2.setBounds(121, 151, 84, 14);
+        lblClienteHospitalizacion_2.setBounds(147, 137, 84, 28);
         panelOpacoHospita.add(lblClienteHospitalizacion_2);
         
         JLabel lblLogoHospitalizacionCliente_2 = new JLabel("");
         lblLogoHospitalizacionCliente_2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasCliente.png")));
-        lblLogoHospitalizacionCliente_2.setBounds(96, 151, 20, 14);
+        lblLogoHospitalizacionCliente_2.setBounds(122, 137, 20, 28);
         panelOpacoHospita.add(lblLogoHospitalizacionCliente_2);
         
         JButton btnAñadirHospita = new JButton("Añadir Cita");
@@ -269,7 +283,7 @@ public class PanelHome extends JPanel {
         	}
         });
         btnAñadirHospita.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAñadirHospita.setBounds(41, 297, 240, 31);
+        btnAñadirHospita.setBounds(24, 297, 274, 31);
         btnAñadirHospita.setBackground(Color.WHITE);
         btnAñadirHospita.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnAñadirHospita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -301,13 +315,13 @@ public class PanelHome extends JPanel {
         
         JLabel lblLogoHospita = new JLabel("");
         lblLogoHospita.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoHospita.png")));
-        lblLogoHospita.setBounds(250, 11, 35, 45);
+        lblLogoHospita.setBounds(263, 11, 35, 45);
         panelHospitalizados.add(lblLogoHospita);
         
         JLabel lbltextoHospitapendientes = new JLabel("Hospitalizados");
         lbltextoHospitapendientes.setForeground(Color.WHITE);
         lbltextoHospitapendientes.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoHospitapendientes.setBounds(40, 11, 120, 37);
+        lbltextoHospitapendientes.setBounds(24, 11, 120, 37);
         panelHospitalizados.add(lbltextoHospitapendientes);
 
     }
@@ -331,7 +345,7 @@ public class PanelHome extends JPanel {
         	}
         });
         btnAñadirVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAñadirVentas.setBounds(33, 297, 358, 31);
+        btnAñadirVentas.setBounds(24, 297, 374, 31);
         btnAñadirVentas.setBackground(Color.WHITE);
         btnAñadirVentas.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnAñadirVentas.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -356,28 +370,28 @@ public class PanelHome extends JPanel {
         
         CustomPanelOpaco panelOpacoVentas = new CustomPanelOpaco();
         panelOpacoVentas.setLayout(null);
-        panelOpacoVentas.setBounds(33, 77, 359, 192);
+        panelOpacoVentas.setBounds(24, 77, 374, 191);
         panelVentas.add(panelOpacoVentas);
           
         JLabel lbltextoVentas = new JLabel("Últimas ventas");
         lbltextoVentas.setForeground(Color.WHITE);
         lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoVentas.setBounds(33, 17, 120, 31);
+        lbltextoVentas.setBounds(24, 17, 120, 31);
         panelVentas.add(lbltextoVentas);
         
         JLabel lblLogoPanelVentas = new JLabel("");
         lblLogoPanelVentas.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoPanelVentas.png")));
-        lblLogoPanelVentas.setBounds(353, 11, 35, 45);
+        lblLogoPanelVentas.setBounds(363, 17, 35, 45);
         panelVentas.add(lblLogoPanelVentas);
         
         JPanel panelEncabezadosVentas = crearPanelEncabezadosVentas();
         panelEncabezadosVentas.setOpaque(false);
-        panelEncabezadosVentas.setBounds(10, 10, 339, 30); // Establece la posición y el tamaño del panel de encabezados de ventas
+        panelEncabezadosVentas.setBounds(0, 10, 376, 30); // Establece la posición y el tamaño del panel de encabezados de ventas
         panelOpacoVentas.add(panelEncabezadosVentas);
 
         JPanel panelDatosVentas = new JPanel();
         panelDatosVentas.setLayout(new BoxLayout(panelDatosVentas, BoxLayout.Y_AXIS));
-        panelDatosVentas.setBounds(10, 40, 339, 152); // Establece la posición y el tamaño del panel de datos de ventas
+        panelDatosVentas.setBounds(0, 40, 376, 152); // Establece la posición y el tamaño del panel de datos de ventas
         panelDatosVentas.setOpaque(false);
         panelOpacoVentas.add(panelDatosVentas);
 
@@ -400,7 +414,7 @@ public class PanelHome extends JPanel {
         // Panel opaco que contendrá tanto el panel de encabezados como el panel de datos
         CustomPanelOpaco panelOpaco = new CustomPanelOpaco();
         panelOpaco.setLayout(null); 
-        panelOpaco.setBounds(29, 57, 1057, 160);
+        panelOpaco.setBounds(24, 57, 1065, 160);
         panelOpaco.setBackground(new Color(255, 255, 255, 80)); // El color se establece aquí pero la opacidad en paintComponent
         panelFarmacos.add(panelOpaco);
 
@@ -420,12 +434,12 @@ public class PanelHome extends JPanel {
         JLabel lbltextoUltimosFarmacos = new JLabel("Ultimos fármacos utilizados");
         lbltextoUltimosFarmacos.setForeground(new Color(255, 255, 255));
         lbltextoUltimosFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoUltimosFarmacos.setBounds(29, 23, 199, 14);
+        lbltextoUltimosFarmacos.setBounds(24, 11, 199, 28);
         panelFarmacos.add(lbltextoUltimosFarmacos);
         
         JLabel lblLogoUltimosFarmacos = new JLabel("");
         lblLogoUltimosFarmacos.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoFarmacos.png")));
-        lblLogoUltimosFarmacos.setBounds(1048, 11, 35, 28);
+        lblLogoUltimosFarmacos.setBounds(1054, 11, 35, 28);
         panelFarmacos.add(lblLogoUltimosFarmacos);
 
         // Agregar algunos datos de ejemplo
@@ -436,7 +450,7 @@ public class PanelHome extends JPanel {
     
     private void mostrarCitasProximas() {
         CitaDAO citaDAO = new CitaDAO();
-        List<Cita> citasProximas = citaDAO.recuperarCitasHome();
+        List<Cita> citasProximas = citaDAO.recuperarCitasFuturas();
 
         if (!citasProximas.isEmpty()) {
             Cita primeraCita = citasProximas.get(0);
