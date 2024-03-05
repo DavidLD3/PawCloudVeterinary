@@ -277,7 +277,7 @@ public class PanelHome extends JPanel {
         lblLogoHospitalizacionCliente_2.setBounds(122, 137, 20, 28);
         panelOpacoHospita.add(lblLogoHospitalizacionCliente_2);
         
-        JButton btnAñadirHospita = new JButton("Añadir Cita");
+        JButton btnAñadirHospita = new JButton("Añadir Mascota");
         btnAñadirHospita.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         	}
@@ -480,7 +480,7 @@ public class PanelHome extends JPanel {
         JPanel panelEncabezados = new JPanel();
         panelEncabezados.setLayout(new GridLayout(1, 8, 0, 0)); // 8 columnas como en tus datos
         panelEncabezados.setBackground(new Color(75, 75, 153)); // Un color de fondo
-        panelEncabezados.setBounds(10, 10, 785, 30); // Tamaño y posición
+        panelEncabezados.setBounds(10, 10, 1055, 30); // Tamaño y posición
         Font fuenteEncabezado = new Font("Segoe UI", Font.BOLD, 15);  //  Fuente del encabezado
 
         String[] encabezados = {"Hora", "Fecha", "Veterinario", "Paciente", "Nombre", "Cantidad", "Dosis", "Código"};
@@ -531,9 +531,13 @@ public class PanelHome extends JPanel {
         panelFilaVentas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Ajusta la altura de la fila
         panelFilaVentas.setOpaque(false);
 
-        for (String dato : datosVentas) {
-            JLabel labelDato = new JLabel(dato, SwingConstants.CENTER);
-            labelDato.setForeground(Color.WHITE);
+        for (int i = 0; i < datosVentas.length; i++) {
+            JLabel labelDato = new JLabel(datosVentas[i], SwingConstants.CENTER);
+            labelDato.setForeground(Color.WHITE); // Color de texto
+            // Configurar el tooltip para la columna del producto
+            if (i == 1) { // Asumiendo que el producto está en la segunda posición del array
+                labelDato.setToolTipText(datosVentas[i]);
+            }
             panelFilaVentas.add(labelDato);
         }
 
@@ -541,6 +545,7 @@ public class PanelHome extends JPanel {
         panelDatosVentas.revalidate();
         panelDatosVentas.repaint();
     }
+
    
 
 
