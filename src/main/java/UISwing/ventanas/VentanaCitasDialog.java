@@ -67,42 +67,43 @@ public class VentanaCitasDialog extends JDialog {
 		JLabel lblTipo = new JLabel("Tipo:");
 	    lblTipo.setForeground(new Color(255, 255, 255));
 	    lblTipo.setFont(new Font("Segoe UI", Font.BOLD, 13));
-	    lblTipo.setBounds(62, 50, 80, 25);
+	    lblTipo.setBounds(56, 37, 80, 34);
 	    roundedPanel.add(lblTipo);
         
         JComboBox<String> comboBoxTipo = new JComboBox<>(new String[]{"Visita", "Consulta", "Urgencia"});
         comboBoxTipo.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        comboBoxTipo.setBounds(60, 74, 120, 25);
+        comboBoxTipo.setBounds(54, 70, 120, 25);
         roundedPanel.add(comboBoxTipo);
         
         JLabel lblDoctor = new JLabel("Doctor:");
         lblDoctor.setForeground(new Color(255, 255, 255));
         lblDoctor.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblDoctor.setBounds(236, 50, 80, 25);
+        lblDoctor.setBounds(230, 37, 80, 34);
         roundedPanel.add(lblDoctor);
         
         JComboBox<String> comboBoxDoctor = new JComboBox<>(new String[]{"Doctor 1", "Doctor 2", "Doctor 3"});
         comboBoxDoctor.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        comboBoxDoctor.setBounds(234, 74, 120, 25);
+        comboBoxDoctor.setBounds(228, 70, 120, 25);
         roundedPanel. add(comboBoxDoctor);
         
         JLabel lblCliente = new JLabel("Cliente:");
         lblCliente.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblCliente.setForeground(new Color(255, 255, 255));
-        lblCliente.setBounds(420, 50, 80, 25);
+        lblCliente.setBounds(414, 37, 80, 34);
         roundedPanel.add(lblCliente);
         
      
         JLabel lblMascota = new JLabel("Mascota:");
         lblMascota.setForeground(new Color(255, 255, 255));
         lblMascota.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblMascota.setBounds(663, 50, 80, 25);
+        lblMascota.setBounds(657, 37, 80, 34);
         roundedPanel.add(lblMascota);
         
      // ComboBox CLientes
         comboBoxClientes = new JComboBox<Cliente>();
+        comboBoxClientes.setFont(new Font("Segoe UI", Font.BOLD, 11));
         comboBoxClientes.setEditable(true);
-        comboBoxClientes.setBounds(420, 74, 179, 25);
+        comboBoxClientes.setBounds(410, 70, 179, 25);
         JTextField textEditorClientes = (JTextField) comboBoxClientes.getEditor().getEditorComponent();
         textEditorClientes.addKeyListener(new KeyAdapter() {
             @Override
@@ -150,8 +151,9 @@ public class VentanaCitasDialog extends JDialog {
    
         // Combobox de Mascotas
         comboBoxMascotas = new JComboBox<>();
+        comboBoxMascotas.setFont(new Font("Segoe UI", Font.BOLD, 11));
         comboBoxMascotas.setEditable(true);
-        comboBoxMascotas.setBounds(660, 74, 179, 25);
+        comboBoxMascotas.setBounds(654, 71, 179, 25);
         comboBoxMascotas.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -171,7 +173,7 @@ public class VentanaCitasDialog extends JDialog {
         JLabel lblFecha = new JLabel("Fecha:");
         lblFecha.setForeground(new Color(255, 255, 255));
         lblFecha.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblFecha.setBounds(420, 132, 44, 25);
+        lblFecha.setBounds(414, 104, 44, 34);
         roundedPanel.add(lblFecha);
 
        
@@ -179,34 +181,63 @@ public class VentanaCitasDialog extends JDialog {
         JLabel lblHora = new JLabel("Hora:");
         lblHora.setForeground(new Color(255, 255, 255));
         lblHora.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblHora.setBounds(663, 132, 80, 25);
+        lblHora.setBounds(657, 104, 80, 34);
         roundedPanel.add(lblHora);
         
         JLabel lblTituloVisita = new JLabel("Título de la visita:");
         lblTituloVisita.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblTituloVisita.setForeground(new Color(255, 255, 255));
-        lblTituloVisita.setBounds(58, 132, 150, 25);
+        lblTituloVisita.setBounds(56, 106, 150, 30);
         roundedPanel.add(lblTituloVisita);
 
         textFieldTituloVisita = new JTextField();
         textFieldTituloVisita.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        textFieldTituloVisita.setBounds(60, 158, 294, 42);
+        textFieldTituloVisita.setBounds(54, 137, 294, 25);
         roundedPanel.add(textFieldTituloVisita);
         
         JLabel lblNotas = new JLabel("Nota");
         lblNotas.setForeground(new Color(255, 255, 255));
         lblNotas.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblNotas.setBounds(62, 229, 46, 14);
+        lblNotas.setBounds(56, 181, 46, 34);
         roundedPanel.add(lblNotas);
         
         textPaneNotas = new JTextPane();
         textPaneNotas.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        textPaneNotas.setBounds(62, 254, 537, 73);
+        textPaneNotas.setBounds(54, 218, 779, 73);
         roundedPanel.add(textPaneNotas);
+        
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnCancelar.setBounds(532, 328, 120, 30);
+        btnCancelar.setBackground(Color.WHITE);
+        btnCancelar.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        btnCancelar.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        btnCancelar.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        btnCancelar.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnCancelar.setOpaque(true);
+        btnCancelar.setRolloverEnabled(true);
+        btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnCancelar.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnCancelar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnCancelar.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnCancelar.setForeground(Color.decode("#0057FF"));
+            }
+        });
+        btnCancelar.addActionListener(e -> {
+        	dispose();
+        });
+        
+        roundedPanel.add(btnCancelar);
         
         JButton btnGuardarCita = new JButton("Guardar Cita");
         btnGuardarCita.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnGuardarCita.setBounds(663, 285, 176, 42);
+        btnGuardarCita.setBounds(713, 328, 120, 30);
         btnGuardarCita.setBackground(Color.WHITE);
         btnGuardarCita.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnGuardarCita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -230,16 +261,7 @@ public class VentanaCitasDialog extends JDialog {
         btnGuardarCita.addActionListener(e -> guardarCita());
         roundedPanel.add(btnGuardarCita);
         
-        JLabel lbllogocerrar = new JLabel("");
-        lbllogocerrar.setIcon(new ImageIcon(getClass().getResource("/imagenes/cerrar.png")));
-        lbllogocerrar.setBounds(852, 0, 26, 41);
-        roundedPanel.add(lbllogocerrar);
-        lbllogocerrar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            	dispose(); // para cerrar solo el dialog	
-            }
-        });
+        
  
         JPanel centerPanel = new JPanel() {
             @Override
@@ -255,7 +277,7 @@ public class VentanaCitasDialog extends JDialog {
         };
         centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
         centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
-        centerPanel.setBounds(34, 38, 826, 320);
+        centerPanel.setBounds(34, 24, 820, 352);
         roundedPanel.add(centerPanel);
  
     }
@@ -264,18 +286,18 @@ public class VentanaCitasDialog extends JDialog {
 	    dateSpinner = new JSpinner(new SpinnerDateModel());
 	    JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
 	    dateSpinner.setEditor(dateEditor);
-	    dateSpinner.setBounds(420, 168, 153, 25);
+	    dateSpinner.setBounds(414, 137, 153, 25);
 	    roundedPanel.add(dateSpinner);
 
 	    calendarButton = new JButton(new ImageIcon(getClass().getResource("/imagenes/logoBotonCalendario.png")));
-	    calendarButton.setBounds(574, 168, 25, 25);
+	    calendarButton.setBounds(568, 137, 25, 25);
 	    calendarButton.addActionListener(e -> mostrarCalendario());
 	    roundedPanel.add(calendarButton);
 
 	    timeSpinner = new JSpinner(new SpinnerDateModel());
 	    JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
 	    timeSpinner.setEditor(timeEditor);
-	    timeSpinner.setBounds(660, 167, 179, 25);
+	    timeSpinner.setBounds(657, 138, 179, 25);
 	    roundedPanel.add(timeSpinner);
 	}
 

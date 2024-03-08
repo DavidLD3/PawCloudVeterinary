@@ -125,7 +125,7 @@ public class MainFrame extends JFrame {
         panelMenu.add(lblLogoCliente);
         
         JLabel lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitas.png")));
+        lblNewLabel_1.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCalendario.png")));
         lblNewLabel_1.setBounds(25, 183, 20, 28);
         panelMenu.add(lblNewLabel_1);
         

@@ -69,4 +69,22 @@ public class MascotaDAO {
             rs.getBoolean("esterilizado")
         );
     }
+    
+    public Mascota obtenerMascotaPorId(int idMascota) {
+        Mascota mascota = null;
+        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE id = ?";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idMascota);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    mascota = crearMascotaDesdeResultSet(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mascota;
+    }
+
 }

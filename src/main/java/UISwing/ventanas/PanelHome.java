@@ -3,6 +3,9 @@ package UISwing.ventanas;
 import javax.swing.*;
 
 import DB.CitaDAO;
+import DB.ClienteDAO;
+import DB.HospitalizacionDAO;
+import DB.MascotaDAO;
 import UISwing.recursos.CustomPanelOpaco;
 import UISwing.recursos.RoundedPanel;
 
@@ -10,8 +13,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import model.Cita;
+import model.Cliente;
+import model.Hospitalizacion;
+import model.Mascota;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PanelHome extends JPanel {
@@ -26,6 +34,14 @@ public class PanelHome extends JPanel {
 	private JLabel lblMascotaCita_2;
 	private JLabel lblNombreCliente2;
 	private CustomPanelOpaco panelOpacoCitas;
+	private JLabel lblDiaHospitalizacion;
+    private JLabel lblMascotaHospitalizacion;
+    private JLabel lblClienteHospitalizacion;
+    private JLabel lblHoraHospita_1;
+    private JLabel lblHoraHospita_2;
+    private JLabel lblDiaHospitalizacion_2;
+    private JLabel lblMascotaHospitalizacion_2;
+    private JLabel lblClienteHospitalizacion_2;
 
     public PanelHome() {
         setLayout(null); // Usando layout nulo para control total sobre la posición de los componentes
@@ -34,8 +50,11 @@ public class PanelHome extends JPanel {
         inicializarPanelCitas();
         mostrarCitasProximas(); // Luego puedes llamar a mostrarCitasProximas()
         inicializarPanelHospitalizados();
+        mostrarHospitalizacionesRecientes();
         inicializarPanelVentas(); // Lo mismo que farmacos pero mas corto
         inicializarPanelFarmacos(); // Panel fármacos sin bordes ni scrollbar visible
+        
+
     }
 
     private void inicializarPanelCitas() {
@@ -185,14 +204,14 @@ public class PanelHome extends JPanel {
         panelCitas.add(btnAñadirCita);
         
         JLabel lblLogoCitas = new JLabel("");
-        lblLogoCitas.setBounds(263, 11, 35, 45);
+        lblLogoCitas.setBounds(24, 21, 19, 37);
         lblLogoCitas.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoPanelCitas.png")));
         panelCitas.add(lblLogoCitas);
         
         JLabel lbltextoCitaspendientes = new JLabel("Citas Pendientes");
         lbltextoCitaspendientes.setForeground(new Color(255, 255, 255));
         lbltextoCitaspendientes.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoCitaspendientes.setBounds(24, 19, 120, 37);
+        lbltextoCitaspendientes.setBounds(44, 21, 120, 37);
         panelCitas.add(lbltextoCitaspendientes);
         
       
@@ -217,22 +236,20 @@ public class PanelHome extends JPanel {
         lbltextoHospitalizados.setBounds(46, 11, 185, 27);
         panelOpacoHospita.add(lbltextoHospitalizados);
         
-        JLabel lblHoraHospitalizacion = new JLabel("19:30");
-        lblHoraHospitalizacion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblHoraHospitalizacion.setBounds(66, 49, 46, 28);
-        panelOpacoHospita.add(lblHoraHospitalizacion);
-        
-        JLabel lblDiaHospitalizacion = new JLabel("24/02/2024");
+        lblDiaHospitalizacion = new JLabel("");
+        lblDiaHospitalizacion.setForeground(new Color(255, 255, 255));
         lblDiaHospitalizacion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblDiaHospitalizacion.setBounds(147, 49, 71, 28);
+        lblDiaHospitalizacion.setBounds(134, 49, 71, 28);
         panelOpacoHospita.add(lblDiaHospitalizacion);
         
-        JLabel lblMascotaHospitalizacion = new JLabel("Yara");
+        lblMascotaHospitalizacion = new JLabel("");
+        lblMascotaHospitalizacion.setForeground(new Color(255, 255, 255));
         lblMascotaHospitalizacion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblMascotaHospitalizacion.setBounds(66, 74, 58, 28);
         panelOpacoHospita.add(lblMascotaHospitalizacion);
         
-        JLabel lblClienteHospitalizacion = new JLabel("David");
+        lblClienteHospitalizacion = new JLabel("");
+        lblClienteHospitalizacion.setForeground(new Color(255, 255, 255));
         lblClienteHospitalizacion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblClienteHospitalizacion.setBounds(147, 74, 84, 28);
         panelOpacoHospita.add(lblClienteHospitalizacion);
@@ -247,27 +264,25 @@ public class PanelHome extends JPanel {
         lblLogoHospitalizacionCliente.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasCliente.png")));
         panelOpacoHospita.add(lblLogoHospitalizacionCliente);
         
-        JLabel lblHoraHospitalizacion_2 = new JLabel("gsdgsdgsdg");
-        lblHoraHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblHoraHospitalizacion_2.setBounds(66, 113, 46, 27);
-        panelOpacoHospita.add(lblHoraHospitalizacion_2);
-        
         JLabel lblLogolblDiaHospitalizacionMascota_2 = new JLabel("");
         lblLogolblDiaHospitalizacionMascota_2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasMascota.png")));
         lblLogolblDiaHospitalizacionMascota_2.setBounds(46, 137, 20, 28);
         panelOpacoHospita.add(lblLogolblDiaHospitalizacionMascota_2);
         
-        JLabel lblMascotaHospitalizacion_2 = new JLabel("New label");
+        lblMascotaHospitalizacion_2 = new JLabel("");
+        lblMascotaHospitalizacion_2.setForeground(new Color(255, 255, 255));
         lblMascotaHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblMascotaHospitalizacion_2.setBounds(66, 137, 58, 28);
         panelOpacoHospita.add(lblMascotaHospitalizacion_2);
         
-        JLabel lblDiaHospitalizacion_2 = new JLabel("gdsgsdgsdg");
+        lblDiaHospitalizacion_2 = new JLabel("");
+        lblDiaHospitalizacion_2.setForeground(new Color(255, 255, 255));
         lblDiaHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblDiaHospitalizacion_2.setBounds(147, 113, 71, 27);
+        lblDiaHospitalizacion_2.setBounds(134, 115, 71, 27);
         panelOpacoHospita.add(lblDiaHospitalizacion_2);
         
-        JLabel lblClienteHospitalizacion_2 = new JLabel("New label");
+        lblClienteHospitalizacion_2 = new JLabel("");
+        lblClienteHospitalizacion_2.setForeground(new Color(255, 255, 255));
         lblClienteHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblClienteHospitalizacion_2.setBounds(147, 137, 84, 28);
         panelOpacoHospita.add(lblClienteHospitalizacion_2);
@@ -276,6 +291,18 @@ public class PanelHome extends JPanel {
         lblLogoHospitalizacionCliente_2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasCliente.png")));
         lblLogoHospitalizacionCliente_2.setBounds(122, 137, 20, 28);
         panelOpacoHospita.add(lblLogoHospitalizacionCliente_2);
+        
+        lblHoraHospita_1 = new JLabel("");
+        lblHoraHospita_1.setForeground(Color.WHITE);
+        lblHoraHospita_1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblHoraHospita_1.setBounds(56, 49, 46, 28);
+        panelOpacoHospita.add(lblHoraHospita_1);
+        
+        lblHoraHospita_2 = new JLabel("");
+        lblHoraHospita_2.setForeground(Color.WHITE);
+        lblHoraHospita_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblHoraHospita_2.setBounds(66, 115, 46, 27);
+        panelOpacoHospita.add(lblHoraHospita_2);
         
         JButton btnAñadirHospita = new JButton("Añadir Mascota");
         btnAñadirHospita.addActionListener(new ActionListener() {
@@ -304,6 +331,14 @@ public class PanelHome extends JPanel {
             	btnAñadirHospita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
             }
         });
+        btnAñadirHospita.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                VentanaHospitalizadosDialog dialog = new VentanaHospitalizadosDialog(null, true);
+                dialog.setTitle("Añadir Cita");
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+            }
+        });
 
         panelHospitalizados.add(btnAñadirHospita);
         
@@ -315,13 +350,13 @@ public class PanelHome extends JPanel {
         
         JLabel lblLogoHospita = new JLabel("");
         lblLogoHospita.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoHospita.png")));
-        lblLogoHospita.setBounds(263, 11, 35, 45);
+        lblLogoHospita.setBounds(24, 21, 24, 37);
         panelHospitalizados.add(lblLogoHospita);
         
         JLabel lbltextoHospitapendientes = new JLabel("Hospitalizados");
         lbltextoHospitapendientes.setForeground(Color.WHITE);
         lbltextoHospitapendientes.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoHospitapendientes.setBounds(24, 11, 120, 37);
+        lbltextoHospitapendientes.setBounds(47, 21, 120, 37);
         panelHospitalizados.add(lbltextoHospitapendientes);
 
     }
@@ -376,12 +411,12 @@ public class PanelHome extends JPanel {
         JLabel lbltextoVentas = new JLabel("Últimas ventas");
         lbltextoVentas.setForeground(Color.WHITE);
         lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoVentas.setBounds(24, 17, 120, 31);
+        lbltextoVentas.setBounds(48, 21, 120, 31);
         panelVentas.add(lbltextoVentas);
         
         JLabel lblLogoPanelVentas = new JLabel("");
         lblLogoPanelVentas.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoPanelVentas.png")));
-        lblLogoPanelVentas.setBounds(363, 17, 35, 45);
+        lblLogoPanelVentas.setBounds(24, 21, 22, 31);
         panelVentas.add(lblLogoPanelVentas);
         
         JPanel panelEncabezadosVentas = crearPanelEncabezadosVentas();
@@ -434,12 +469,12 @@ public class PanelHome extends JPanel {
         JLabel lbltextoUltimosFarmacos = new JLabel("Ultimos fármacos utilizados");
         lbltextoUltimosFarmacos.setForeground(new Color(255, 255, 255));
         lbltextoUltimosFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoUltimosFarmacos.setBounds(24, 11, 199, 28);
+        lbltextoUltimosFarmacos.setBounds(54, 11, 199, 28);
         panelFarmacos.add(lbltextoUltimosFarmacos);
         
         JLabel lblLogoUltimosFarmacos = new JLabel("");
         lblLogoUltimosFarmacos.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoFarmacos.png")));
-        lblLogoUltimosFarmacos.setBounds(1054, 11, 35, 28);
+        lblLogoUltimosFarmacos.setBounds(24, 11, 26, 28);
         panelFarmacos.add(lblLogoUltimosFarmacos);
 
         // Agregar algunos datos de ejemplo
@@ -545,8 +580,36 @@ public class PanelHome extends JPanel {
         panelDatosVentas.revalidate();
         panelDatosVentas.repaint();
     }
+    private void mostrarHospitalizacionesRecientes() {
+        HospitalizacionDAO hospitalizacionDAO = new HospitalizacionDAO();
+        MascotaDAO mascotaDAO = new MascotaDAO();
+        ClienteDAO clienteDAO = new ClienteDAO();
+        
+        List<Hospitalizacion> hospitalizacionesRecientes = hospitalizacionDAO.recuperarHospitalizacionesSinFechaSalida();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-   
+        if (!hospitalizacionesRecientes.isEmpty()) {
+            Hospitalizacion primeraHospitalizacion = hospitalizacionesRecientes.get(0);
+            Mascota mascotaPrimera = mascotaDAO.obtenerMascotaPorId(primeraHospitalizacion.getIdMascota());
+            Cliente clientePrimera = clienteDAO.obtenerClientePorId(mascotaPrimera.getIdCliente());
 
+            lblDiaHospitalizacion.setText(primeraHospitalizacion.getFechaIngreso().format(dateFormatter));
+			lblHoraHospita_1.setText(primeraHospitalizacion.getFechaIngreso().format(timeFormatter));
+            lblMascotaHospitalizacion.setText(mascotaPrimera.getNombre());
+            lblClienteHospitalizacion.setText(clientePrimera.getNombre() + " " + clientePrimera.getApellidos());
 
+            if (hospitalizacionesRecientes.size() > 1) {
+                Hospitalizacion segundaHospitalizacion = hospitalizacionesRecientes.get(1);
+                Mascota mascotaSegunda = mascotaDAO.obtenerMascotaPorId(segundaHospitalizacion.getIdMascota());
+                Cliente clienteSegunda = clienteDAO.obtenerClientePorId(mascotaSegunda.getIdCliente());
+
+                lblDiaHospitalizacion_2.setText(segundaHospitalizacion.getFechaIngreso().format(dateFormatter));
+                lblHoraHospita_2.setText(segundaHospitalizacion.getFechaIngreso().format(timeFormatter));
+                lblMascotaHospitalizacion_2.setText(mascotaSegunda.getNombre());
+                lblClienteHospitalizacion_2.setText(clienteSegunda.getNombre() + " " + clienteSegunda.getApellidos());
+            }
+        }
+    }
+    
 }

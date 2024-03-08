@@ -21,13 +21,13 @@ public class ClienteDAO {
 
     public Cliente obtenerClientePorId(int id) {
         Cliente cliente = null;
-        String consulta = "SELECT * FROM clientes WHERE id_cliente = ?";
+        String consulta = "SELECT * FROM clientes WHERE id = ?";
         try (Connection conn = conexion.getConexion(); PreparedStatement statement = conn.prepareStatement(consulta)) {
             statement.setInt(1, id);
             ResultSet resultados = statement.executeQuery();
             if (resultados.next()) {
                 cliente = new Cliente(
-                    resultados.getInt("id_cliente"),
+                    resultados.getInt("id"),
                     resultados.getString("nombre"),
                     resultados.getString("apellidos"),
                     resultados.getDate("fecha_nacimiento").toLocalDate(),
