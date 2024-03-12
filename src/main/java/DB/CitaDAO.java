@@ -15,22 +15,24 @@ import model.Cita;
 
 public class CitaDAO {
 
-    public void insertarCita(Cita cita) {
-        String sql = "INSERT INTO citas (titulo, fecha, hora, notas, id_cliente,id_mascota) VALUES (?, ?, ?, ?, ?, ?)";
-        
-        try (Connection conn = Conexion.getConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, cita.getTitulo());
-            pstmt.setDate(2, Date.valueOf(cita.getFecha()));
-            pstmt.setTime(3, Time.valueOf(cita.getHora()));
-            pstmt.setString(4, cita.getNotas());
-            pstmt.setInt(5, cita.getClienteId());
-            pstmt.setInt(6, cita.getMascotaId());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	public void insertarCita(Cita cita) {
+	    String sql = "INSERT INTO citas (titulo, fecha, hora, notas, id_cliente, id_mascota, tipo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	    
+	    try (Connection conn = Conexion.getConexion();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setString(1, cita.getTitulo());
+	        pstmt.setDate(2, Date.valueOf(cita.getFecha()));
+	        pstmt.setTime(3, Time.valueOf(cita.getHora()));
+	        pstmt.setString(4, cita.getNotas());
+	        pstmt.setInt(5, cita.getClienteId());
+	        pstmt.setInt(6, cita.getMascotaId());
+	        pstmt.setString(7, cita.getTipo()); // Añadir el tipo de cita
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
     
     public List<Cita> recuperarCitas() {
         List<Cita> citas = new ArrayList<>();
@@ -134,13 +136,123 @@ public class CitaDAO {
         }
         return citas;
     }
-
-
-
-
-
-
     
+    public List<Cita> recuperarCitasParaCalendario() {
+        List<Cita> citas = new ArrayList<>();
+        String sql = "SELECT c.id, c.titulo, c.fecha, c.hora, c.tipo " + // Selecciona solo los campos necesarios
+                     "FROM citas c " +
+                     "ORDER BY c.fecha ASC, c.hora ASC";
+
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Cita cita = new Cita();
+                cita.setId(rs.getInt("id"));
+                cita.setTitulo(rs.getString("titulo"));
+                cita.setFecha(rs.getDate("fecha").toLocalDate());
+                cita.setHora(rs.getTime("hora").toLocalTime());
+                cita.setTipo(rs.getString("tipo")); // Asegúrate de incluir el tipo
+                citas.add(cita);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return citas;
+    }
     
+    public static List<Cita> recuperarCitasPorSemana(LocalDate fechaInicio, LocalDate fechaFin) {
+        List<Cita> citas = new ArrayList<>();
+        String sql = "SELECT c.id, c.titulo, c.fecha, c.hora, c.tipo, cl.nombre AS nombre_cliente, m.nombre AS nombre_mascota " +
+                     "FROM citas c " +
+                     "JOIN clientes cl ON c.id_cliente = cl.id " +
+                     "JOIN mascotas m ON c.id_mascota = m.id " +
+                     "WHERE c.fecha >= ? AND c.fecha <= ? " +
+                     "ORDER BY c.fecha ASC, c.hora ASC";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, Date.valueOf(fechaInicio));
+            stmt.setDate(2, Date.valueOf(fechaFin));
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+            	Cita cita = new Cita();
+                cita.setId(rs.getInt("id"));
+                cita.setTitulo(rs.getString("titulo"));
+                cita.setFecha(rs.getDate("fecha").toLocalDate());
+                cita.setHora(rs.getTime("hora").toLocalTime());
+                cita.setTipo(rs.getString("tipo")); // Asegúrate de incluir el tipo
+                citas.add(cita);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return citas;
+    }
+    public void actualizarCita(Cita cita) throws SQLException {
+        String sql = "UPDATE citas SET titulo = ?, fecha = ?, hora = ?, notas = ?, id_cliente = ?, id_mascota = ?, tipo = ? WHERE id = ?";
+        
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, cita.getTitulo());
+            pstmt.setDate(2, Date.valueOf(cita.getFecha()));
+            pstmt.setTime(3, Time.valueOf(cita.getHora()));
+            pstmt.setString(4, cita.getNotas());
+            pstmt.setInt(5, cita.getClienteId());
+            pstmt.setInt(6, cita.getMascotaId());
+            pstmt.setString(7, cita.getTipo());
+            pstmt.setInt(8, cita.getId());
+            
+            pstmt.executeUpdate();
+        }
+    }
+    public void eliminarCita(int idCita) throws SQLException {
+        String sql = "DELETE FROM citas WHERE id = ?";
+        
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, idCita);
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public Cita obtenerCitaPorId(int idCita) {
+        String sql = "SELECT c.id, c.titulo, c.fecha, c.hora, c.notas, c.id_cliente, c.id_mascota, c.tipo, cl.nombre AS nombre_cliente, m.nombre AS nombre_mascota " +
+                     "FROM citas c " +
+                     "JOIN clientes cl ON c.id_cliente = cl.id " +
+                     "JOIN mascotas m ON c.id_mascota = m.id " +
+                     "WHERE c.id = ?";
+        Cita cita = null;
+
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, idCita);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                cita = new Cita();
+                cita.setId(rs.getInt("id"));
+                cita.setTitulo(rs.getString("titulo"));
+                cita.setFecha(rs.getDate("fecha").toLocalDate());
+                cita.setHora(rs.getTime("hora").toLocalTime());
+                cita.setNotas(rs.getString("notas"));
+                cita.setClienteId(rs.getInt("id_cliente"));
+                cita.setMascotaId(rs.getInt("id_mascota"));
+                cita.setTipo(rs.getString("tipo"));
+                // Los campos nombre_cliente y nombre_mascota pueden ser usados si necesitas mostrar esta información
+                // Pero si solo necesitas la información de la cita, puede que no necesites asignar estos campos aquí.
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cita;
+    }
+
+
+
 }
 

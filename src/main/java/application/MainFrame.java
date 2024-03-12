@@ -7,7 +7,10 @@ import java.awt.EventQueue;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -19,6 +22,8 @@ import javax.swing.JPanel;
 
 import UISwing.recursos.GradientPanel2;
 import UISwing.recursos.RoundedPanel;
+import UISwing.ventanas.PanelAdministracion;
+import UISwing.ventanas.PanelAlmacen;
 import UISwing.ventanas.PanelCalendario;
 import UISwing.ventanas.PanelCitas;
 import UISwing.ventanas.PanelHome;
@@ -69,13 +74,15 @@ public class MainFrame extends JFrame {
         // Inicialización y adición de PanelHome al cardPanel
         PanelHome panelHome = new PanelHome(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelHome, "PanelHome");
-
         // Inicialización y adición de PanelCitas al cardPanel
         PanelCitas panelCitas = new PanelCitas(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelCitas, "PanelCitas");
         PanelCalendario panelCalendario = new PanelCalendario(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelCalendario, "PanelCalendario");
-
+        PanelAdministracion panelAdministracion = new PanelAdministracion();
+        cardPanel.add(panelAdministracion, "PanelAdministracion");
+        PanelAlmacen panelAlmacen = new PanelAlmacen();
+        cardPanel.add(panelAlmacen, "PanelAlmacen");
         // Muestra inicialmente el PanelHome
         cardLayout.show(cardPanel, "PanelHome");
         
@@ -170,6 +177,12 @@ public class MainFrame extends JFrame {
         lblAlmacen.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblAlmacen.setBounds(55, 261, 130, 28);
         panelMenu.add(lblAlmacen);
+        lblAlmacen.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(cardPanel, "PanelAlmacen");
+            }
+        });
         
         JLabel lblNewLabel_4 = new JLabel("");
         lblNewLabel_4.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoConfiguracion.png")));
@@ -181,15 +194,56 @@ public class MainFrame extends JFrame {
         lblAdministracion.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblAdministracion.setBounds(55, 300, 102, 28);
         panelMenu.add(lblAdministracion);
+        lblAdministracion.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(cardPanel, "PanelAdministracion");
+            }
+        });
 
+        JButton btnLogOut = new JButton("Salir");
+        btnLogOut.setBounds(25, 714, 165, 28);
+        btnLogOut.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnLogOut.setBackground(Color.WHITE);
+        btnLogOut.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        btnLogOut.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        btnLogOut.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        btnLogOut.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnLogOut.setOpaque(true); // El botón debe pintar cada pixel dentro de sus límites. Esto es necesario para ver el color de fondo.
+        // Personalización del efecto rollover
+        btnLogOut.setRolloverEnabled(true);
+        btnLogOut.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnLogOut.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnLogOut.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnLogOut.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnLogOut.setForeground(Color.decode("#0057FF"));
+            }
+        });
+        btnLogOut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        // Establece el ícono dentro del botón, al lado del texto
+        btnLogOut.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoLogout2.png")));
+        btnLogOut.setIconTextGap(10); // Aumenta el valor para más espacio
+        // Ajusta los márgenes del botón para dar más espacio interior si es necesario
+        btnLogOut.setMargin(new Insets(0, 10, 0, 10));
+        panelMenu.add(btnLogOut);
 
         
-        JLabel lbllogoLogout = new JLabel("");
-        lbllogoLogout.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoLogout.png")));
-        lbllogoLogout.setBounds(30, 712, 20, 28);
-        panelMenu.add(lbllogoLogout);
         
-        JLabel lbllogout = new JLabel("Logout");
+        
+        
+        
+        
+        /*JLabel lbllogout = new JLabel("Logout");
         lbllogout.setForeground(new Color(255, 255, 255));
         lbllogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lbllogout.setBounds(50, 712, 75, 28);
@@ -199,8 +253,8 @@ public class MainFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 System.exit(0); // Cierra la aplicación
             }
-        });
-        
+        });*/
+     
         RoundedPanel panelHeader = new RoundedPanel(20);  // Redondeado del panel
         panelHeader.setBounds(234, 11, 1112, 82);
         panelHeader.setBackground(new Color(255, 255, 255, 123)); // Establece el color de fondo y la opacidad

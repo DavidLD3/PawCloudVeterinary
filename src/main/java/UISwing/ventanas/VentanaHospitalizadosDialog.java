@@ -52,7 +52,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	        
 	        
 	        
-	        roundedPanel = new RoundedPanel(30, Color.decode("#7E88E2"));
+	        roundedPanel = new RoundedPanel(30, Color.decode("#0483FF"));
 	        roundedPanel.setLayout(null);
 	        roundedPanel.setBounds(0, 0, 888, 399); // Ajustar al tamaño del JDialog
 	        roundedPanel.setOpaque(false); // Hacer el fondo transparente
@@ -185,7 +185,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	        JScrollPane scrollPaneNotas = new JScrollPane(textAreaNotas); // Asocias el JTextArea al JScrollPane
 	        scrollPaneNotas.setBounds(40, 320, 808, 50);
 	        roundedPanel.add(scrollPaneNotas);
-	        /*JPanel centerPanel = new JPanel() {
+	        JPanel centerPanel = new JPanel() {
 	            @Override
 	            protected void paintComponent(Graphics g) {
 	                // Personaliza aquí tu componente
@@ -199,7 +199,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	        };
 	        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
 	        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
-	        centerPanel.setBounds(21, 21, 846, 414);*/
+	        centerPanel.setBounds(21, 21, 846, 414);
 	        
 	        // Agregar los componentes al panel
 	        
@@ -212,7 +212,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	        roundedPanel.add(scrollPaneNotas);
 	        roundedPanel.add(saveButton);
 	        roundedPanel.add(cancelButton);
-	       // roundedPanel.add(centerPanel);
+	        roundedPanel.add(centerPanel);
 	        
 	        JLabel lblMascota = new JLabel("Mascota:");
 	        lblMascota.setForeground(new Color(255, 255, 255));

@@ -1,12 +1,12 @@
 package UISwing.ventanas;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.List;
 import com.toedter.calendar.JCalendar;
 import DB.CitaDAO;
 import DB.ClienteDAO;
@@ -16,10 +16,8 @@ import model.Cliente;
 import model.Mascota;
 import model.Mascota.MascotaContenedor;
 import UISwing.recursos.RoundedPanel;
-import java.util.List;
 
-
-public class VentanaCitasDialog extends JDialog {
+public class VentanaModificarCitaDialog extends JDialog {
 
     private ClienteDAO clienteDAO;
     private MascotaDAO mascotaDAO;
@@ -35,33 +33,33 @@ public class VentanaCitasDialog extends JDialog {
     private JComboBox<String> comboBoxTipo;
     private boolean cargaInicialCompleta = false;
     private RoundedPanel roundedPanel;
+    private Cita citaActual;
 
-    public VentanaCitasDialog(Frame owner, boolean modal) {
+    // Asegúrate de pasar la cita actual como parámetro al crear la ventana
+    public VentanaModificarCitaDialog(Frame owner, boolean modal, Cita citaActual) {
         super(owner, modal);
-        setTitle("Programar Cita");
-        setUndecorated(true); // Esto elimina la decoración de la ventana
+        this.citaActual = citaActual; // Guardar la cita actual como un campo de la clase
+        setTitle("Modificar/Eliminar Cita");
+        setUndecorated(true);
         setSize(new Dimension(888, 399));
-        
         setLocationRelativeTo(null);
-        
-        
-        
+
+        // Inicializa roundedPanel aquí, antes de llamar a inicializarComponentesUI
         roundedPanel = new RoundedPanel(30, Color.decode("#7E88E2"));
         roundedPanel.setLayout(null);
-        roundedPanel.setBounds(0, 0, 888, 399); // Ajustar al tamaño del JDialog
-        roundedPanel.setOpaque(false); // Hacer el fondo transparente
-        setBackground(new java.awt.Color(0, 0, 0, 0));
+        roundedPanel.setBounds(0, 0, 888, 399);
+        roundedPanel.setOpaque(false);
+        setBackground(new Color(0, 0, 0, 0));
+
+        // Ahora que roundedPanel está inicializado, puedes proceder a inicializar los demás componentes
         clienteDAO = new ClienteDAO();
         mascotaDAO = new MascotaDAO();
-        
-        inicializarComponentesUI();
-        cargarClientesInicialmente();
-        configurarSeleccionFechaHora();
-        
-        // Agrega el RoundedPanel al JDialog
-        getContentPane().add(roundedPanel);
-	}
-	
+
+        inicializarComponentesUI(); // Ahora es seguro llamar a este método
+        cargarDatosCita(); // Carga los datos de la cita en la interfaz de usuario
+        getContentPane().add(roundedPanel); // Agrega roundedPanel al JDialog
+    }
+
 	private void inicializarComponentesUI() {
     	
 		JLabel lblTipo = new JLabel("Tipo:");
@@ -183,6 +181,7 @@ public class VentanaCitasDialog extends JDialog {
         lblHora.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblHora.setBounds(657, 104, 80, 34);
         roundedPanel.add(lblHora);
+        configurarSeleccionFechaHora();
         
         JLabel lblTituloVisita = new JLabel("Título de la visita:");
         lblTituloVisita.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -208,7 +207,7 @@ public class VentanaCitasDialog extends JDialog {
         
         JButton btnCancelar = new JButton("Cancelar");
         btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnCancelar.setBounds(532, 328, 120, 30);
+        btnCancelar.setBounds(56, 328, 120, 30);
         btnCancelar.setBackground(Color.WHITE);
         btnCancelar.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnCancelar.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -235,35 +234,50 @@ public class VentanaCitasDialog extends JDialog {
         
         roundedPanel.add(btnCancelar);
         
-        JButton btnGuardarCita = new JButton("Guardar Cita");
-        btnGuardarCita.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnGuardarCita.setBounds(713, 328, 120, 30);
-        btnGuardarCita.setBackground(Color.WHITE);
-        btnGuardarCita.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnGuardarCita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnGuardarCita.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnGuardarCita.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnGuardarCita.setOpaque(true);
-        btnGuardarCita.setRolloverEnabled(true);
-        btnGuardarCita.addMouseListener(new java.awt.event.MouseAdapter() {
+        
+        
+        JButton btneliminarCita = new JButton("Eliminar");
+        btneliminarCita.setRolloverEnabled(true);
+        btneliminarCita.setOpaque(true);
+        btneliminarCita.setForeground(new Color(0, 87, 255));
+        btneliminarCita.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btneliminarCita.setFocusPainted(false);
+        btneliminarCita.setContentAreaFilled(false);
+        btneliminarCita.setBorderPainted(false);
+        btneliminarCita.setBackground(Color.WHITE);
+        btneliminarCita.setBounds(556, 328, 120, 30);
+        btneliminarCita.addActionListener(e -> eliminarCita());
+        roundedPanel.add(btneliminarCita);
+        
+        JButton btnModificarCita = new JButton("Modificar");
+        btnModificarCita.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnModificarCita.setBounds(713, 328, 120, 30);
+        btnModificarCita.setBackground(Color.WHITE);
+        btnModificarCita.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        btnModificarCita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        btnModificarCita.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        btnModificarCita.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnModificarCita.setOpaque(true);
+        btnModificarCita.setRolloverEnabled(true);
+        btnModificarCita.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnGuardarCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-                btnGuardarCita.setForeground(Color.WHITE);
+                btnModificarCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnModificarCita.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnGuardarCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
-                btnGuardarCita.setForeground(Color.decode("#0057FF"));
+                btnModificarCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnModificarCita.setForeground(Color.decode("#0057FF"));
             }
         });
-        btnGuardarCita.addActionListener(e -> guardarCita());
-        roundedPanel.add(btnGuardarCita);
+        btnModificarCita.addActionListener(e -> modificarCita());
+        roundedPanel.add(btnModificarCita);
         
         
  
-        JPanel centerPanel = new JPanel() {
+       /* JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 // Personaliza aquí tu componente
@@ -278,9 +292,11 @@ public class VentanaCitasDialog extends JDialog {
         centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
         centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
         centerPanel.setBounds(24, 24, 841, 352);
-        roundedPanel.add(centerPanel);
+        roundedPanel.add(centerPanel);*/
  
     }
+	
+	
 	
 	private void configurarSeleccionFechaHora() {
 	    dateSpinner = new JSpinner(new SpinnerDateModel());
@@ -320,11 +336,6 @@ public class VentanaCitasDialog extends JDialog {
 	    dialog.setVisible(true);
 	}
 	
-
-
-    
-   
-  
 	private void actualizarMascotasPorCliente(int clienteId) {
 	    new SwingWorker<List<Mascota>, Void>() {
 	        @Override
@@ -346,10 +357,6 @@ public class VentanaCitasDialog extends JDialog {
 	        }
 	    }.execute();
 	}
-
-
-
-
 	private void cargarClientesInicialmente() {
 	    new SwingWorker<List<Cliente>, Void>() {
 	        @Override
@@ -373,9 +380,6 @@ public class VentanaCitasDialog extends JDialog {
 	        }
 	    }.execute();
 	}
-
-    
-    
 
 	private void actualizarListaClientes(String texto) {
 	    // Verifica si la carga inicial aún no se ha completado para evitar ejecución innecesaria
@@ -409,51 +413,91 @@ public class VentanaCitasDialog extends JDialog {
 	        }
 	    }.execute();
 	}
+	
+	private void cargarDatosCita() {
+        // Suponiendo que tienes getters adecuados en tu objeto Cita
+        // Actualiza los componentes de UI con los datos de la cita
+        if (citaActual != null) {
+            textFieldTituloVisita.setText(citaActual.getTitulo());
+            textPaneNotas.setText(citaActual.getNotas());
+            // Similarmente, establece el valor para los JComboBox y JSpinners
+            // Recuerda convertir fechas y horas al formato correcto si es necesario
+        }
+    }
 
-	private void guardarCita() {
+
+
+	private void modificarCita() {
 	    try {
-	        String titulo = textFieldTituloVisita.getText();
-	        java.util.Date fechaUtil = (java.util.Date) dateSpinner.getValue();
-	        java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime());
-	        Calendar cal = Calendar.getInstance();
-	        cal.setTime((java.util.Date) timeSpinner.getValue());
-	        LocalTime hora = LocalTime.of(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-	        String notas = textPaneNotas.getText();
-
-	        Cliente clienteSeleccionado = (Cliente) comboBoxClientes.getSelectedItem();
-	        Mascota.MascotaContenedor contenedorMascota = (Mascota.MascotaContenedor) comboBoxMascotas.getSelectedItem();
-	        Mascota mascotaSeleccionada = contenedorMascota.getMascota();
+	        CitaDAO citaDAO = new CitaDAO();
+	        citaActual.setTitulo(textFieldTituloVisita.getText());
 	        
-			// Aquí obtenemos el tipo de la cita desde el comboBoxTipo
-	        String tipoCita = comboBoxTipo.getSelectedItem() == null ? "" : comboBoxTipo.getSelectedItem().toString();
-
-	        if (clienteSeleccionado == null || mascotaSeleccionada == null) {
-	            JOptionPane.showMessageDialog(this, "Seleccione un cliente y una mascota.", "Error", JOptionPane.ERROR_MESSAGE);
-	            return;
+	        java.util.Date fecha = (java.util.Date) dateSpinner.getValue();
+	        citaActual.setFecha(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+	        
+	        java.util.Date hora = (java.util.Date) timeSpinner.getValue();
+	        citaActual.setHora(hora.toInstant().atZone(ZoneId.systemDefault()).toLocalTime());
+	        
+	        citaActual.setNotas(textPaneNotas.getText());
+	        
+	        Cliente clienteSeleccionado = (Cliente) comboBoxClientes.getSelectedItem();
+	        MascotaContenedor mascotaSeleccionada = (MascotaContenedor) comboBoxMascotas.getSelectedItem();
+	        
+	        if (clienteSeleccionado != null) {
+	            citaActual.setClienteId(clienteSeleccionado.getId());
 	        }
-
-	        // Asegúrate de añadir un constructor en tu clase Cita que incluya el tipo, o usa el setter para tipo
-	        Cita cita = new Cita(0, titulo, fechaSql.toLocalDate(), hora, notas, clienteSeleccionado.getId(), mascotaSeleccionada.getId());
-	        cita.setTipo(tipoCita); // Asegúrate de que este setter exista y esté implementado correctamente
-
-	        new CitaDAO().insertarCita(cita);
-
-	        JOptionPane.showMessageDialog(this, "Cita guardada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-	        dispose();
+	        
+	        if (mascotaSeleccionada != null) {
+	            citaActual.setMascotaId(mascotaSeleccionada.getMascota().getId());
+	        }
+	        
+	        citaActual.setTipo(comboBoxTipo.getSelectedItem().toString());
+	        
+	        citaDAO.actualizarCita(citaActual);
+	        JOptionPane.showMessageDialog(this, "Cita modificada con éxito.");
+	        this.dispose();
 	    } catch (Exception ex) {
-	        JOptionPane.showMessageDialog(this, "Error al guardar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        ex.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error al modificar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
+
+
+	private void eliminarCita() {
+	    int confirmacion = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar esta cita?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+	    if (confirmacion == JOptionPane.YES_OPTION) {
+	        try {
+	            CitaDAO citaDAO = new CitaDAO();
+	            citaDAO.eliminarCita(citaActual.getId());
+	            JOptionPane.showMessageDialog(this, "Cita eliminada con éxito.");
+	            this.dispose();
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	            JOptionPane.showMessageDialog(this, "Error al eliminar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
+	}
+
+
 
 
     
    
 	
 	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            VentanaCitasDialog dialog = new VentanaCitasDialog(null, true);
-            dialog.setVisible(true);
-        });
-    }
+	    SwingUtilities.invokeLater(() -> {
+	        // Crea una cita de prueba o recupera una cita existente de tu base de datos / lógica de aplicación
+	        Cita citaDePrueba = new Cita(); // Usa un constructor adecuado o setters para establecer los datos de la cita
+	        citaDePrueba.setId(1); // Asumiendo que tienes un método setId y el ID es relevante
+	        citaDePrueba.setTitulo("Consulta de prueba");
+	        citaDePrueba.setFecha(LocalDate.now());
+	        citaDePrueba.setHora(LocalTime.now());
+	        // Continúa configurando otros campos necesarios...
+
+	        // Ahora pasas este objeto citaDePrueba al constructor
+	        VentanaModificarCitaDialog dialog = new VentanaModificarCitaDialog(null, true, citaDePrueba);
+	        dialog.setVisible(true);
+	    });
+	}
 
 }

@@ -14,7 +14,7 @@ public class Cita {
     private int mascotaId; // ID de la mascota
     private String nombreCliente; // Opcional: Para mostrar en la UI
     private String nombreMascota;
-	
+    private String tipo;
     
     public int getId() {
 		return id;
@@ -90,6 +90,24 @@ public class Cita {
     public void setNombreMascota(String nombreMascota) {
         this.nombreMascota = nombreMascota;
     }
+    
+    // Constructor, getters y setters...
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    public Cita() {
+        // Constructor sin argumentos
+    }
+
+    
+    
+    
+    
+    
 
 }
 
