@@ -13,6 +13,7 @@ public class Hospitalizacion {
     private String tratamiento;
     private String estado;
     private String notas;
+    private String nombreMascota;
     
     public int getId() {
 		return id;
@@ -78,20 +79,39 @@ public class Hospitalizacion {
 	public void setNotas(String notas) {
 		this.notas = notas;
 	}
-
 	
+	public String getNombreMascota() {
+	    return nombreMascota;
+	}
 
-    // Constructor
-    public Hospitalizacion(int id, int idMascota, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas) {
-        this.id = id;
-        this.idMascota = idMascota;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaSalida = fechaSalida;
-        this.motivo = motivo;
-        this.tratamiento = tratamiento;
-        this.estado = estado;
-        this.notas = notas;
-    }
+	public void setNombreMascota(String nombreMascota) {
+	    this.nombreMascota = nombreMascota;
+	}
 
+
+	// Constructor sin el nombre de la mascota
+	public Hospitalizacion(int id, int idMascota, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas) {
+	    this.id = id;
+	    this.idMascota = idMascota;
+	    this.fechaIngreso = fechaIngreso;
+	    this.fechaSalida = fechaSalida;
+	    this.motivo = motivo;
+	    this.tratamiento = tratamiento;
+	    this.estado = estado;
+	    this.notas = notas;
+	}
+
+	// Constructor con el nombre de la mascota
+	public Hospitalizacion(int id, int idMascota, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas, String nombreMascota) {
+	    this(id, idMascota, fechaIngreso, fechaSalida, motivo, tratamiento, estado, notas); // Llama al constructor sin el nombre de la mascota
+	    this.nombreMascota = nombreMascota; // Establece el nuevo campo
+	}
+
+	// Constructor vacío
+	public Hospitalizacion() {
+	    
+	}
+
+    
    
 }

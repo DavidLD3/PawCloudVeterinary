@@ -172,7 +172,6 @@ public class PanelHome extends JPanel {
         lblListadoCitas.setForeground(new Color(255, 255, 255));
         lblListadoCitas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblListadoCitas.setBounds(129, 359, 71, 14);
-        panelCitas.add(lblListadoCitas);
         // Hacer que el cursor cambie a la forma de mano al pasar sobre el JLabel
         lblListadoCitas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         // Agregar MouseListener al JLabel
@@ -185,6 +184,8 @@ public class PanelHome extends JPanel {
             }
         });
 
+        panelCitas.add(lblListadoCitas);
+       
         
         JButton btnAñadirCita = new JButton("Añadir Cita");
         btnAñadirCita.addActionListener(new ActionListener() {
@@ -398,6 +399,18 @@ public class PanelHome extends JPanel {
         lblListadoHospitalizaciones.setForeground(Color.WHITE);
         lblListadoHospitalizaciones.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblListadoHospitalizaciones.setBounds(129, 359, 71, 14);
+        // Hacer que el cursor cambie a la forma de mano al pasar sobre el JLabel
+        lblListadoHospitalizaciones.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        // Agregar MouseListener al JLabel
+        lblListadoHospitalizaciones.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Crea y muestra el diálogo de listado de citas al hacer clic en el JLabel
+                DialogoListaHospitalizados dialogoListaHospitalizados = new DialogoListaHospitalizados(JFrame.getFrames()[0]); // Asume que este es el frame principal
+                dialogoListaHospitalizados.setVisible(true);
+            }
+        });
+
         panelHospitalizados.add(lblListadoHospitalizaciones);
         
         JLabel lblLogoHospita = new JLabel("");

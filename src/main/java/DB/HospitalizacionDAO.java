@@ -84,6 +84,39 @@ public class HospitalizacionDAO {
         }
         return hospitalizaciones;
     }
+    
+    public List<Hospitalizacion> recuperarTodasLasHospitalizaciones() {
+        List<Hospitalizacion> hospitalizaciones = new ArrayList<>();
+        String sql = "SELECT c.id, c.fecha_ingreso, c.fecha_salida, c.motivo, c.tratamiento, c.estado, c.notas, c.id_mascota, m.nombre AS nombre_mascota " +
+                     "FROM hospitalizaciones c " +
+                     "JOIN mascotas m ON m.id = c.id_mascota " + // Asegúrate de que el nombre del campo id en mascotas sea correcto
+                     "ORDER BY c.fecha_ingreso DESC, c.fecha_salida DESC"; // Asegúrate de que las columnas fecha_ingreso y fecha_salida existan y sean las que quieres ordenar.
+
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Hospitalizacion hospitalizacion = new Hospitalizacion(
+                    rs.getInt("id"),
+                    rs.getInt("id_mascota"),
+                    rs.getTimestamp("fecha_ingreso").toLocalDateTime(),
+                    rs.getTimestamp("fecha_salida") != null ? rs.getTimestamp("fecha_salida").toLocalDateTime() : null,
+                    rs.getString("motivo"),
+                    rs.getString("tratamiento"),
+                    rs.getString("estado"),
+                    rs.getString("notas"),
+                    rs.getString("nombre_mascota") // Asumiendo que has añadido este campo a tu clase Hospitalizacion
+                );
+                hospitalizaciones.add(hospitalizacion);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return hospitalizaciones;
+    }
+
+
 
 
 }
