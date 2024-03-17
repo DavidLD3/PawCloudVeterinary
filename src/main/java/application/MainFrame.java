@@ -26,6 +26,7 @@ import UISwing.ventanas.PanelAdministracion;
 import UISwing.ventanas.PanelAlmacen;
 import UISwing.ventanas.PanelCalendario;
 import UISwing.ventanas.PanelCitas;
+import UISwing.ventanas.PanelClienteMascota;
 import UISwing.ventanas.PanelHome;
 
 import javax.swing.JLabel;
@@ -77,6 +78,8 @@ public class MainFrame extends JFrame {
         // Inicialización y adición de PanelCitas al cardPanel
         PanelCitas panelCitas = new PanelCitas(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelCitas, "PanelCitas");
+        PanelClienteMascota panelClienteMascota = new PanelClienteMascota(); // Asume que esta clase ya está definida correctamente
+        cardPanel.add(panelClienteMascota, "PanelClienteMascota");
         PanelCalendario panelCalendario = new PanelCalendario(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelCalendario, "PanelCalendario");
         PanelAdministracion panelAdministracion = new PanelAdministracion();
@@ -85,6 +88,7 @@ public class MainFrame extends JFrame {
         cardPanel.add(panelAlmacen, "PanelAlmacen");
         // Muestra inicialmente el PanelHome
         cardLayout.show(cardPanel, "PanelHome");
+        
         
         GradientPanel2 gradientPanel = new GradientPanel2();
         gradientPanel.setBounds(0, 0, 215, 768);
@@ -125,6 +129,12 @@ public class MainFrame extends JFrame {
         lblclientemascotas.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblclientemascotas.setBounds(55, 144, 130, 28);
         panelMenu.add(lblclientemascotas);
+        lblclientemascotas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(cardPanel, "PanelClienteMascota"); // Cambiar al PanelCitas
+            }
+        });
         
         JLabel lblLogoCliente = new JLabel("");
         lblLogoCliente.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoMascotas.png")));
