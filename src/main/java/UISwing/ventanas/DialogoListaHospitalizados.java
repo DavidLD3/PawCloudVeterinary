@@ -59,6 +59,8 @@ public class DialogoListaHospitalizados extends JDialog {
                 return tip;
             }
         };
+        
+        
 
         table.setFillsViewportHeight(true);
 

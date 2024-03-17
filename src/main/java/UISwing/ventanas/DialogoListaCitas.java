@@ -72,7 +72,7 @@ public class DialogoListaCitas extends JDialog {
     
 
     private void cargarCitas() {
-        List<Cita> citas = citaDAO.recuperarCitas(); // Asegúrate de que este método recupere las citas ordenadas por fecha y hora
+        List<Cita> citas = citaDAO.recuperarCitas();
         for (Cita cita : citas) {
             model.addRow(new Object[]{cita.getTitulo(), cita.getFecha(), cita.getHora(), cita.getNombreCliente(), cita.getNombreMascota(), cita.getNotas()});
         }

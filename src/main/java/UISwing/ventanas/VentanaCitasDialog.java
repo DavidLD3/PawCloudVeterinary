@@ -11,10 +11,12 @@ import com.toedter.calendar.JCalendar;
 import DB.CitaDAO;
 import DB.ClienteDAO;
 import DB.MascotaDAO;
+import DB.VeterinarioDAO;
 import model.Cita;
 import model.Cliente;
 import model.Mascota;
 import model.Mascota.MascotaContenedor;
+import model.Veterinario;
 import UISwing.recursos.RoundedPanel;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class VentanaCitasDialog extends JDialog {
     private JButton calendarButton;
     private JTextField textFieldTituloVisita;
     private JTextPane textPaneNotas;
-    
+    private JComboBox<Veterinario> comboBoxVeterinarios;
     private JComboBox<Cliente> comboBoxClientes;
     private JComboBox<Mascota.MascotaContenedor> comboBoxMascotas;
     private JComboBox<String> comboBoxTipo;
@@ -55,6 +57,7 @@ public class VentanaCitasDialog extends JDialog {
         mascotaDAO = new MascotaDAO();
         
         inicializarComponentesUI();
+        cargarVeterinarios();
         cargarClientesInicialmente();
         configurarSeleccionFechaHora();
         
@@ -75,21 +78,21 @@ public class VentanaCitasDialog extends JDialog {
         comboBoxTipo.setBounds(54, 70, 120, 25);
         roundedPanel.add(comboBoxTipo);
         
-        JLabel lblDoctor = new JLabel("Doctor:");
-        lblDoctor.setForeground(new Color(255, 255, 255));
-        lblDoctor.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblDoctor.setBounds(230, 37, 80, 34);
-        roundedPanel.add(lblDoctor);
-        
-        JComboBox<String> comboBoxDoctor = new JComboBox<>(new String[]{"Doctor 1", "Doctor 2", "Doctor 3"});
-        comboBoxDoctor.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        comboBoxDoctor.setBounds(228, 70, 120, 25);
-        roundedPanel. add(comboBoxDoctor);
+        JLabel lblVeterinario = new JLabel("Veterinario:");
+        lblVeterinario.setForeground(Color.WHITE);
+        lblVeterinario.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblVeterinario.setBounds(211, 42, 80, 25);
+        roundedPanel.add(lblVeterinario);
+
+        comboBoxVeterinarios = new JComboBox<>();
+        comboBoxVeterinarios.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        comboBoxVeterinarios.setBounds(211, 70, 179, 25);
+        roundedPanel.add(comboBoxVeterinarios);
         
         JLabel lblCliente = new JLabel("Cliente:");
         lblCliente.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblCliente.setForeground(new Color(255, 255, 255));
-        lblCliente.setBounds(414, 37, 80, 34);
+        lblCliente.setBounds(434, 37, 80, 34);
         roundedPanel.add(lblCliente);
         
      
@@ -103,7 +106,7 @@ public class VentanaCitasDialog extends JDialog {
         comboBoxClientes = new JComboBox<Cliente>();
         comboBoxClientes.setFont(new Font("Segoe UI", Font.BOLD, 11));
         comboBoxClientes.setEditable(true);
-        comboBoxClientes.setBounds(410, 70, 179, 25);
+        comboBoxClientes.setBounds(434, 70, 179, 25);
         JTextField textEditorClientes = (JTextField) comboBoxClientes.getEditor().getEditorComponent();
         textEditorClientes.addKeyListener(new KeyAdapter() {
             @Override
@@ -173,7 +176,7 @@ public class VentanaCitasDialog extends JDialog {
         JLabel lblFecha = new JLabel("Fecha:");
         lblFecha.setForeground(new Color(255, 255, 255));
         lblFecha.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblFecha.setBounds(414, 104, 44, 34);
+        lblFecha.setBounds(434, 106, 44, 34);
         roundedPanel.add(lblFecha);
 
        
@@ -192,7 +195,7 @@ public class VentanaCitasDialog extends JDialog {
 
         textFieldTituloVisita = new JTextField();
         textFieldTituloVisita.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        textFieldTituloVisita.setBounds(54, 137, 294, 25);
+        textFieldTituloVisita.setBounds(54, 137, 336, 25);
         roundedPanel.add(textFieldTituloVisita);
         
         JLabel lblNotas = new JLabel("Nota");
@@ -263,7 +266,7 @@ public class VentanaCitasDialog extends JDialog {
         
         
  
-        JPanel centerPanel = new JPanel() {
+       JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 // Personaliza aquí tu componente
@@ -282,15 +285,34 @@ public class VentanaCitasDialog extends JDialog {
  
     }
 	
+	private void cargarVeterinarios() {
+	    VeterinarioDAO veterinarioDAO = new VeterinarioDAO();
+	    List<Veterinario> veterinarios = veterinarioDAO.obtenerTodosLosVeterinarios();
+	    veterinarios.forEach(comboBoxVeterinarios::addItem);
+
+	    comboBoxVeterinarios.setRenderer(new DefaultListCellRenderer() {
+	        @Override
+	        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+	            if (value instanceof Veterinario) {
+	                Veterinario veterinario = (Veterinario) value;
+	                setText(veterinario.getNombre() + " " + veterinario.getApellidos());
+	            }
+	            return this;
+	        }
+	    });
+	}
+	
+	
 	private void configurarSeleccionFechaHora() {
 	    dateSpinner = new JSpinner(new SpinnerDateModel());
 	    JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
 	    dateSpinner.setEditor(dateEditor);
-	    dateSpinner.setBounds(414, 137, 153, 25);
+	    dateSpinner.setBounds(434, 137, 155, 25);
 	    roundedPanel.add(dateSpinner);
 
 	    calendarButton = new JButton(new ImageIcon(getClass().getResource("/imagenes/logoBotonCalendario.png")));
-	    calendarButton.setBounds(568, 137, 25, 25);
+	    calendarButton.setBounds(588, 137, 25, 25);
 	    calendarButton.addActionListener(e -> mostrarCalendario());
 	    roundedPanel.add(calendarButton);
 

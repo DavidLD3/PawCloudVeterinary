@@ -18,20 +18,24 @@ public class HospitalizacionDAO {
         this.conexion = new Conexion(); // Asumiendo que tienes una clase que maneja la conexión
     }
 
-    public boolean insertarHospitalizacion(Hospitalizacion hospitalizacion) {
-        String sql = "INSERT INTO hospitalizaciones (id_mascota, fecha_ingreso, fecha_salida, motivo, tratamiento, estado, notas) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public boolean insertarHospitalizacion(Hospitalizacion hospitalizacion, int idVeterinario) {
+        String sql = "INSERT INTO hospitalizaciones (id_mascota, fecha_ingreso, fecha_salida, motivo, tratamiento, estado, notas, id_veterinario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = conexion.getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, hospitalizacion.getIdMascota());
             pstmt.setTimestamp(2, Timestamp.valueOf(hospitalizacion.getFechaIngreso()));
-            // Ajusta la fecha de salida para que maneje LocalDateTime
-            pstmt.setTimestamp(3, hospitalizacion.getFechaSalida() != null ? Timestamp.valueOf(hospitalizacion.getFechaSalida()) : null);
+            if (hospitalizacion.getFechaSalida() != null) {
+                pstmt.setTimestamp(3, Timestamp.valueOf(hospitalizacion.getFechaSalida()));
+            } else {
+                pstmt.setTimestamp(3, null);
+            }
             pstmt.setString(4, hospitalizacion.getMotivo());
             pstmt.setString(5, hospitalizacion.getTratamiento());
             pstmt.setString(6, hospitalizacion.getEstado());
             pstmt.setString(7, hospitalizacion.getNotas());
+            pstmt.setInt(8, idVeterinario);
             
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
@@ -40,6 +44,8 @@ public class HospitalizacionDAO {
             return false;
         }
     }
+
+
 
     public boolean actualizarFechaSalidaHospitalizacion(int idMascota, Date fechaSalida) {
         String sql = "UPDATE hospitalizaciones SET fecha_salida = ? WHERE id_mascota = ? AND fecha_salida IS NULL";
@@ -115,6 +121,23 @@ public class HospitalizacionDAO {
         }
         return hospitalizaciones;
     }
+    
+    public int obtenerIdHospitalizacionActual(int idMascota) {
+        String sql = "SELECT id FROM hospitalizaciones WHERE id_mascota = ? AND fecha_salida IS NULL ORDER BY fecha_ingreso DESC LIMIT 1";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idMascota);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Indica que no se encontró una hospitalización actual
+    }
+
 
 
 

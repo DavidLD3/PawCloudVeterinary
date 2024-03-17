@@ -13,7 +13,19 @@ public class Hospitalizacion {
     private String tratamiento;
     private String estado;
     private String notas;
+    private int idVeterinario;
     private String nombreMascota;
+    
+    
+    public int getIdveterinario() {
+		return idVeterinario;
+	}
+
+	public void setIdveterinario(int idveterinario) {
+		this.idVeterinario = idveterinario;
+	}
+
+	
     
     public int getId() {
 		return id;
@@ -99,6 +111,7 @@ public class Hospitalizacion {
 	    this.tratamiento = tratamiento;
 	    this.estado = estado;
 	    this.notas = notas;
+	    this.idVeterinario = idVeterinario;
 	}
 
 	// Constructor con el nombre de la mascota
