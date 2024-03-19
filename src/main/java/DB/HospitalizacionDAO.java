@@ -93,27 +93,29 @@ public class HospitalizacionDAO {
     
     public List<Hospitalizacion> recuperarTodasLasHospitalizaciones() {
         List<Hospitalizacion> hospitalizaciones = new ArrayList<>();
-        String sql = "SELECT c.id, c.fecha_ingreso, c.fecha_salida, c.motivo, c.tratamiento, c.estado, c.notas, c.id_mascota, m.nombre AS nombre_mascota " +
-                     "FROM hospitalizaciones c " +
-                     "JOIN mascotas m ON m.id = c.id_mascota " + // Asegúrate de que el nombre del campo id en mascotas sea correcto
-                     "ORDER BY c.fecha_ingreso DESC, c.fecha_salida DESC"; // Asegúrate de que las columnas fecha_ingreso y fecha_salida existan y sean las que quieres ordenar.
+        String sql = "SELECT h.id, h.fecha_ingreso, h.fecha_salida, h.motivo, h.tratamiento, h.estado, h.notas, "
+                     + "m.nombre AS nombre_mascota, v.nombre AS nombre_veterinario "
+                     + "FROM hospitalizaciones h "
+                     + "JOIN mascotas m ON m.id = h.id_mascota "
+                     + "LEFT JOIN veterinarios v ON v.id = h.id_veterinario "
+                     + "ORDER BY h.fecha_ingreso DESC, h.fecha_salida DESC";
 
         try (Connection conn = conexion.getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                Hospitalizacion hospitalizacion = new Hospitalizacion(
-                    rs.getInt("id"),
-                    rs.getInt("id_mascota"),
-                    rs.getTimestamp("fecha_ingreso").toLocalDateTime(),
-                    rs.getTimestamp("fecha_salida") != null ? rs.getTimestamp("fecha_salida").toLocalDateTime() : null,
-                    rs.getString("motivo"),
-                    rs.getString("tratamiento"),
-                    rs.getString("estado"),
-                    rs.getString("notas"),
-                    rs.getString("nombre_mascota") // Asumiendo que has añadido este campo a tu clase Hospitalizacion
-                );
+                Hospitalizacion hospitalizacion = new Hospitalizacion();
+                hospitalizacion.setId(rs.getInt("id"));
+                hospitalizacion.setFechaIngreso(rs.getTimestamp("fecha_ingreso").toLocalDateTime());
+                hospitalizacion.setFechaSalida(rs.getTimestamp("fecha_salida") != null ? rs.getTimestamp("fecha_salida").toLocalDateTime() : null);
+                hospitalizacion.setMotivo(rs.getString("motivo"));
+                hospitalizacion.setTratamiento(rs.getString("tratamiento"));
+                hospitalizacion.setEstado(rs.getString("estado"));
+                hospitalizacion.setNotas(rs.getString("notas"));
+                hospitalizacion.setNombreMascota(rs.getString("nombre_mascota"));
+                hospitalizacion.setNombreVeterinario(rs.getString("nombre_veterinario")); // Asumiendo que has añadido este campo a tu clase Hospitalizacion
+
                 hospitalizaciones.add(hospitalizacion);
             }
         } catch (SQLException e) {
@@ -121,6 +123,7 @@ public class HospitalizacionDAO {
         }
         return hospitalizaciones;
     }
+
     
     public int obtenerIdHospitalizacionActual(int idMascota) {
         String sql = "SELECT id FROM hospitalizaciones WHERE id_mascota = ? AND fecha_salida IS NULL ORDER BY fecha_ingreso DESC LIMIT 1";
@@ -137,6 +140,66 @@ public class HospitalizacionDAO {
         }
         return -1; // Indica que no se encontró una hospitalización actual
     }
+    
+    public boolean actualizarHospitalizacion(Hospitalizacion hospitalizacion) {
+        String sql = "UPDATE hospitalizaciones SET fecha_salida = ?, estado = ?, notas = ?, tratamiento = ? WHERE id = ?";
+        
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setTimestamp(1, hospitalizacion.getFechaSalida() == null ? null : Timestamp.valueOf(hospitalizacion.getFechaSalida()));
+            pstmt.setString(2, hospitalizacion.getEstado());
+            pstmt.setString(3, hospitalizacion.getNotas());
+            pstmt.setString(4, hospitalizacion.getTratamiento());
+            pstmt.setInt(5, hospitalizacion.getId());
+            
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public Hospitalizacion obtenerHospitalizacionPorId(int id) {
+        String sql = "SELECT h.id, h.fecha_ingreso, h.fecha_salida, h.motivo, h.tratamiento, h.estado, h.notas, " +
+                     "m.nombre AS nombre_mascota, v.nombre AS nombre_veterinario " +
+                     "FROM hospitalizaciones h " +
+                     "JOIN mascotas m ON h.id_mascota = m.id " +
+                     "LEFT JOIN veterinarios v ON h.id_veterinario = v.id " +
+                     "WHERE h.id = ?";
+
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Hospitalizacion hospitalizacion = new Hospitalizacion();
+                    hospitalizacion.setId(rs.getInt("id"));
+                    hospitalizacion.setFechaIngreso(rs.getTimestamp("fecha_ingreso").toLocalDateTime());
+                    hospitalizacion.setFechaSalida(rs.getTimestamp("fecha_salida") != null ? rs.getTimestamp("fecha_salida").toLocalDateTime() : null);
+                    hospitalizacion.setMotivo(rs.getString("motivo"));
+                    hospitalizacion.setTratamiento(rs.getString("tratamiento"));
+                    hospitalizacion.setEstado(rs.getString("estado"));
+                    hospitalizacion.setNotas(rs.getString("notas"));
+                    hospitalizacion.setNombreMascota(rs.getString("nombre_mascota"));
+                    hospitalizacion.setNombreVeterinario(rs.getString("nombre_veterinario"));
+                    return hospitalizacion;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    
+    
+    
+    
+
+
 
 
 

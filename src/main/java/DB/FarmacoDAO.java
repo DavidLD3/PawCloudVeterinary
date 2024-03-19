@@ -53,20 +53,6 @@ public class FarmacoDAO {
         }
     }
     
-    public boolean registrarUsoFarmaco(int idFarmaco, int idHospitalizacion, int idVeterinario, int cantidadUsada, LocalDateTime fechaHoraUso) {
-        String sql = "INSERT INTO uso_farmacos (id_farmaco, id_hospitalizacion, id_veterinario, cantidad_usada, fecha_hora_uso) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = Conexion.getConexion(); 
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, idFarmaco);
-            pstmt.setInt(2, idHospitalizacion);
-            pstmt.setInt(3, idVeterinario);
-            pstmt.setInt(4, cantidadUsada);
-            pstmt.setTimestamp(5, Timestamp.valueOf(fechaHoraUso));
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+    
+    
 }

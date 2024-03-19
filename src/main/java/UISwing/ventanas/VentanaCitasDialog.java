@@ -48,7 +48,7 @@ public class VentanaCitasDialog extends JDialog {
         
         
         
-        roundedPanel = new RoundedPanel(30, Color.decode("#7E88E2"));
+        roundedPanel = new RoundedPanel(30, Color.decode("#999CE3"));
         roundedPanel.setLayout(null);
         roundedPanel.setBounds(0, 0, 888, 399); // Ajustar al tamaño del JDialog
         roundedPanel.setOpaque(false); // Hacer el fondo transparente

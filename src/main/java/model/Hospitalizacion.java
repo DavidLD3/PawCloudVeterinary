@@ -1,10 +1,8 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Hospitalizacion {
-	
     private int id;
     private int idMascota;
     private LocalDateTime fechaIngreso;
@@ -13,118 +11,127 @@ public class Hospitalizacion {
     private String tratamiento;
     private String estado;
     private String notas;
-    private int idVeterinario;
     private String nombreMascota;
-    
-    
-    public int getIdveterinario() {
-		return idVeterinario;
-	}
+    private String nombreVeterinario;
 
-	public void setIdveterinario(int idveterinario) {
-		this.idVeterinario = idveterinario;
-	}
+    // Constructor vacío
+    public Hospitalizacion() {
+    }
 
-	
-    
+    // Constructor para inserción/actualización (sin nombreVeterinario)
+    public Hospitalizacion(int id, int idMascota, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas) {
+        this.id = id;
+        this.idMascota = idMascota;
+        this.fechaIngreso = fechaIngreso;
+        this.fechaSalida = fechaSalida;
+        this.motivo = motivo;
+        this.tratamiento = tratamiento;
+        this.estado = estado;
+        this.notas = notas;
+    }
+
+    // Constructor completo (incluye nombres)
+    public Hospitalizacion(int id, int idMascota, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas, String nombreMascota, String nombreVeterinario) {
+        this(id, idMascota, fechaIngreso, fechaSalida, motivo, tratamiento, estado, notas);
+        this.nombreMascota = nombreMascota;
+        this.nombreVeterinario = nombreVeterinario;
+    }
+
+    // Getters y Setters
     public int getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getIdMascota() {
-		return idMascota;
-	}
+    public int getIdMascota() {
+        return idMascota;
+    }
 
-	public void setIdMascota(int idMascota) {
-		this.idMascota = idMascota;
-	}
+    public void setIdMascota(int idMascota) {
+        this.idMascota = idMascota;
+    }
 
-	public LocalDateTime getFechaIngreso() {
-	    return fechaIngreso;
-	}
+    public LocalDateTime getFechaIngreso() {
+        return fechaIngreso;
+    }
 
-	public void setFechaIngreso(LocalDateTime fechaIngreso) {
-	    this.fechaIngreso = fechaIngreso;
-	}
+    public void setFechaIngreso(LocalDateTime fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
 
+    public LocalDateTime getFechaSalida() {
+        return fechaSalida;
+    }
 
-	public LocalDateTime getFechaSalida() {
-		return fechaSalida;
-	}
+    public void setFechaSalida(LocalDateTime fechaSalida) {
+        this.fechaSalida = fechaSalida;
+    }
 
-	public void setFechaSalida(LocalDateTime fechaSalida) {
-		this.fechaSalida = fechaSalida;
-	}
+    public String getMotivo() {
+        return motivo;
+    }
 
-	public String getMotivo() {
-		return motivo;
-	}
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
 
-	public void setMotivo(String motivo) {
-		this.motivo = motivo;
-	}
+    public String getTratamiento() {
+        return tratamiento;
+    }
 
-	public String getTratamiento() {
-		return tratamiento;
-	}
+    public void setTratamiento(String tratamiento) {
+        this.tratamiento = tratamiento;
+    }
 
-	public void setTratamiento(String tratamiento) {
-		this.tratamiento = tratamiento;
-	}
+    public String getEstado() {
+        return estado;
+    }
 
-	public String getEstado() {
-		return estado;
-	}
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
+    public String getNotas() {
+        return notas;
+    }
 
-	public String getNotas() {
-		return notas;
-	}
+    public void setNotas(String notas) {
+        this.notas = notas;
+    }
 
-	public void setNotas(String notas) {
-		this.notas = notas;
-	}
-	
-	public String getNombreMascota() {
-	    return nombreMascota;
-	}
+    public String getNombreMascota() {
+        return nombreMascota;
+    }
 
-	public void setNombreMascota(String nombreMascota) {
-	    this.nombreMascota = nombreMascota;
-	}
+    public void setNombreMascota(String nombreMascota) {
+        this.nombreMascota = nombreMascota;
+    }
 
+    public String getNombreVeterinario() {
+        return nombreVeterinario;
+    }
 
-	// Constructor sin el nombre de la mascota
-	public Hospitalizacion(int id, int idMascota, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas) {
-	    this.id = id;
-	    this.idMascota = idMascota;
-	    this.fechaIngreso = fechaIngreso;
-	    this.fechaSalida = fechaSalida;
-	    this.motivo = motivo;
-	    this.tratamiento = tratamiento;
-	    this.estado = estado;
-	    this.notas = notas;
-	    this.idVeterinario = idVeterinario;
-	}
+    public void setNombreVeterinario(String nombreVeterinario) {
+        this.nombreVeterinario = nombreVeterinario;
+    }
 
-	// Constructor con el nombre de la mascota
-	public Hospitalizacion(int id, int idMascota, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas, String nombreMascota) {
-	    this(id, idMascota, fechaIngreso, fechaSalida, motivo, tratamiento, estado, notas); // Llama al constructor sin el nombre de la mascota
-	    this.nombreMascota = nombreMascota; // Establece el nuevo campo
-	}
-
-	// Constructor vacío
-	public Hospitalizacion() {
-	    
-	}
-
-    
-   
+    // Método toString
+    @Override
+    public String toString() {
+        return "Hospitalizacion{" +
+                "id=" + id +
+                ", idMascota=" + idMascota +
+                ", fechaIngreso=" + fechaIngreso +
+                ", fechaSalida=" + fechaSalida +
+                ", motivo='" + motivo + '\'' +
+                ", tratamiento='" + tratamiento + '\'' +
+                ", estado='" + estado + '\'' +
+                ", notas='" + notas + '\'' +
+                ", nombreMascota='" + nombreMascota + '\'' +
+                ", nombreVeterinario='" + nombreVeterinario + '\'' +
+                '}';
+    }
 }

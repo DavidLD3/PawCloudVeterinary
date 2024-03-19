@@ -59,7 +59,7 @@ public class DialogoListaCitas extends JDialog {
         table.setFillsViewportHeight(true);
 
         // Aplicar color de fondo al panel y color de texto a las celdas de la tabla
-        table.setBackground(Color.decode("#7E88E2"));
+        table.setBackground(Color.decode("#999CE3"));
         table.setForeground(Color.WHITE);
         table.setFont(new Font("Segoe UI", Font.BOLD, 12));
         table.getTableHeader().setBackground(Color.decode("#7E88E2"));

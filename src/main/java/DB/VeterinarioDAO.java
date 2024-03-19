@@ -70,4 +70,24 @@ public class VeterinarioDAO {
         }
         return veterinarios;
     }
+    
+    public int obtenerIdVeterinarioPorNombre(String nombreCompletoVeterinario) {
+        int idVeterinario = -1; // Un valor que indica que el id no fue encontrado
+        String sql = "SELECT id FROM veterinarios WHERE CONCAT(nombre, ' ', apellidos) = ?";
+
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombreCompletoVeterinario);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                idVeterinario = rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener el ID del veterinario: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return idVeterinario;
+    }
+
 }
