@@ -39,24 +39,12 @@ public class Cliente {
     
     @Override
     public String toString() {
-        return "Cliente{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", apellidos='" + apellidos + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
-                ", dni='" + dni + '\'' +
-                ", nif='" + nif + '\'' +
-                ", direccion='" + direccion + '\'' +
-                ", poblacion='" + poblacion + '\'' +
-                ", provincia='" + provincia + '\'' +
-                ", telefonoFijo='" + telefonoFijo + '\'' +
-                ", telefonoMovil='" + telefonoMovil + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        // Puedes ajustar el formato a tus necesidades
+        return nombre + " " + apellidos;
     }
     
-    
-  
+   
+
 
     public int getId() {
         return id;

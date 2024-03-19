@@ -14,16 +14,17 @@ public class Mascota {
     private String caracter;
     private String color;
     private String tipoPelo;
-    private String sexo;
+    private Sexo sexo; // Cambio de String a enum
     private boolean esterilizado;
-    
-    
-    
 
-    // Constructor combinado
+    public enum Sexo {
+        MACHO, HEMBRA
+    }
+
+    // Constructor modificado para aceptar Sexo como enum
     public Mascota(int id, String nombre, String especie, String raza, int edad, int idCliente, 
-            String microchip, LocalDate fechaNacimiento, String caracter, String color, 
-            String tipoPelo, String string, boolean esterilizado) {
+                   String microchip, LocalDate fechaNacimiento, String caracter, String color, 
+                   String tipoPelo, Sexo sexo, boolean esterilizado) {
         this.id = id;
         this.nombre = nombre;
         this.especie = especie;
@@ -35,11 +36,18 @@ public class Mascota {
         this.caracter = caracter;
         this.color = color;
         this.tipoPelo = tipoPelo;
-        this.sexo = string;
+        this.sexo = sexo; // Asignar directamente el enum
         this.esterilizado = esterilizado;
     }
 
-    // Getters y Setters combinados
+    public Mascota() {
+        // Constructor vacío
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
+    }
+
     public int getId() {
         return id;
     }
@@ -96,14 +104,13 @@ public class Mascota {
         this.microchip = microchip;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
     public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
 
     public String getCaracter() {
         return caracter;
@@ -129,14 +136,12 @@ public class Mascota {
         this.tipoPelo = tipoPelo;
     }
 
-    public String getSexo() {
+    // Getters y Setters para el campo `sexo`, utilizando el enum Sexo
+    public Sexo getSexo() {
         return sexo;
     }
 
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-
+   
     public boolean isEsterilizado() {
         return esterilizado;
     }
@@ -144,11 +149,23 @@ public class Mascota {
     public void setEsterilizado(boolean esterilizado) {
         this.esterilizado = esterilizado;
     }
-    public enum Sexo {
-        MACHO, HEMBRA
+    
+    public static class MascotaContenedor {
+        private Mascota mascota;
+
+        public MascotaContenedor(Mascota mascota) {
+            this.mascota = mascota;
+        }
+
+        public Mascota getMascota() {
+            return mascota;
+        }
+
+        @Override
+        public String toString() {
+            return mascota.getNombre(); // Suponiendo que quieres mostrar solo el nombre en el comboBox
+        }
     }
-
-
 
     @Override
     public String toString() {
@@ -164,9 +181,8 @@ public class Mascota {
                 ", caracter='" + caracter + '\'' +
                 ", color='" + color + '\'' +
                 ", tipoPelo='" + tipoPelo + '\'' +
-                ", sexo='" + sexo + '\'' +
+                ", sexo='" + (sexo != null ? sexo.name() : "null") + '\'' +
                 ", esterilizado=" + esterilizado +
                 '}';
     }
-
 }

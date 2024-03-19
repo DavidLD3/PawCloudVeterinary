@@ -130,12 +130,12 @@ public class MainFrame extends JFrame {
         panelMenu.add(lblNewLabel_1);
         
         //Para el menu de citas
-        JLabel lblCitas = new JLabel("Citas");
-        lblCitas.setForeground(new Color(255, 255, 255));
-        lblCitas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblCitas.setBounds(55, 183, 130, 28);
-        panelMenu.add(lblCitas);
-        lblCitas.addMouseListener(new MouseAdapter() {
+        JLabel lblVentas = new JLabel("Ventas");
+        lblVentas.setForeground(new Color(255, 255, 255));
+        lblVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblVentas.setBounds(55, 222, 102, 28);
+        panelMenu.add(lblVentas);
+        lblVentas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 cardLayout.show(cardPanel, "PanelCitas"); // Cambiar al PanelCitas
@@ -150,7 +150,7 @@ public class MainFrame extends JFrame {
         JLabel lblcalendario = new JLabel("Calendario");
         lblcalendario.setForeground(new Color(255, 255, 255));
         lblcalendario.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblcalendario.setBounds(55, 222, 102, 28);
+        lblcalendario.setBounds(55, 183, 130, 28);
         panelMenu.add(lblcalendario);
         lblcalendario.addMouseListener(new MouseAdapter() {
             @Override
@@ -165,22 +165,24 @@ public class MainFrame extends JFrame {
         lblNewLabel_3.setBounds(25, 261, 20, 28);
         panelMenu.add(lblNewLabel_3);
         
-        JLabel lblventas = new JLabel("Ventas");
-        lblventas.setForeground(new Color(255, 255, 255));
-        lblventas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblventas.setBounds(55, 261, 46, 28);
-        panelMenu.add(lblventas);
+        JLabel lblAlmacen = new JLabel("Almacen");
+        lblAlmacen.setForeground(new Color(255, 255, 255));
+        lblAlmacen.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblAlmacen.setBounds(55, 261, 130, 28);
+        panelMenu.add(lblAlmacen);
         
         JLabel lblNewLabel_4 = new JLabel("");
         lblNewLabel_4.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoConfiguracion.png")));
         lblNewLabel_4.setBounds(25, 300, 20, 28);
         panelMenu.add(lblNewLabel_4);
         
-        JLabel lblconfiguracion = new JLabel("Configuración");
-        lblconfiguracion.setForeground(new Color(255, 255, 255));
-        lblconfiguracion.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblconfiguracion.setBounds(55, 300, 102, 28);
-        panelMenu.add(lblconfiguracion);
+        JLabel lblAdministracion = new JLabel("Administración");
+        lblAdministracion.setForeground(new Color(255, 255, 255));
+        lblAdministracion.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblAdministracion.setBounds(55, 300, 102, 28);
+        panelMenu.add(lblAdministracion);
+
+
         
         JLabel lbllogoLogout = new JLabel("");
         lbllogoLogout.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoLogout.png")));
