@@ -59,7 +59,7 @@ public class DialogoListaCitas extends JDialog {
         table.setFillsViewportHeight(true);
 
         // Aplicar color de fondo al panel y color de texto a las celdas de la tabla
-        table.setBackground(Color.decode("#7E88E2"));
+        table.setBackground(Color.decode("#999CE3"));
         table.setForeground(Color.WHITE);
         table.setFont(new Font("Segoe UI", Font.BOLD, 12));
         table.getTableHeader().setBackground(Color.decode("#7E88E2"));
@@ -72,7 +72,7 @@ public class DialogoListaCitas extends JDialog {
     
 
     private void cargarCitas() {
-        List<Cita> citas = citaDAO.recuperarCitas(); // Asegúrate de que este método recupere las citas ordenadas por fecha y hora
+        List<Cita> citas = citaDAO.recuperarCitas();
         for (Cita cita : citas) {
             model.addRow(new Object[]{cita.getTitulo(), cita.getFecha(), cita.getHora(), cita.getNombreCliente(), cita.getNombreMascota(), cita.getNotas()});
         }
