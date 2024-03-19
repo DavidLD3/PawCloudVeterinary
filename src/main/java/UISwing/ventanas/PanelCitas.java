@@ -16,15 +16,15 @@ public class PanelCitas extends JPanel {
 		setLayout(null);
 		
 		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(1013, 620, 89, 23);
+		btnNewButton.setBounds(1026, 630, 89, 23);
 		add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("New button");
-		btnNewButton_1.setBounds(10, 620, 89, 23);
+		btnNewButton_1.setBounds(0, 630, 89, 23);
 		add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("New button");
-		btnNewButton_2.setBounds(1013, 7, 89, 23);
+		btnNewButton_2.setBounds(1026, 0, 89, 23);
 		add(btnNewButton_2);
 		
 		JButton btnNewButton_3 = new JButton("New button");
@@ -32,7 +32,7 @@ public class PanelCitas extends JPanel {
 		add(btnNewButton_3);
 		
 		JButton btnNewButton_4 = new JButton("New button");
-		btnNewButton_4.setBounds(10, 7, 89, 23);
+		btnNewButton_4.setBounds(0, 0, 89, 23);
 		add(btnNewButton_4);
 
 	}

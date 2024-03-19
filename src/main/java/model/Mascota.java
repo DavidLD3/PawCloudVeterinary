@@ -147,6 +147,23 @@ public class Mascota {
     public enum Sexo {
         MACHO, HEMBRA
     }
+    public static class MascotaContenedor {
+        private Mascota mascota;
+
+        public MascotaContenedor(Mascota mascota) {
+            this.mascota = mascota;
+        }
+
+        public Mascota getMascota() {
+            return mascota;
+        }
+
+        @Override
+        public String toString() {
+            return mascota.getNombre(); // Suponiendo que quieres mostrar solo el nombre en el comboBox
+        }
+    }
+
 
 
 

@@ -21,13 +21,13 @@ public class ClienteDAO {
 
     public Cliente obtenerClientePorId(int id) {
         Cliente cliente = null;
-        String consulta = "SELECT * FROM clientes WHERE id_cliente = ?";
+        String consulta = "SELECT * FROM clientes WHERE id = ?";
         try (Connection conn = conexion.getConexion(); PreparedStatement statement = conn.prepareStatement(consulta)) {
             statement.setInt(1, id);
             ResultSet resultados = statement.executeQuery();
             if (resultados.next()) {
                 cliente = new Cliente(
-                    resultados.getInt("id_cliente"),
+                    resultados.getInt("id"),
                     resultados.getString("nombre"),
                     resultados.getString("apellidos"),
                     resultados.getDate("fecha_nacimiento").toLocalDate(),
@@ -202,6 +202,37 @@ public class ClienteDAO {
         }
         return clientes;
     }
+    public List<Cliente> buscarClientesPorApellido(String apellido) {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT * FROM clientes WHERE apellidos LIKE ?";
+        try (Connection conn = conexion.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + apellido + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cliente cliente = new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("apellidos"),
+                    rs.getDate("fecha_nacimiento").toLocalDate(),
+                    rs.getString("dni"),
+                    rs.getString("nif"),
+                    rs.getString("direccion"),
+                    rs.getString("poblacion"),
+                    rs.getString("provincia"),
+                    rs.getString("telefono_fijo"),
+                    rs.getString("telefono_movil"),
+                    rs.getString("email")
+                );
+                clientes.add(cliente);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar clientes por apellido: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return clientes;
+    }
+
+
 
 
    
