@@ -3,215 +3,125 @@ package UISwing.ventanas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
-import java.util.Map;
-
-import DB.CitaDAO;
 import model.Cita;
 
 public class PanelCalendario extends JPanel {
+
     private JTable table;
     private DefaultTableModel model;
-    private LocalDate fechaInicioSemana;
-    private JLabel lblCurrentDate;
-    private CitaDAO citaDAO = new CitaDAO();
- // Agregar esto como un campo de la clase PanelCalendario
-    private Map<Point, Integer> posicionACitaId = new HashMap<>();
+    private List<Cita> citas; // Asumimos que esta lista se llena con las citas recuperadas de tu base de datos
 
     public PanelCalendario() {
-        fechaInicioSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
         setLayout(null);
-        inicializarModeloYTabla();
         inicializarComponentes();
-        cargarCitas();
+        fillModelWithTimes(); // Llenar el modelo con las horas del día al inicializar
+        cargarCitas(); // Si tienes un método para cargar citas desde la base de datos
     }
 
-    private void inicializarModeloYTabla() {
-        model = new DefaultTableModel() {
+    private void inicializarComponentes() {
+        JPanel panelHeader = new JPanel();
+        panelHeader.setBounds(10, 11, 1092, 85);
+        add(panelHeader);
+        panelHeader.setLayout(null);
+
+        JPanel panelCalendario = new JPanel();
+        panelCalendario.setBounds(10, 107, 1092, 533);
+        add(panelCalendario);
+        panelCalendario.setLayout(new BorderLayout());
+
+        String[] columns = calculateWeekDaysWithDates();
+        model = new DefaultTableModel(null, columns);
+        table = new JTable(model) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Las celdas no deben ser editables
             }
         };
-
-        table = new JTable(model);
-        table.setRowHeight(50);
+        table.setRowHeight(30);
+        table.setCellSelectionEnabled(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setDefaultRenderer(Object.class, new CitaTableCellRenderer());
-
-        table.addMouseListener(new MouseAdapter() {
+        JScrollPane scrollPane = new JScrollPane(table);
+        panelCalendario.add(scrollPane, BorderLayout.CENTER);
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(50);
+        for (int i = 1; i < columnModel.getColumnCount(); i++) {
+            columnModel.getColumn(i).setPreferredWidth(150);
+        }
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                int fila = table.rowAtPoint(e.getPoint());
-                int columna = table.columnAtPoint(e.getPoint());
-                
-                if (columna > 0) { // Asegúrate de que se haga clic en una columna de cita, no en la de "Hora"
-                    Point clave = new Point(fila, columna);
-                    if (posicionACitaId.containsKey(clave)) {
-                        int idCita = posicionACitaId.get(clave);
-                        Cita cita = citaDAO.obtenerCitaPorId(idCita);
-                        if (cita != null) {
-                            VentanaModificarCitaDialog ventanaModificar = new VentanaModificarCitaDialog(null, true, cita);
-                            ventanaModificar.setVisible(true);
-                            // Podrías necesitar recargar las citas después de modificar/eliminar
-                            cargarCitas();
-                        }
-                    }
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!value.toString().isEmpty()) { // Suponiendo que las celdas con citas tienen texto
+                    setBackground(Color.YELLOW); // Color de fondo para las citas
+                    setForeground(Color.BLACK); // Color del texto
+                } else {
+                    setBackground(table.getBackground());
+                    setForeground(table.getForeground());
                 }
+                return this;
             }
         });
 
     }
 
-
-
-    private void inicializarComponentes() {
-        JPanel panelHeader = crearPanelHeader();
-        panelHeader.setBounds(0, 0, 1092, 50); // Ajustar a tu layout
-        add(panelHeader);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 50, 1092, 590); // Ajustar a tu layout
-        add(scrollPane);
-        actualizarModeloTabla();
+    private String[] calculateWeekDaysWithDates() {
+        LocalDate today = LocalDate.now();
+        LocalDate monday = today.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E dd/MM");
+        String[] weekDaysWithDates = new String[8];
+        weekDaysWithDates[0] = "Hora";
+        for (int i = 1; i <= 7; i++) {
+            weekDaysWithDates[i] = monday.plusDays(i - 1).format(formatter);
+        }
+        return weekDaysWithDates;
     }
-
-    private JPanel crearPanelHeader() {
-        JPanel panelHeader = new JPanel(new FlowLayout());
-        JButton prevWeekButton = new JButton("<");
-        prevWeekButton.addActionListener(e -> navegar(-1));
-        panelHeader.add(prevWeekButton);
-
-        lblCurrentDate = new JLabel();
-        panelHeader.add(lblCurrentDate);
-        actualizarFechaActual();
-
-        JButton nextWeekButton = new JButton(">");
-        nextWeekButton.addActionListener(e -> navegar(1));
-        panelHeader.add(nextWeekButton);
-
-        return panelHeader;
+    
+    private void fillModelWithTimes() {
+        // Asegúrate de que el modelo de la tabla esté inicializado antes de llamar a este método
+        for (int hour = 8; hour < 24; hour++) { // Comienza desde las 8 de la mañana
+            String horaCompleta = String.format("%02d:00", hour);
+            String mediaHora = String.format("%02d:30", hour);
+            model.addRow(new Object[]{horaCompleta, "", "", "", "", "", "", ""});
+            if (hour < 24) { // Asegura que después de las 23:00 solo se agregue la hora completa
+                model.addRow(new Object[]{mediaHora, "", "", "", "", "", "", ""});
+            }
+        }
     }
+    
 
-    private void navegar(int semanas) {
-        fechaInicioSemana = fechaInicioSemana.plusWeeks(semanas);
-        actualizarModeloTabla();
-        cargarCitas();
-    }
-
-    private void actualizarFechaActual() {
-        // Esto actualiza la fecha actual en el lblCurrentDate.
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
-        lblCurrentDate.setText(String.format("Semana del %s al %s",
-                fechaInicioSemana.format(formatter),
-                fechaInicioSemana.plusDays(6).format(formatter)));
-    }
 
     private void cargarCitas() {
-        List<Cita> citas = citaDAO.recuperarCitasPorSemana(fechaInicioSemana, fechaInicioSemana.plusDays(6));
-        actualizarTablaConCitas(citas);
+        // Aquí debes cargar tus citas de la base de datos a la lista `citas`
+        // Por ejemplo: citas = citaDAO.recuperarCitas();
+        actualizarVistaCitas();
     }
 
-    private void actualizarModeloTabla() {
-        model.setRowCount(0);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E dd/MM");
-        LocalDate diaDeLaSemana = fechaInicioSemana;
-        String[] columnNames = new String[8];
-        columnNames[0] = "Hora";
-        for (int i = 1; i <= 7; i++) {
-            columnNames[i] = diaDeLaSemana.format(formatter);
-            diaDeLaSemana = diaDeLaSemana.plusDays(1);
-        }
-        model.setColumnIdentifiers(columnNames);
-        actualizarTablaConHoras();
-        actualizarFechaActual(); // Asegúrate de que la fecha entre las flechas se actualiza correctamente
+    private void actualizarVistaCitas() {
+        // Aquí deberías recorrer tus citas y añadirlas al modelo en la fecha y hora correspondiente
+        // Ten en cuenta que necesitarás convertir la fecha y hora de la cita en índices de fila y columna en el modelo
     }
-
-    private void actualizarTablaConHoras() {
-        model.setRowCount(0); // Limpia las filas antes de añadir las horas nuevamente
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        for (int i = 8; i <= 22; i++) {
-            model.addRow(new Object[]{formatter.format(LocalTime.of(i, 0)), "", "", "", "", "", "", ""});
-            model.addRow(new Object[]{formatter.format(LocalTime.of(i, 15)), "", "", "", "", "", "", ""});
-            model.addRow(new Object[]{formatter.format(LocalTime.of(i, 30)), "", "", "", "", "", "", ""});
-            model.addRow(new Object[]{formatter.format(LocalTime.of(i, 45)), "", "", "", "", "", "", ""});
-        }
-    }
-
-
-
-
-    private void actualizarTablaConCitas(List<Cita> citas) {
-        posicionACitaId.clear(); // Limpiar el mapa antes de llenarlo nuevamente
-        // El resto del proceso de carga de citas...
-        citas.forEach(cita -> {
-            LocalDate fechaCita = cita.getFecha();
-            LocalTime horaCita = cita.getHora();
-            int columna = fechaCita.getDayOfWeek().getValue();
-            int fila = ((horaCita.getHour() - 8) * 4) + (horaCita.getMinute() / 15); // Ajustar según cómo estás llenando las filas
-            
-            String infoCita = cita.getTitulo() + " - " + cita.getTipo(); // O cualquier otro dato que estés mostrando
-            model.setValueAt(infoCita, fila, columna);
-            
-            posicionACitaId.put(new Point(fila, columna), cita.getId()); // Asociar la posición de la celda con el ID de la cita
-        });
-    }
-
-
 
     class CitaTableCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (value != null) {
-                String[] parts = value.toString().split(" - ");
-                if (parts.length > 1) {
-                    String tipo = parts[1];
-                    switch (tipo) {
-                        case "Visita":
-                            // Utiliza un verde más oscuro que el Color.GREEN predeterminado
-                            setBackground(new Color(0, 153, 0)); // Un ejemplo de verde oscuro
-                            setForeground(Color.WHITE); // Texto en blanco para mejor contraste
-                            setFont(new Font("Segoe UI", Font.BOLD, 12)); // Cambiar el font si deseas
-                            break;
-                        case "Consulta":
-                            setBackground(Color.BLUE);
-                            setForeground(Color.WHITE); // Asegúrate de que el texto sea visible
-                            setFont(new Font("Segoe UI", Font.BOLD, 12));
-                            break;
-                        case "Urgencia":
-                            setBackground(Color.RED);
-                            setForeground(Color.WHITE); // Mejora el contraste
-                            setFont(new Font("Segoe UI", Font.BOLD, 12));
-                            break;
-                        default:
-                            setBackground(Color.LIGHT_GRAY);
-                            setForeground(Color.BLACK); // Color del texto por defecto
-                            setFont(new Font("Segoe UI", Font.PLAIN, 12)); // Font por defecto
-                            break;
-                    }
-                } else {
-                    // Configuración por defecto para celdas sin tipo especificado
-                    setBackground(Color.WHITE);
-                    setForeground(Color.BLACK);
-                    setFont(new Font("Segoe UI", Font.PLAIN, 12));
-                }
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            // Aquí puedes decidir el color basándote en el contenido de `value`, que sería el título de la cita
+            if (value instanceof String && !((String) value).isEmpty()) {
+                c.setBackground(Color.YELLOW); // Un ejemplo, ajusta según la lógica que necesites
             } else {
-                // Configuración por defecto si el valor es nulo
-                setBackground(Color.WHITE);
-                setForeground(Color.BLACK);
-                setFont(new Font("Segoe UI", Font.PLAIN, 12));
+                c.setBackground(Color.WHITE);
             }
-            return this;
+            return c;
         }
     }
-
-
 }
