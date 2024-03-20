@@ -32,6 +32,8 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
     
     // prueba de gi  
     //prueba de git3
+    //prueba git
+    
     class PaddingTableCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
