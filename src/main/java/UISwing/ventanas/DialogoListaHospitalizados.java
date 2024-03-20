@@ -30,7 +30,8 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
         cargarHospitalizados();
     }
     
-    
+    // prueba de git  
+    //prueba de git2
     class PaddingTableCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
