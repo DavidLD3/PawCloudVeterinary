@@ -33,7 +33,7 @@ public class PanelCalendario extends JPanel {
         inicializarComponentes();
         cargarCitas();
     }
-
+ //prueba
     private void inicializarModeloYTabla() {
         model = new DefaultTableModel() {
             @Override
