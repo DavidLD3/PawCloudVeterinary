@@ -31,13 +31,6 @@
     <version>1.4</version>
 </dependency>
 
-
-
-  	<dependency>
-  		<groupId>RespaldoProject</groupId>
-  		<artifactId>PawCloudRespaldo</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
   </dependencies>
 </project>
 
