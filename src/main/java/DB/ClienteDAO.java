@@ -21,6 +21,7 @@ public class ClienteDAO {
 
     public Cliente obtenerClientePorId(int id) {
         Cliente cliente = null;
+        // Asegúrate de que la consulta utiliza "id" para referirse al identificador
         String consulta = "SELECT * FROM clientes WHERE id = ?";
         try (Connection conn = conexion.getConexion(); PreparedStatement statement = conn.prepareStatement(consulta)) {
             statement.setInt(1, id);
@@ -48,14 +49,12 @@ public class ClienteDAO {
         return cliente;
     }
 
-
     public boolean insertarCliente(Cliente cliente) {
-        try (Connection conn = conexion.getConexion()) { // Obtiene la conexión desde la clase Conexion
+        try (Connection conn = conexion.getConexion()) {
             String consulta = "INSERT INTO clientes (nombre, apellidos, fecha_nacimiento, dni, nif, direccion, poblacion, provincia, telefono_fijo, telefono_movil, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement statement = conn.prepareStatement(consulta); // Usa conn para preparar la consulta
+            PreparedStatement statement = conn.prepareStatement(consulta);
             statement.setString(1, cliente.getNombre());
             statement.setString(2, cliente.getApellidos());
-            // Asegúrate de convertir LocalDate a SQL Date
             statement.setDate(3, java.sql.Date.valueOf(cliente.getFechaNacimiento()));
             statement.setString(4, cliente.getDni());
             statement.setString(5, cliente.getNif());
@@ -89,7 +88,7 @@ public class ClienteDAO {
             statement.setString(9, cliente.getTelefonoFijo());
             statement.setString(10, cliente.getTelefonoMovil());
             statement.setString(11, cliente.getEmail());
-            statement.setInt(12, cliente.getId()); // Asumiendo que id es ahora un int en Cliente
+            statement.setInt(12, cliente.getId());
             
             int filasActualizadas = statement.executeUpdate();
             return filasActualizadas > 0;
@@ -101,8 +100,8 @@ public class ClienteDAO {
 
 
     public boolean eliminarCliente(int id) {
-        try (Connection conn = conexion.getConexion()) { // Obtiene la conexión desde la clase Conexion
-            String consulta = "DELETE FROM clientes WHERE id_cliente = ?";
+        try (Connection conn = conexion.getConexion()) {
+            String consulta = "DELETE FROM clientes WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(consulta);
             statement.setInt(1, id);
             int filasEliminadas = statement.executeUpdate();
@@ -112,6 +111,7 @@ public class ClienteDAO {
             return false;
         }
     }
+    
     
     public List<Cliente> buscarClientesPorNombre(String nombre) {
         List<Cliente> clientes = new ArrayList<>();
@@ -154,7 +154,7 @@ public class ClienteDAO {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 cliente = new Cliente(
-                    rs.getInt("id"),
+                    rs.getInt("id_cliente"),
                     rs.getString("nombre"),
                     rs.getString("apellidos"),
                     rs.getDate("fecha_nacimiento").toLocalDate(), // Conversión a LocalDate
@@ -182,7 +182,7 @@ public class ClienteDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Cliente cliente = new Cliente(
-                    rs.getInt("id"),
+                    rs.getInt("id"), // Cambiado de "id_cliente" a "id"
                     rs.getString("nombre"),
                     rs.getString("apellidos"),
                     rs.getDate("fecha_nacimiento").toLocalDate(), // Conversión a LocalDate
@@ -232,6 +232,20 @@ public class ClienteDAO {
         return clientes;
     }
 
+    public boolean existeCliente(int idCliente) {
+        String sql = "SELECT COUNT(id) FROM clientes WHERE id = ?";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
 
