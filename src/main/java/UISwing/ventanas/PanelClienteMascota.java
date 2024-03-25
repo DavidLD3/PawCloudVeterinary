@@ -15,6 +15,13 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
 
 public class PanelClienteMascota extends JPanel {
 
@@ -22,6 +29,7 @@ public class PanelClienteMascota extends JPanel {
 	private JTextField txtBuscarClientemascota;
 	private JTable table;
 	private JTextField txtBuscarCliente;
+	private JTable table_1;
 
 	/**
 	 * Create the panel.
@@ -30,48 +38,9 @@ public class PanelClienteMascota extends JPanel {
 		setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 1041, 794);
+		panel.setBounds(-10, 11, 1112, 653);
 		add(panel);
 		panel.setLayout(null);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(42, 172, 970, 570);
-		panel.add(panel_2);
-		panel_2.setLayout(null);
-		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(0, 0, 470, 570);
-		panel_2.add(panel_3);
-		panel_3.setLayout(null);
-		
-		JLabel lblNewLabel_3 = new JLabel("Cliente");
-		lblNewLabel_3.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblNewLabel_3.setBounds(41, 41, 49, 14);
-		panel_3.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_4 = new JLabel("DNI");
-		lblNewLabel_4.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblNewLabel_4.setBounds(194, 41, 49, 14);
-		panel_3.add(lblNewLabel_4);
-		
-		JLabel lblNewLabel_5 = new JLabel("Teléfono");
-		lblNewLabel_5.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblNewLabel_5.setBounds(292, 41, 49, 14);
-		panel_3.add(lblNewLabel_5);
-		
-		table = new JTable();
-		table.setBounds(41, 82, 387, 449);
-		panel_3.add(table);
-		
-		JLabel lblNewLabel_6 = new JLabel("Nombre");
-		lblNewLabel_6.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblNewLabel_6.setBounds(553, 47, 49, 14);
-		panel_2.add(lblNewLabel_6);
-		
-		JLabel lblNewLabel_7 = new JLabel("Especie");
-		lblNewLabel_7.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblNewLabel_7.setBounds(733, 48, 49, 14);
-		panel_2.add(lblNewLabel_7);
 		
 		JButton btnNewButton = new JButton("Exportar");
 		btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -79,17 +48,17 @@ public class PanelClienteMascota extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnNewButton.setBounds(303, 117, 89, 23);
+		btnNewButton.setBounds(256, 42, 89, 23);
 		panel.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Importar");
 		btnNewButton_1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnNewButton_1.setBounds(414, 117, 89, 23);
+		btnNewButton_1.setBounds(355, 42, 89, 23);
 		panel.add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("Añadir");
 		btnNewButton_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnNewButton_2.setBounds(885, 117, 89, 23);
+		btnNewButton_2.setBounds(887, 42, 89, 23);
 		panel.add(btnNewButton_2);
 		
 		
@@ -104,27 +73,117 @@ public class PanelClienteMascota extends JPanel {
 		
 		JButton btnNewButton_3 = new JButton("Mostrar por");
 		btnNewButton_3.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnNewButton_3.setBounds(553, 117, 89, 23);
+		btnNewButton_3.setBounds(516, 42, 89, 23);
 		panel.add(btnNewButton_3);
 		
 		txtBuscarClientemascota = new JTextField();
 		txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		txtBuscarClientemascota.setText("Buscar mascota");
-		txtBuscarClientemascota.setBounds(683, 118, 161, 20);
+		txtBuscarClientemascota.setBounds(716, 43, 161, 20);
 		panel.add(txtBuscarClientemascota);
 		txtBuscarClientemascota.setColumns(10);
 		
 		txtBuscarCliente = new JTextField();
 		txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		txtBuscarCliente.setText("Buscar cliente");
-		txtBuscarCliente.setBounds(42, 118, 166, 20);
+		txtBuscarCliente.setBounds(42, 43, 166, 20);
 		panel.add(txtBuscarCliente);
 		txtBuscarCliente.setColumns(10);
-
 		
+		table = new JTable();
+		table.setBounds(42, 105, 483, 451);
+		panel.add(table);
+		
+		table_1 = new JTable();
+		table_1.setBounds(535, 105, 483, 451);
+		panel.add(table_1);
+
+		 // Llama a los métodos para cargar los datos en las tablas al iniciar el panel
+	    mostrarDatos();
+	    mostrarDatosMascotas();
 		
 		
 	}
+	
+	 private void mostrarDatos() {
+	        // Datos para la conexión
+	        String url = "jdbc:mysql://localhost:3306/pawcloud"; // URL de tu base de datos
+	        String usuario = "tuUsuario"; // Tu usuario de la base de datos
+	        String contraseña = "tuContraseña"; // Tu contraseña de la base de datos
+
+	        // Consulta SQL para obtener los datos deseados
+	        String consulta = "SELECT nombre, dni, telefono_movil FROM clientes;";
+
+	        try {
+	            // Establece la conexión con la base de datos
+	            Connection conexion = DriverManager.getConnection(url, usuario, contraseña);
+
+	            // Crea un Statement para poder ejecutar la consulta
+	            Statement sentencia = conexion.createStatement();
+
+	            // Ejecuta la consulta y obtiene el resultado
+	            ResultSet resultado = sentencia.executeQuery(consulta);
+
+	            // Poblar el JTable con los datos del resultado
+	            DefaultTableModel modelo = new DefaultTableModel(new String[]{"Cliente", "DNI", "Teléfono Móvil"}, 0);
+	            while(resultado.next()) {
+	                String nombre = resultado.getString("nombre");
+	                String dni = resultado.getString("dni");
+	                String telefonoMovil = resultado.getString("telefono_movil");
+	                modelo.addRow(new Object[]{nombre, dni, telefonoMovil});
+	            }
+	            table.setModel(modelo);
+
+	            // Cierra las conexiones
+	            resultado.close();
+	            sentencia.close();
+	            conexion.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	//prueba
+	 private void mostrarDatosMascotas() {
+		    // Datos para la conexión
+		    String url = "jdbc:mysql://localhost:3306/pawcloud"; // URL de tu base de datos
+		    String usuario = "tuUsuario"; // Tu usuario de la base de datos
+		    String contraseña = "tuContraseña"; // Tu contraseña de la base de datos
+
+		    // Consulta SQL para obtener los datos deseados de mascotas
+		    String consulta = "SELECT nombre, especie, microchip FROM mascotas;";
+
+		    try {
+		        // Establece la conexión con la base de datos
+		        Connection conexion = DriverManager.getConnection(url, usuario, contraseña);
+
+		        // Crea un Statement para poder ejecutar la consulta
+		        Statement sentencia = conexion.createStatement();
+
+		        // Ejecuta la consulta y obtiene el resultado
+		        ResultSet resultado = sentencia.executeQuery(consulta);
+
+		        // Poblar la segunda JTable con los datos del resultado
+		        DefaultTableModel modeloMascotas = new DefaultTableModel(new String[]{"Nombre", "Especie", "Microchip"}, 0);
+		        while(resultado.next()) {
+		            String nombre = resultado.getString("nombre");
+		            String especie = resultado.getString("especie");
+		            String microchip = resultado.getString("microchip");
+		            modeloMascotas.addRow(new Object[]{nombre, especie, microchip});
+		        }
+		        table_1.setModel(modeloMascotas);
+
+		        // Cierra las conexiones
+		        resultado.close();
+		        sentencia.close();
+		        conexion.close();
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		}
+	 
+	
+	
+	
 	
 	
     // Método para abrir el PanelRegistroClienteMascota.
@@ -138,6 +197,4 @@ public class PanelClienteMascota extends JPanel {
 	    frameRegistro.getContentPane().add(panelRegistro); // Agrega el panelRegistro al frame
 	    frameRegistro.setVisible(true); // Hace visible el frame
 	}
-	
-	
 }
