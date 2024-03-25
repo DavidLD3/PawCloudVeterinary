@@ -131,7 +131,7 @@ public class PanelClienteMascota extends JPanel {
      
 	private void abrirPanelRegistro() {
 	    JFrame frameRegistro = new JFrame("Registro de Cliente y Mascota");
-	    PanelRegistroClienteMascota panelRegistro = new PanelRegistroClienteMascota();
+	    PanelRegistroCliente panelRegistro = new PanelRegistroCliente();
 
 	    frameRegistro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cierra solo este frame al cerrar
 	    frameRegistro.setSize(800, 600); // Ajusta según la necesidad
