@@ -9,6 +9,8 @@ import java.awt.event.WindowEvent;
 import java.time.format.DateTimeFormatter;
 import DB.ClienteDAO;
 import DB.MascotaDAO;
+import UISwing.recursos.GradientPanel2;
+import UISwing.recursos.RoundedButton;
 import model.Cliente;
 import model.Mascota;
 import java.util.List;
@@ -26,6 +28,7 @@ public class PanelCliente extends JPanel {
         clienteDao = new ClienteDAO();
         this.cliente = clienteDao.obtenerClientePorId(idCliente);
         initializeUI();
+        actualizarTablaMascotas(); 
     }
 
     private void initializeUI() {
@@ -42,8 +45,8 @@ public class PanelCliente extends JPanel {
     }
 
     private JPanel crearPanelInfoCliente() {
-        JPanel panel = new JPanel(new GridLayout(0, 2)); // GridLayout para organizar los campos y etiquetas
-
+    	 JPanel panel = new GradientPanel2(); // Utiliza GradientPanel2 para un fondo con degradado
+         panel.setLayout(new GridLayout(0, 2)); 
         if (this.cliente != null) {
             // Añadir los campos de texto y etiquetas al panel
             agregarCampo(panel, "Nombre:", cliente.getNombre());
@@ -72,32 +75,25 @@ public class PanelCliente extends JPanel {
     }
 
     private JPanel crearPanelMascotasTotales() {
-        JPanel panelMascotas = new JPanel(new BorderLayout());
+        JPanel panelMascotas = new GradientPanel2(); // Usa GradientPanel2 para el fondo
+        panelMascotas.setLayout(new BorderLayout());
         panelMascotas.add(new JLabel("Lista de mascotas"), BorderLayout.NORTH);
 
         String[] columnas = {"ID Mascota", "Nombre", "Especie", "Raza"};
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Esto hace que ninguna celda sea editable
                 return false;
             }
         };
-        this.tablaMascotas = new JTable(modeloTabla);
-
-        MascotaDAO mascotaDao = new MascotaDAO();
-        List<Mascota> listaMascotas = mascotaDao.obtenerMascotasPorClienteId(this.cliente.getId());
-
-        for (Mascota mascota : listaMascotas) {
-            modeloTabla.addRow(new Object[]{mascota.getId(), mascota.getNombre(), mascota.getEspecie(), mascota.getRaza()});
-        }
-
-        JScrollPane scrollPane = new JScrollPane(this.tablaMascotas);
+        tablaMascotas = new JTable(modeloTabla);
+        JScrollPane scrollPane = new JScrollPane(tablaMascotas);
         panelMascotas.add(scrollPane, BorderLayout.CENTER);
 
-        JButton botonAgregarMascota = new JButton("Añadir Mascota");
+        RoundedButton botonAgregarMascota = new RoundedButton("Añadir Mascota"); // Usa RoundedButton
         botonAgregarMascota.addActionListener(e -> abrirPanelRegistroMascota());
         JPanel panelBoton = new JPanel();
+        panelBoton.setOpaque(false); // Hazlo transparente para que se muestre el fondo degradado
         panelBoton.add(botonAgregarMascota);
         panelMascotas.add(panelBoton, BorderLayout.SOUTH);
 
