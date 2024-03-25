@@ -16,7 +16,7 @@ public class MascotaDAO {
 
     public List<Mascota> buscarMascotasPorNombre(String nombre) {
         List<Mascota> mascotas = new ArrayList<>();
-        String sql = "SELECT id, nombre, especie, raza, edad, cliente_id, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE nombre LIKE ?";
+        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE nombre LIKE ?";
         try (Connection conn = conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "%" + nombre + "%");
@@ -33,7 +33,7 @@ public class MascotaDAO {
 
     public List<Mascota> buscarMascotasPorCliente(int idCliente) {
         List<Mascota> mascotas = new ArrayList<>();
-        String sql = "SELECT id, nombre, especie, raza, edad, cliente_id, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE cliente_id = ?";
+        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE id_cliente = ?";
         try (Connection conn = conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idCliente);
@@ -48,8 +48,8 @@ public class MascotaDAO {
         return mascotas;
     }
 
-    public List<Mascota> obtenerMascotasPorClienteId(int clienteId) {
-        return buscarMascotasPorCliente(clienteId);
+    public List<Mascota> obtenerMascotasPorClienteId(int idCliente) {
+        return buscarMascotasPorCliente(idCliente);
     }
 
     private Mascota crearMascotaDesdeResultSet(ResultSet rs) throws SQLException {
@@ -61,7 +61,7 @@ public class MascotaDAO {
             rs.getString("especie"),
             rs.getString("raza"),
             rs.getInt("edad"),
-            rs.getInt("cliente_id"),
+            rs.getInt("id_cliente"),
             rs.getString("microchip"),
             rs.getDate("fecha_nacimiento").toLocalDate(),
             rs.getString("caracter"),
@@ -72,7 +72,7 @@ public class MascotaDAO {
         );
     }
     public boolean insertarMascota(Mascota mascota) {
-        String sql = "INSERT INTO mascotas (nombre, especie, raza, edad, cliente_id, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO mascotas (nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = this.conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, mascota.getNombre());
@@ -100,7 +100,7 @@ public class MascotaDAO {
     }
 
     public boolean actualizarMascota(Mascota mascota) {
-        String sql = "UPDATE mascotas SET nombre = ?, especie = ?, raza = ?, edad = ?, cliente_id = ?, microchip = ?, fecha_nacimiento = ?, caracter = ?, color = ?, tipo_pelo = ?, sexo = ?, esterilizado = ? WHERE id = ?";
+        String sql = "UPDATE mascotas SET nombre = ?, especie = ?, raza = ?, edad = ?, id_cliente = ?, microchip = ?, fecha_nacimiento = ?, caracter = ?, color = ?, tipo_pelo = ?, sexo = ?, esterilizado = ? WHERE id = ?";
         try (Connection conn = this.conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, mascota.getNombre());
@@ -138,7 +138,7 @@ public class MascotaDAO {
     }
     public Mascota obtenerMascotaPorId(int idMascota) {
         Mascota mascota = null;
-        String sql = "SELECT id, nombre, especie, raza, edad, cliente_id, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE id = ?";
+        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE id = ?";
         try (Connection conn = conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idMascota);
