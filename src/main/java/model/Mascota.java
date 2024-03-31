@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Mascota {
     private int id;
@@ -162,10 +163,24 @@ public class Mascota {
         }
 
         @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MascotaContenedor that = (MascotaContenedor) o;
+            return Objects.equals(mascota.getId(), that.mascota.getId());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(mascota.getId());
+        }
+
+        @Override
         public String toString() {
             return mascota.getNombre(); // Suponiendo que quieres mostrar solo el nombre en el comboBox
         }
     }
+
 
     @Override
     public String toString() {

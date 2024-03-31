@@ -15,6 +15,16 @@ public class Cita {
     private String nombreCliente; // Opcional: Para mostrar en la UI
     private String nombreMascota;
     private String tipo;
+    private int veterinarioId;
+    
+    
+    public int getVeterinarioId() {
+        return veterinarioId;
+    }
+
+    public void setVeterinarioId(int veterinarioId) {
+        this.veterinarioId = veterinarioId;
+    }
     
     public int getId() {
 		return id;
@@ -101,6 +111,18 @@ public class Cita {
     }
     public Cita() {
         // Constructor sin argumentos
+    }
+    
+    // Constructor que incluye veterinarioId
+    public Cita(int id, String titulo, LocalDate fecha, LocalTime hora, String notas, int clienteId, int mascotaId, int veterinarioId) {
+        this.id = id;
+        this.titulo = titulo;
+        this.fecha = fecha;
+        this.hora = hora;
+        this.notas = notas;
+        this.clienteId = clienteId;
+        this.mascotaId = mascotaId;
+        this.veterinarioId = veterinarioId; // Asigna el ID del veterinario
     }
 
     

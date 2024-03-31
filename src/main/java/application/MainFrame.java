@@ -45,7 +45,7 @@ public class MainFrame extends JFrame {
     private JPanel cardPanel; // Panel que contiene los diferentes paneles intercambiables
     private JLabel lblNombreUsuario;
     private JLabel lblRealTime;
-
+    private PanelHome panelHome;
 
 
     public static void main(String[] args) {
@@ -73,7 +73,7 @@ public class MainFrame extends JFrame {
         getContentPane().add(cardPanel);
         
         // Inicialización y adición de PanelHome al cardPanel
-        PanelHome panelHome = new PanelHome(); // Asume que esta clase ya está definida correctamente
+        panelHome = new PanelHome(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelHome, "PanelHome");
         // Inicialización y adición de PanelCitas al cardPanel
         PanelCitas panelCitas = new PanelCitas(); // Asume que esta clase ya está definida correctamente
@@ -82,6 +82,7 @@ public class MainFrame extends JFrame {
         cardPanel.add(panelClienteMascota, "PanelClienteMascota");
         PanelCalendario panelCalendario = new PanelCalendario(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelCalendario, "PanelCalendario");
+        panelCalendario.addCitaActualizadaListener(panelHome);
         PanelAdministracion panelAdministracion = new PanelAdministracion();
         cardPanel.add(panelAdministracion, "PanelAdministracion");
         PanelAlmacen panelAlmacen = new PanelAlmacen();
@@ -319,4 +320,6 @@ public class MainFrame extends JFrame {
 	    public void setNombreUsuario(String nombreUsuario) {
 	        lblNombreUsuario.setText(nombreUsuario);
 	    }
+	    
+
 }

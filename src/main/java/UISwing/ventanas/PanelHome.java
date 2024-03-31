@@ -13,6 +13,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import model.Cita;
@@ -22,7 +24,7 @@ import model.Mascota;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PanelHome extends JPanel {
+public class PanelHome extends JPanel implements CitaActualizadaListener {
 	
 	private JPanel panelDatos;
 	private JLabel lblHoraCita;
@@ -178,11 +180,12 @@ public class PanelHome extends JPanel {
         lblListadoCitas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Crea y muestra el diálogo de listado de citas al hacer clic en el JLabel
                 DialogoListaCitas dialogoListaCitas = new DialogoListaCitas(JFrame.getFrames()[0]); // Asume que este es el frame principal
+                dialogoListaCitas.setCitaActualizadaListener(PanelHome.this); // Registra PanelHome como el listener
                 dialogoListaCitas.setVisible(true);
             }
         });
+
 
         panelCitas.add(lblListadoCitas);
        
@@ -222,9 +225,17 @@ public class PanelHome extends JPanel {
                 VentanaCitasDialog dialog = new VentanaCitasDialog(null, true);
                 dialog.setTitle("Añadir Cita");
                 dialog.setLocationRelativeTo(null);
+                dialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        // Llama aquí al método para actualizar las citas pendientes en PanelHome
+                        actualizarCitasPendientes();
+                    }
+                });
                 dialog.setVisible(true);
             }
         });
+
 
 
         panelCitas.add(btnAñadirCita);
@@ -678,4 +689,15 @@ public class PanelHome extends JPanel {
             }
         }
     }
+    public void actualizarCitasPendientes() {
+        mostrarCitasProximas();
+    }
+    @Override
+    public void onCitaActualizada() {
+        actualizarCitasPendientes(); // Suponiendo que este método actualiza la lista de citas pendientes
+        mostrarCitasProximas();
+        // Cualquier otra actualización de UI necesaria
+    }
+  
+
 }

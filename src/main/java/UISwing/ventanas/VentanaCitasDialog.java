@@ -466,6 +466,18 @@ public class VentanaCitasDialog extends JDialog {
 	        JOptionPane.showMessageDialog(this, "Error al guardar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
+	
+	public void setFecha(java.util.Date fecha) {
+        // Establece el valor del spinner de fecha. Asegúrate de que dateSpinner es accesible aquí.
+        SpinnerDateModel model = (SpinnerDateModel) dateSpinner.getModel();
+        model.setValue(fecha);
+    }
+	
+	public void setHora(java.util.Date hora) {
+        // Establece el valor del spinner de hora. Asegúrate de que timeSpinner es accesible aquí.
+        SpinnerDateModel model = (SpinnerDateModel) timeSpinner.getModel();
+        model.setValue(hora);
+    }
 
 
     

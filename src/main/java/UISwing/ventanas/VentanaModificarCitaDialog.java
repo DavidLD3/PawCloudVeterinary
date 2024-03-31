@@ -6,15 +6,18 @@ import java.awt.event.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import com.toedter.calendar.JCalendar;
 import DB.CitaDAO;
 import DB.ClienteDAO;
 import DB.MascotaDAO;
+import DB.VeterinarioDAO;
 import model.Cita;
 import model.Cliente;
 import model.Mascota;
 import model.Mascota.MascotaContenedor;
+import model.Veterinario;
 import UISwing.recursos.RoundedPanel;
 
 public class VentanaModificarCitaDialog extends JDialog {
@@ -27,13 +30,14 @@ public class VentanaModificarCitaDialog extends JDialog {
     private JButton calendarButton;
     private JTextField textFieldTituloVisita;
     private JTextPane textPaneNotas;
-    
+    private JComboBox<Veterinario> comboBoxDoctor;
     private JComboBox<Cliente> comboBoxClientes;
     private JComboBox<Mascota.MascotaContenedor> comboBoxMascotas;
     private JComboBox<String> comboBoxTipo;
     private boolean cargaInicialCompleta = false;
     private RoundedPanel roundedPanel;
     private Cita citaActual;
+    private List<CitaActualizadaListener> listeners = new ArrayList<>();
 
     // Asegúrate de pasar la cita actual como parámetro al crear la ventana
     public VentanaModificarCitaDialog(Frame owner, boolean modal, Cita citaActual) {
@@ -56,6 +60,7 @@ public class VentanaModificarCitaDialog extends JDialog {
         mascotaDAO = new MascotaDAO();
 
         inicializarComponentesUI(); // Ahora es seguro llamar a este método
+        cargarVeterinarios();
         cargarDatosCita(); // Carga los datos de la cita en la interfaz de usuario
         getContentPane().add(roundedPanel); // Agrega roundedPanel al JDialog
     }
@@ -79,10 +84,10 @@ public class VentanaModificarCitaDialog extends JDialog {
         lblDoctor.setBounds(230, 37, 80, 34);
         roundedPanel.add(lblDoctor);
         
-        JComboBox<String> comboBoxDoctor = new JComboBox<>(new String[]{"Doctor 1", "Doctor 2", "Doctor 3"});
+        comboBoxDoctor = new JComboBox<>();
         comboBoxDoctor.setFont(new Font("Segoe UI", Font.BOLD, 11));
         comboBoxDoctor.setBounds(228, 70, 120, 25);
-        roundedPanel. add(comboBoxDoctor);
+        roundedPanel.add(comboBoxDoctor);
         
         JLabel lblCliente = new JLabel("Cliente:");
         lblCliente.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -242,10 +247,24 @@ public class VentanaModificarCitaDialog extends JDialog {
         btneliminarCita.setForeground(new Color(0, 87, 255));
         btneliminarCita.setFont(new Font("Tahoma", Font.BOLD, 12));
         btneliminarCita.setFocusPainted(false);
-        btneliminarCita.setContentAreaFilled(false);
+        btneliminarCita.setContentAreaFilled(true);
         btneliminarCita.setBorderPainted(false);
         btneliminarCita.setBackground(Color.WHITE);
+        btneliminarCita.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btneliminarCita.setBounds(556, 328, 120, 30);
+        btneliminarCita.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btneliminarCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btneliminarCita.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btneliminarCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btneliminarCita.setForeground(Color.decode("#0057FF"));
+            }
+        });
         btneliminarCita.addActionListener(e -> eliminarCita());
         roundedPanel.add(btneliminarCita);
         
@@ -349,7 +368,11 @@ public class VentanaModificarCitaDialog extends JDialog {
 	                List<Mascota> mascotas = get();
 	                comboBoxMascotas.removeAllItems();
 	                for (Mascota mascota : mascotas) {
-	                    comboBoxMascotas.addItem(new Mascota.MascotaContenedor(mascota)); // Uso correcto con la clase estática
+	                    comboBoxMascotas.addItem(new Mascota.MascotaContenedor(mascota));
+	                }
+	                // Si estamos cargando datos para una cita existente, asegurémonos de seleccionar la mascota correcta.
+	                if (citaActual != null && clienteId == citaActual.getClienteId()) {
+	                    cargarYSeleccionarMascota(citaActual.getMascotaId());
 	                }
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -357,7 +380,7 @@ public class VentanaModificarCitaDialog extends JDialog {
 	        }
 	    }.execute();
 	}
-	private void cargarClientesInicialmente() {
+	/*private void cargarClientesInicialmente() {
 	    new SwingWorker<List<Cliente>, Void>() {
 	        @Override
 	        protected List<Cliente> doInBackground() throws Exception {
@@ -412,20 +435,83 @@ public class VentanaModificarCitaDialog extends JDialog {
 	            }
 	        }
 	    }.execute();
-	}
+	}*/
 	
 	private void cargarDatosCita() {
-        // Suponiendo que tienes getters adecuados en tu objeto Cita
-        // Actualiza los componentes de UI con los datos de la cita
-        if (citaActual != null) {
-            textFieldTituloVisita.setText(citaActual.getTitulo());
-            textPaneNotas.setText(citaActual.getNotas());
-            // Similarmente, establece el valor para los JComboBox y JSpinners
-            // Recuerda convertir fechas y horas al formato correcto si es necesario
-        }
-    }
+	    // Suponemos que citaActual tiene todos los datos necesarios cargados
+	    if (citaActual != null) {
+	        textFieldTituloVisita.setText(citaActual.getTitulo());
+	        textPaneNotas.setText(citaActual.getNotas());
 
+	        // Configurar la fecha y hora
+	        LocalDate fecha = citaActual.getFecha();
+	        LocalTime hora = citaActual.getHora();
+	        dateSpinner.setValue(java.util.Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+	        timeSpinner.setValue(java.util.Date.from(hora.atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()));
+	        seleccionarVeterinarioEnComboBox(citaActual.getVeterinarioId());
+	        // Seleccionar el cliente y mascota correspondiente
+	        cargarYSeleccionarCliente(citaActual.getClienteId());
+	        cargarYSeleccionarMascota(citaActual.getMascotaId());
+	        // Seleccionar el tipo
+	        comboBoxTipo.setSelectedItem(citaActual.getTipo());
+	    }
+	}
+	
+	
+	private void seleccionarVeterinarioEnComboBox(int veterinarioId) {
+	    for (int i = 0; i < comboBoxDoctor.getItemCount(); i++) {
+	        Veterinario veterinario = comboBoxDoctor.getItemAt(i);
+	        if (veterinario.getId() == veterinarioId) {
+	            comboBoxDoctor.setSelectedIndex(i);
+	            break;
+	        }
+	    }
+	}
+	
+	private void cargarVeterinarios() {
+	    VeterinarioDAO veterinarioDAO = new VeterinarioDAO();
+	    List<Veterinario> veterinarios = veterinarioDAO.obtenerTodosLosVeterinarios();
+	    for (Veterinario veterinario : veterinarios) {
+	        comboBoxDoctor.addItem(veterinario);
+	    }
 
+	    comboBoxDoctor.setRenderer(new DefaultListCellRenderer() {
+	        @Override
+	        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+	            if (value instanceof Veterinario) {
+	                Veterinario veterinario = (Veterinario) value;
+	                setText(veterinario.getNombre() + " " + veterinario.getApellidos());
+	            }
+	            return this;
+	        }
+	    });
+	}
+
+	
+	private void cargarYSeleccionarCliente(int clienteId) {
+	    List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+	    comboBoxClientes.removeAllItems();
+	    Cliente clienteSeleccionado = null;
+	    for (Cliente cliente : clientes) {
+	        comboBoxClientes.addItem(cliente);
+	        if (cliente.getId() == clienteId) {
+	            clienteSeleccionado = cliente;
+	        }
+	    }
+	    comboBoxClientes.setSelectedItem(clienteSeleccionado);
+	}
+	
+	private void cargarYSeleccionarMascota(int mascotaId) {
+	    // Asume que ya se han cargado las mascotas para el cliente seleccionado en comboBoxMascotas
+	    for (int i = 0; i < comboBoxMascotas.getItemCount(); i++) {
+	        Mascota.MascotaContenedor mascotaContenedor = comboBoxMascotas.getItemAt(i);
+	        if (mascotaContenedor.getMascota().getId() == mascotaId) {
+	            comboBoxMascotas.setSelectedIndex(i);
+	            return;
+	        }
+	    }
+	}
 
 	private void modificarCita() {
 	    try {
@@ -454,13 +540,18 @@ public class VentanaModificarCitaDialog extends JDialog {
 	        citaActual.setTipo(comboBoxTipo.getSelectedItem().toString());
 	        
 	        citaDAO.actualizarCita(citaActual);
+	        
+	        
 	        JOptionPane.showMessageDialog(this, "Cita modificada con éxito.");
+	        notificarCitaActualizada();
 	        this.dispose();
 	    } catch (Exception ex) {
 	        ex.printStackTrace();
 	        JOptionPane.showMessageDialog(this, "Error al modificar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
+	
+	
 
 
 	private void eliminarCita() {
@@ -470,6 +561,7 @@ public class VentanaModificarCitaDialog extends JDialog {
 	            CitaDAO citaDAO = new CitaDAO();
 	            citaDAO.eliminarCita(citaActual.getId());
 	            JOptionPane.showMessageDialog(this, "Cita eliminada con éxito.");
+	            notificarCitaActualizada();
 	            this.dispose();
 	        } catch (Exception ex) {
 	            ex.printStackTrace();
@@ -477,12 +569,18 @@ public class VentanaModificarCitaDialog extends JDialog {
 	        }
 	    }
 	}
+	public void addCitaActualizadaListener(CitaActualizadaListener listener) {
+        listeners.add(listener);
+    }
+	
+	private void notificarCitaActualizada() {
+        for (CitaActualizadaListener listener : listeners) {
+            listener.onCitaActualizada();
+        }
+    }
+	
+	
 
-
-
-
-    
-   
 	
 	public static void main(String[] args) {
 	    SwingUtilities.invokeLater(() -> {

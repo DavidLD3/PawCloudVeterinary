@@ -6,8 +6,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +29,7 @@ public class PanelCalendario extends JPanel {
     private CitaDAO citaDAO = new CitaDAO();
  // Agregar esto como un campo de la clase PanelCalendario
     private Map<Point, Integer> posicionACitaId = new HashMap<>();
+    private List<CitaActualizadaListener> listeners = new ArrayList<>();
 
     public PanelCalendario() {
         fechaInicioSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
@@ -33,7 +38,6 @@ public class PanelCalendario extends JPanel {
         inicializarComponentes();
         cargarCitas();
     }
- //prueba
     private void inicializarModeloYTabla() {
         model = new DefaultTableModel() {
             @Override
@@ -51,7 +55,10 @@ public class PanelCalendario extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 int fila = table.rowAtPoint(e.getPoint());
                 int columna = table.columnAtPoint(e.getPoint());
-                
+
+                LocalDate fechaSeleccionada = fechaInicioSemana.plusDays(columna - 1);
+                LocalTime horaSeleccionada = LocalTime.of(8 + (fila / 4), (fila % 4) * 15);
+
                 if (columna > 0) { // Asegúrate de que se haga clic en una columna de cita, no en la de "Hora"
                     Point clave = new Point(fila, columna);
                     if (posicionACitaId.containsKey(clave)) {
@@ -59,14 +66,33 @@ public class PanelCalendario extends JPanel {
                         Cita cita = citaDAO.obtenerCitaPorId(idCita);
                         if (cita != null) {
                             VentanaModificarCitaDialog ventanaModificar = new VentanaModificarCitaDialog(null, true, cita);
+                            ventanaModificar.addCitaActualizadaListener(() -> {
+                                cargarCitas(); // Recarga las citas en PanelCalendario
+                                notificarCitaActualizada(); // Notifica a todos los listeners de PanelCalendario
+                            });
                             ventanaModificar.setVisible(true);
-                            // Podrías necesitar recargar las citas después de modificar/eliminar
-                            cargarCitas();
                         }
+                    } else {
+                        // Aquí manejas el caso para una nueva cita
+                        java.util.Date fecha = java.util.Date.from(fechaSeleccionada.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                        java.util.Date hora = java.util.Date.from(LocalDateTime.of(fechaSeleccionada, horaSeleccionada).atZone(ZoneId.systemDefault()).toInstant());
+                        
+                        VentanaCitasDialog nuevaCitaDialog = new VentanaCitasDialog(null, true);
+                        nuevaCitaDialog.setFecha(fecha); // Ajusta la fecha
+                        nuevaCitaDialog.setHora(hora); // Ajusta la hora
+                        nuevaCitaDialog.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosed(WindowEvent e) {
+                                cargarCitas(); // Recargar citas después de potencialmente añadir una nueva
+                                notificarCitaActualizada(); // Notificar a los listeners
+                            }
+                        });
+                        nuevaCitaDialog.setVisible(true);
                     }
                 }
             }
         });
+
 
     }
 
@@ -150,6 +176,11 @@ public class PanelCalendario extends JPanel {
 
     private void actualizarTablaConCitas(List<Cita> citas) {
         posicionACitaId.clear(); // Limpiar el mapa antes de llenarlo nuevamente
+        for (int i = 1; i < model.getColumnCount(); i++) {
+            for (int j = 0; j < model.getRowCount(); j++) {
+                model.setValueAt("", j, i);
+            }
+        }
         // El resto del proceso de carga de citas...
         citas.forEach(cita -> {
             LocalDate fechaCita = cita.getFecha();
@@ -162,6 +193,16 @@ public class PanelCalendario extends JPanel {
             
             posicionACitaId.put(new Point(fila, columna), cita.getId()); // Asociar la posición de la celda con el ID de la cita
         });
+    }
+    
+    public void addCitaActualizadaListener(CitaActualizadaListener listener) {
+        listeners.add(listener);
+    }
+
+    private void notificarCitaActualizada() {
+        for (CitaActualizadaListener listener : listeners) {
+            listener.onCitaActualizada();
+        }
     }
 
 
