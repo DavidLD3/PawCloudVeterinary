@@ -1,6 +1,8 @@
 package UISwing.ventanas;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import DB.MascotaDAO;
@@ -19,13 +21,13 @@ public class PanelInfoMascota extends JPanel {
             tabbedPane = new JTabbedPane();
 
             JPanel panelInfoGeneral = crearPanelInfoMascota();
-            JPanel panelVisitasVet = crearPanelVisitasVet();
+            JPanel panelHospitalizaciones = crearPanelHospitalizaciones();
             JPanel panelHistorialMedico = crearPanelHistorialMedico();
             JPanel panelVacunas = crearPanelVacunas();
             JPanel panelCuidadosEspeciales = crearPanelCuidadosEspeciales();
 
             tabbedPane.addTab("General", null, panelInfoGeneral, "Información General");
-            tabbedPane.addTab("Visitas Veterinarias", null, panelVisitasVet, "Historial de visitas al veterinario");
+            tabbedPane.addTab("Hospitalizaciones", null, panelHospitalizaciones, "Historial de hospitalizaciones");
             tabbedPane.addTab("Historial Médico", null, panelHistorialMedico, "Historial médico de la mascota");
             tabbedPane.addTab("Vacunas", null, panelVacunas, "Registro de vacunas");
             tabbedPane.addTab("Cuidados Especiales", null, panelCuidadosEspeciales, "Cuidados especiales de la mascota");
@@ -63,10 +65,38 @@ public class PanelInfoMascota extends JPanel {
     }
 
     // Métodos para crear paneles específicos
-    private JPanel crearPanelVisitasVet() {
-        JPanel panel = new JPanel(new BorderLayout());
-        // Aquí tu código para mostrar la información de las visitas al veterinario...
-        return panel;
+    private JPanel crearPanelHospitalizaciones() {
+        JPanel panelHospitalizaciones = new JPanel(new BorderLayout());
+        DefaultTableModel modeloTabla = new DefaultTableModel();
+        modeloTabla.addColumn("Fecha");
+        modeloTabla.addColumn("Motivo");
+
+        // Aquí deberías llenar el modelo de la tabla con los datos existentes, si los hay.
+        JTable tablaHospitalizaciones = new JTable(modeloTabla);
+        JScrollPane scrollPane = new JScrollPane(tablaHospitalizaciones);
+        panelHospitalizaciones.add(scrollPane, BorderLayout.CENTER);
+
+        JButton btnAgregarHospitalizacion = new JButton("Añadir Hospitalización");
+        btnAgregarHospitalizacion.addActionListener(e -> abrirDialogoDetalleHospitalizacion());
+
+        JPanel panelBoton = new JPanel();
+        panelBoton.add(btnAgregarHospitalizacion);
+        panelHospitalizaciones.add(panelBoton, BorderLayout.SOUTH);
+
+        return panelHospitalizaciones;
+    }
+
+    private void abrirDialogoDetalleHospitalizacion() {
+        if (this.mascota != null) {
+            Frame owner = (Frame) SwingUtilities.getWindowAncestor(this);
+            // Asumiendo que `Mascota` tiene un método getId() para obtener su ID
+            int idDeLaMascota = this.mascota.getId();
+            String nombreDeLaMascota = this.mascota.getNombre();
+            VentanaHospitalizadosDialogMascota dialogo = new VentanaHospitalizadosDialogMascota(owner, true, idDeLaMascota, nombreDeLaMascota);
+            dialogo.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Mascota no está inicializada.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private JPanel crearPanelHistorialMedico() {
