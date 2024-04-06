@@ -70,9 +70,13 @@ public class PanelClienteMascota extends JPanel {
         inicializarComponentesClientes(panel);
         inicializarComponentesMascotas(panel); // Agregar inicialización de componentes de mascotas
         
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(569, 105, 518, 537);
-        panel.add(scrollPane);
+        JScrollPane scrollPaneClientes = new JScrollPane();
+        scrollPaneClientes.setBounds(10, 105, 549, 537);
+        panel.add(scrollPaneClientes);
+
+        JScrollPane scrollPaneMascotas = new JScrollPane(); // Nuevo JScrollPane para mascotas
+        scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajusta las dimensiones según necesites
+        panel.add(scrollPaneMascotas);
     }
 
     private void inicializarComponentesClientes(JPanel panel) {
