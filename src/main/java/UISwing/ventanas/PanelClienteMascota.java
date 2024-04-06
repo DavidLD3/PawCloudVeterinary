@@ -18,7 +18,7 @@ public class PanelClienteMascota extends JPanel {
     private JTextField txtBuscarClientemascota;
     private JTextField txtBuscarCliente;
     private JTable tablaClientes;  // JTable para clientes
-    private JTable tablaMascotas;  // JTable para mascotas, asumiendo que lo usarás
+    private JTable tablaMascotas;  // JTable para mascotas
     private DefaultTableModel modeloTablaClientes;
     private ClienteDAO clienteDao;
     private DefaultTableModel modeloTablaMascotas; // Nuevo modelo para mascotas
@@ -29,8 +29,8 @@ public class PanelClienteMascota extends JPanel {
     public PanelClienteMascota() {
         setLayout(null);
 
-        clienteDao = new ClienteDAO(); // Asume que tienes esta clase para la gestión de la base de datos
-        mascotaDAO = new MascotaDAO();
+        clienteDao = new ClienteDAO(); // clase para la gestión de la base de datos
+        mascotaDAO = new MascotaDAO(); 
         
         JPanel panel = new JPanel();
         panel.setBounds(0, -11, 1112, 664);
@@ -67,9 +67,12 @@ public class PanelClienteMascota extends JPanel {
         txtBuscarCliente.setBounds(42, 43, 166, 20);
         panel.add(txtBuscarCliente);
 
-        inicializarComponentesClientes(panel);
-        inicializarComponentesMascotas(panel); // Agregar inicialización de componentes de mascotas
-        
+        inicializarComponentesClientes(panel); // Agregar inicialización de componentes de mascotas
+        inicializarComponentesMascotas(panel); 
+        /* Asi tambien se puede
+        JScrollPane scrollPaneClientes = new JScrollPane();
+        scrollPaneClientes.setBounds(10, 105, 549, 537);
+        panel.add(scrollPaneClientes); */
         JScrollPane scrollPaneClientes = new JScrollPane();
         scrollPaneClientes.setBounds(10, 105, 549, 537);
         panel.add(scrollPaneClientes);
@@ -80,7 +83,7 @@ public class PanelClienteMascota extends JPanel {
     }
 
     private void inicializarComponentesClientes(JPanel panel) {
-        // Configura el modelo de la tabla sin mostrar el ID
+    	 // Configuramos el modelo de la tabla sin mostrar el ID
         modeloTablaClientes = new DefaultTableModel(new Object[]{"Nombre", "Apellidos", "DNI"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -96,7 +99,7 @@ public class PanelClienteMascota extends JPanel {
                 if (e.getClickCount() == 2) {  // Doble clic
                     int filaSeleccionada = tablaClientes.getSelectedRow();
                     if (filaSeleccionada != -1) {
-                        String dni = (String) modeloTablaClientes.getValueAt(filaSeleccionada, 2);  // Asumiendo que el DNI está en la columna 2
+                        String dni = (String) modeloTablaClientes.getValueAt(filaSeleccionada, 2); 
                         abrirPanelDetalleClientePorDni(dni);
                     }
                 }
@@ -104,14 +107,14 @@ public class PanelClienteMascota extends JPanel {
         });
 
         JScrollPane scrollPane = new JScrollPane(tablaClientes);
-        scrollPane.setBounds(10, 105, 549, 537); // Ajusta las dimensiones según necesites
+        scrollPane.setBounds(10, 105, 549, 537); // Ajustamos las dimensiones según necesitamos
         panel.add(scrollPane);
 
-        cargarDatosClientes(); // Carga los datos de los clientes después de inicializar la tabla
+        cargarDatosClientes(); // Cargamos los datos de los clientes después de inicializar la tabla
     }
     
     private void inicializarComponentesMascotas(JPanel panel) {
-        // Configura el modelo de la tabla para mascotas
+    	 // Configuramos el modelo de la tabla para mascotas
         modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Especie", "Microchip"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -121,18 +124,31 @@ public class PanelClienteMascota extends JPanel {
 
         tablaMascotas = new JTable(modeloTablaMascotas);
         tablaMascotas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tablaMascotas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {  // Doble clic
+                    int filaSeleccionada = tablaMascotas.getSelectedRow();
+                    if (filaSeleccionada != -1) {
+                        String microchip = (String) modeloTablaMascotas.getValueAt(filaSeleccionada, 2);  
+                        abrirPanelDetalleMascotaPorMicrochip(microchip);
+                    }
+                }
+            }
+        });
 
         JScrollPane scrollPaneMascotas = new JScrollPane(tablaMascotas);
-        scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajusta las dimensiones según necesites
+        scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajustamos las dimensiones según necesitamos
+        panel.add(scrollPaneMascotas);
         panel.add(scrollPaneMascotas);
 
-        cargarDatosMascotas(); // Carga los datos de las mascotas en la tabla
+        cargarDatosMascotas(); // Cargamos los datos de las mascotas en la tabla
     }
 
     private void cargarDatosClientes() {
         List<Cliente> listaClientes = clienteDao.obtenerTodosLosClientes(); // Obtiene los datos desde la base de datos a través del DAO
         DefaultTableModel modelo = (DefaultTableModel) tablaClientes.getModel();
-        modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+        modelo.setRowCount(0); // Limpiamos la tabla antes de agregar nuevos datos
 
         for (Cliente cliente : listaClientes) {
             modelo.addRow(new Object[]{
@@ -158,9 +174,9 @@ public class PanelClienteMascota extends JPanel {
                 });
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Maneja la excepción de SQL
-            // Aquí podrías mostrar un mensaje de error al usuario si la carga de datos falla.
-        }
+            e.printStackTrace(); 
+        }// Maneja la excepción de SQL
+        // Aquí podrías mostrar un mensaje de error al usuario si la carga de datos falla.
     }
 
     private void abrirPanelDetalleClientePorDni(String dni) {
@@ -172,7 +188,18 @@ public class PanelClienteMascota extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+    // Método para abrir el panel de detalles de la mascota por microchip
+    private void abrirPanelDetalleMascotaPorMicrochip(String microchip) {
+        Mascota mascota = mascotaDAO.obtenerMascotaPorMicrochip(microchip); // Agregamos este método al DAO
+        if (mascota != null) {
+            JFrame frame = new JFrame("Detalles de la Mascota");
+            PanelInfoMascota panelInfoMascota = new PanelInfoMascota(mascota.getId());
+            frame.getContentPane().add(panelInfoMascota);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        } 
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Panel Cliente Mascota");
@@ -180,7 +207,7 @@ public class PanelClienteMascota extends JPanel {
 
             PanelClienteMascota panel = new PanelClienteMascota();
             frame.getContentPane().add(panel);
-            frame.setSize(800, 600); // Ajusta el tamaño según necesites
+            frame.setSize(800, 600); // Ajustamos el tamaño según necesitamos
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
