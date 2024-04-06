@@ -127,21 +127,26 @@ public class PanelClienteMascota extends JPanel {
             }
         });
         txtBuscarCliente.addActionListener(e -> {
-            String searchText = txtBuscarCliente.getText().trim(); // Obtiene el texto ingresado y elimina espacios en blanco
+            String searchText = txtBuscarCliente.getText().trim().toLowerCase(); // Obtiene el texto ingresado y lo convierte a minúsculas
             boolean found = false;
-            // Realiza la búsqueda en la tabla de clientes por nombre o DNI
+
+            // Realiza la búsqueda en la tabla de clientes por nombre, apellido o DNI
             for (int row = 0; row < tablaClientes.getRowCount(); row++) {
-                String nombre = tablaClientes.getValueAt(row, 0).toString();
-                String dni = tablaClientes.getValueAt(row, 2).toString();
-                if (nombre.equalsIgnoreCase(searchText) || dni.equals(searchText)) {
+                String nombre = tablaClientes.getValueAt(row, 0).toString().toLowerCase(); // Nombre del cliente
+                String apellidos = tablaClientes.getValueAt(row, 1).toString().toLowerCase(); // Apellidos del cliente
+                String dni = tablaClientes.getValueAt(row, 2).toString().toLowerCase(); // DNI del cliente
+
+                // Concatena nombre y apellido para la búsqueda
+                String fullName = nombre + " " + apellidos;
+
+                if (fullName.contains(searchText) || dni.equals(searchText)) {
                     // Selecciona la fila correspondiente si se encuentra una coincidencia
                     tablaClientes.setRowSelectionInterval(row, row);
                     // Hace que la fila seleccionada sea visible en la tabla
                     Rectangle rect = tablaClientes.getCellRect(row, 0, true);
                     tablaClientes.scrollRectToVisible(rect);
-                    // Hace que el scrollPane se enfoque en la tabla
-                    scrollPaneClientes.getViewport().setViewPosition(new Point(rect.x, rect.y));
-                    return; // Sale del bucle después de encontrar la primera coincidencia
+                    found = true;
+                    break; // Sale del bucle después de encontrar la primera coincidencia
                 }
             }
             if (!found) {
