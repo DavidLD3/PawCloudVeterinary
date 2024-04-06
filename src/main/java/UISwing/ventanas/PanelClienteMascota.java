@@ -3,6 +3,8 @@ package UISwing.ventanas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
@@ -57,15 +59,51 @@ public class PanelClienteMascota extends JPanel {
         btnMostrarPor.setBounds(516, 42, 89, 23);
         panel.add(btnMostrarPor);
 
-        txtBuscarClientemascota = new JTextField("Buscar mascota");
-        txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        txtBuscarClientemascota.setBounds(716, 43, 161, 20);
-        panel.add(txtBuscarClientemascota);
+        txtBuscarClientemascota = new JTextField("Buscar mascota"); // Crea un JTextField con texto predeterminado
+        txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 12)); // Establece la fuente del texto
+        txtBuscarClientemascota.setBounds(716, 43, 161, 20); // Establece la posición y el tamaño del campo de texto
 
-        txtBuscarCliente = new JTextField("Buscar cliente");
-        txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        txtBuscarCliente.setBounds(42, 43, 166, 20);
-        panel.add(txtBuscarCliente);
+        // Agrega un MouseListener para detectar clics en el campo de texto
+        txtBuscarClientemascota.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                txtBuscarClientemascota.setText(""); // Borra el texto cuando se hace clic en el campo de texto
+            }
+        });
+
+        // Agrega un FocusListener para detectar cuando el campo de texto pierde el foco
+        txtBuscarClientemascota.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txtBuscarClientemascota.getText().isEmpty()) { // Comprueba si el campo de texto está vacío
+                    txtBuscarClientemascota.setText("Buscar mascota"); // Restablece el texto predeterminado si está vacío
+                }
+            }
+        });
+
+        panel.add(txtBuscarClientemascota); // Agrega el campo de texto al panel
+
+        txtBuscarCliente = new JTextField("Buscar cliente"); 			// Creamos un JTextField con texto predeterminado
+        txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 12)); // Establecemos la fuente del texto
+        txtBuscarCliente.setBounds(42, 43, 166, 20);					// Establecemos la posición y el tamaño del campo de texto
+     // Agregamos un MouseListener para detectar clics en el campo de texto
+        txtBuscarCliente.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                txtBuscarCliente.setText(""); // Borramos el texto cuando se hace clic en el campo de texto
+            }
+        });
+     // Agregamos un FocusListener para detectar cuando el campo de texto pierde el foco
+        txtBuscarCliente.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txtBuscarCliente.getText().isEmpty()) { 	 // Comprueba si el campo de texto está vacío
+                    txtBuscarCliente.setText("Buscar cliente");	 // Restablece el texto predeterminado si está vacío
+                }
+            }
+        });
+
+        panel.add(txtBuscarCliente);  // Agrega el campo de texto al pane
 
         inicializarComponentesClientes(panel); // Agregar inicialización de componentes de mascotas
         inicializarComponentesMascotas(panel); 
