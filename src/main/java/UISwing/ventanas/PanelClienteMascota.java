@@ -53,13 +53,22 @@ public class PanelClienteMascota extends JPanel {
         panel.add(btnImportar);
 
         JButton btnAnadir = new JButton("Añadir");
-        btnAnadir.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
         btnAnadir.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnAnadir.setBounds(186, 42, 89, 23);
         panel.add(btnAnadir);
+
+        // Añadir ActionListener al botón Añadir
+        btnAnadir.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFrame newFrame = new JFrame("Registro de Cliente"); // Crea un nuevo JFrame
+                newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Configura la acción de cierre
+                newFrame.setSize(800, 600); // Establece el tamaño del JFrame
+                PanelRegistroCliente panelRegistro = new PanelRegistroCliente(); // Crea el panel de registro
+                newFrame.getContentPane().add(panelRegistro); // Añade el panel al JFrame
+                newFrame.setLocationRelativeTo(null); // Centra el JFrame en la pantalla
+                newFrame.setVisible(true); // Hace visible el JFrame
+            }
+        });
 
         JButton btnMostrarPor = new JButton("Mostrar por");
         btnMostrarPor.setFont(new Font("Segoe UI", Font.PLAIN, 12));
