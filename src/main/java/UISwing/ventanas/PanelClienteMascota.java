@@ -5,9 +5,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.List;
 import DB.ClienteDAO;
 import model.Cliente;
+import DB.MascotaDAO;
+import model.Mascota;
 
 public class PanelClienteMascota extends JPanel {
 
@@ -18,7 +21,8 @@ public class PanelClienteMascota extends JPanel {
     private JTable tablaMascotas;  // JTable para mascotas, asumiendo que lo usarás
     private DefaultTableModel modeloTablaClientes;
     private ClienteDAO clienteDao;
-
+    private DefaultTableModel modeloTablaMascotas; // Nuevo modelo para mascotas
+    private MascotaDAO mascotaDAO;
     /**
      * Create the panel.
      */
@@ -26,7 +30,8 @@ public class PanelClienteMascota extends JPanel {
         setLayout(null);
 
         clienteDao = new ClienteDAO(); // Asume que tienes esta clase para la gestión de la base de datos
-
+        mascotaDAO = new MascotaDAO();
+        
         JPanel panel = new JPanel();
         panel.setBounds(0, -11, 1112, 664);
         add(panel);
@@ -63,10 +68,11 @@ public class PanelClienteMascota extends JPanel {
         panel.add(txtBuscarCliente);
 
         inicializarComponentesClientes(panel);
+        inicializarComponentesMascotas(panel); // Agregar inicialización de componentes de mascotas
         
-        JScrollPane scrollPane2 = new JScrollPane();
-        scrollPane2.setBounds(569, 105, 533, 537);
-        panel.add(scrollPane2);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(569, 105, 518, 537);
+        panel.add(scrollPane);
     }
 
     private void inicializarComponentesClientes(JPanel panel) {
@@ -99,6 +105,25 @@ public class PanelClienteMascota extends JPanel {
 
         cargarDatosClientes(); // Carga los datos de los clientes después de inicializar la tabla
     }
+    
+    private void inicializarComponentesMascotas(JPanel panel) {
+        // Configura el modelo de la tabla para mascotas
+        modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Especie", "Microchip"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;  // Hacer que la tabla no sea editable
+            }
+        };
+
+        tablaMascotas = new JTable(modeloTablaMascotas);
+        tablaMascotas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JScrollPane scrollPaneMascotas = new JScrollPane(tablaMascotas);
+        scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajusta las dimensiones según necesites
+        panel.add(scrollPaneMascotas);
+
+        cargarDatosMascotas(); // Carga los datos de las mascotas en la tabla
+    }
 
     private void cargarDatosClientes() {
         List<Cliente> listaClientes = clienteDao.obtenerTodosLosClientes(); // Obtiene los datos desde la base de datos a través del DAO
@@ -111,6 +136,26 @@ public class PanelClienteMascota extends JPanel {
                 cliente.getApellidos(),
                 cliente.getDni()
             });
+        }
+    }
+    
+    private void cargarDatosMascotas() {
+        try {
+            List<Mascota> listaMascotas = mascotaDAO.obtenerMascotasOrdenadasPorNombreEspecieMicrochip();
+
+            DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
+            modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+
+            for (Mascota mascota : listaMascotas) {
+                modelo.addRow(new Object[]{
+                        mascota.getNombre(),
+                        mascota.getEspecie(),
+                        mascota.getMicrochip()
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Maneja la excepción de SQL
+            // Aquí podrías mostrar un mensaje de error al usuario si la carga de datos falla.
         }
     }
 
@@ -131,7 +176,6 @@ public class PanelClienteMascota extends JPanel {
 
             PanelClienteMascota panel = new PanelClienteMascota();
             frame.getContentPane().add(panel);
-
             frame.setSize(800, 600); // Ajusta el tamaño según necesites
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);

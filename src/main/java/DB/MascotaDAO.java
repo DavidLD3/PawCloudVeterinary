@@ -152,4 +152,22 @@ public class MascotaDAO {
         }
         return mascota;
     }
+    
+    public List<Mascota> obtenerMascotasOrdenadasPorNombreEspecieMicrochip() throws SQLException {
+        List<Mascota> mascotas = new ArrayList<>();
+        String sql = "SELECT nombre, especie, microchip FROM mascotas ORDER BY nombre, especie, microchip";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Mascota mascota = new Mascota();
+                mascota.setNombre(rs.getString("nombre"));
+                mascota.setEspecie(rs.getString("especie"));
+                mascota.setMicrochip(rs.getString("microchip"));
+                mascotas.add(mascota);
+            }
+        }
+        return mascotas;
+    }
+    
 }
