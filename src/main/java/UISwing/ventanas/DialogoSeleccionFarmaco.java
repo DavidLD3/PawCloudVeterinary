@@ -21,12 +21,12 @@ public class DialogoSeleccionFarmaco extends JDialog {
         this.farmacoDAO = farmacoDAO;
         setTitle("Seleccionar Fármaco");
         setUndecorated(true);
-        setSize(new Dimension(300, 200));
+        setSize(new Dimension(300, 250));
         setLocationRelativeTo(null);
 
         comboBoxFarmacos = new JComboBox<>();
         comboBoxFarmacos.setEditable(true);
-        comboBoxFarmacos.setBounds(26, 11, 248, 24);
+        comboBoxFarmacos.setBounds(26, 41, 248, 24);
         comboBoxFarmacos.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -51,17 +51,15 @@ public class DialogoSeleccionFarmaco extends JDialog {
         getContentPane().add(comboBoxFarmacos);
 
         textFieldDosis = new JTextField(10);
-        textFieldDosis.setBounds(26, 63, 116, 22);
-        getContentPane().add(new JLabel("Dosis:")).setBounds(26, 46, 50, 14);
+        textFieldDosis.setBounds(26, 96, 116, 22);
         getContentPane().add(textFieldDosis);
 
         textFieldFrecuencia = new JTextField(10);
-        textFieldFrecuencia.setBounds(26, 121, 248, 22);
-        getContentPane().add(new JLabel("Frecuencia:")).setBounds(26, 104, 70, 14);
+        textFieldFrecuencia.setBounds(26, 154, 248, 22);
         getContentPane().add(textFieldFrecuencia);
 
         btnAceptar = new JButton("Aceptar");
-        btnAceptar.setBounds(193, 154, 81, 23);
+        btnAceptar.setBounds(182, 200, 92, 23);
         btnAceptar.addActionListener(e -> {
             seleccionado = true;
             setVisible(false);
@@ -69,12 +67,30 @@ public class DialogoSeleccionFarmaco extends JDialog {
         getContentPane().add(btnAceptar);
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBounds(102, 154, 83, 23);
+        btnCancelar.setBounds(26, 200, 95, 23);
         btnCancelar.addActionListener(e -> {
             seleccionado = false;
             setVisible(false);
         });
         getContentPane().add(btnCancelar);
+        
+        JLabel lblFarmaco = new JLabel("Farmaco:");
+        lblFarmaco.setForeground(new Color(255, 255, 255));
+        lblFarmaco.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblFarmaco.setBounds(26, 16, 69, 14);
+        getContentPane().add(lblFarmaco);
+        
+        JLabel lblDosis = new JLabel("Dosis:");
+        lblDosis.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblDosis.setForeground(new Color(255, 255, 255));
+        lblDosis.setBounds(26, 76, 46, 14);
+        getContentPane().add(lblDosis);
+        
+        JLabel lblFrecuencia = new JLabel("Frecuencia:");
+        lblFrecuencia.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblFrecuencia.setForeground(new Color(255, 255, 255));
+        lblFrecuencia.setBounds(26, 129, 95, 14);
+        getContentPane().add(lblFrecuencia);
 
         applyStyles();
     }
@@ -125,7 +141,4 @@ public class DialogoSeleccionFarmaco extends JDialog {
         DialogoSeleccionFarmaco dialogo = new DialogoSeleccionFarmaco(null, true, farmacoDAO);
         dialogo.setVisible(true);
     }
-
-    
-    
 }

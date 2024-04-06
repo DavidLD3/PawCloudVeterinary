@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class Hospitalizacion {
     private int id;
     private int idMascota;
+    private int idVeterinario; 
     private LocalDateTime fechaIngreso;
     private LocalDateTime fechaSalida;
     private String motivo;
@@ -33,6 +34,22 @@ public class Hospitalizacion {
     // Constructor completo (incluye nombres)
     public Hospitalizacion(int id, int idMascota, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas, String nombreMascota, String nombreVeterinario) {
         this(id, idMascota, fechaIngreso, fechaSalida, motivo, tratamiento, estado, notas);
+        this.nombreMascota = nombreMascota;
+        this.nombreVeterinario = nombreVeterinario;
+    }
+    
+    
+ // Constructor completo actualizado para incluir idVeterinario
+    public Hospitalizacion(int id, int idMascota, int idVeterinario, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas, String nombreMascota, String nombreVeterinario) {
+        this.id = id;
+        this.idMascota = idMascota;
+        this.idVeterinario = idVeterinario; // Agregar este parámetro
+        this.fechaIngreso = fechaIngreso;
+        this.fechaSalida = fechaSalida;
+        this.motivo = motivo;
+        this.tratamiento = tratamiento;
+        this.estado = estado;
+        this.notas = notas;
         this.nombreMascota = nombreMascota;
         this.nombreVeterinario = nombreVeterinario;
     }
@@ -117,6 +134,14 @@ public class Hospitalizacion {
     public void setNombreVeterinario(String nombreVeterinario) {
         this.nombreVeterinario = nombreVeterinario;
     }
+    
+    public int getIdVeterinario() {
+        return idVeterinario;
+    }
+
+    public void setIdVeterinario(int idVeterinario) {
+        this.idVeterinario = idVeterinario;
+    }
 
     // Método toString
     @Override
@@ -124,6 +149,7 @@ public class Hospitalizacion {
         return "Hospitalizacion{" +
                 "id=" + id +
                 ", idMascota=" + idMascota +
+                ", idVeterinario=" + idVeterinario + // Mostrar idVeterinario en toString
                 ", fechaIngreso=" + fechaIngreso +
                 ", fechaSalida=" + fechaSalida +
                 ", motivo='" + motivo + '\'' +

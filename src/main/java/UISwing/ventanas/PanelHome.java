@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import DB.CitaDAO;
 import DB.ClienteDAO;
+import DB.FarmacoDAO;
 import DB.HospitalizacionDAO;
 import DB.MascotaDAO;
 import UISwing.recursos.CustomPanelOpaco;
@@ -21,6 +22,7 @@ import model.Cita;
 import model.Cliente;
 import model.Hospitalizacion;
 import model.Mascota;
+import model.UsoFarmaco;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -38,16 +40,18 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
 	private CustomPanelOpaco panelOpacoCitas;
 	private JLabel lblDiaHospitalizacion;
     private JLabel lblMascotaHospitalizacion;
-    private JLabel lblClienteHospitalizacion;
+    private JLabel lblClienteHospitalizacion;	
     private JLabel lblHoraHospita_1;
     private JLabel lblHoraHospita_2;
     private JLabel lblDiaHospitalizacion_2;
     private JLabel lblMascotaHospitalizacion_2;
     private JLabel lblClienteHospitalizacion_2;
+    private FarmacoDAO farmacoDAO;	
 
     public PanelHome() {
         setLayout(null); // Usando layout nulo para control total sobre la posición de los componentes
         setOpaque(false);
+        this.farmacoDAO = new FarmacoDAO(); 
 
         inicializarPanelCitas();
         mostrarCitasProximas(); // Luego puedes llamar a mostrarCitasProximas()
@@ -68,12 +72,13 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         
         panelOpacoCitas = new CustomPanelOpaco();
         panelOpacoCitas.setBounds(24, 77, 274, 192);
+        panelOpacoCitas.setBackground(new Color(255, 255, 255, 70));
         panelCitas.add(panelOpacoCitas);
         panelOpacoCitas.setLayout(null);
         
         JLabel lblProximasCitas = new JLabel("Próximas Citas");
         lblProximasCitas.setForeground(new Color(255, 255, 255));
-        lblProximasCitas.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        lblProximasCitas.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblProximasCitas.setBounds(37, 13, 113, 27);
         panelOpacoCitas.add(lblProximasCitas);
         
@@ -247,8 +252,8 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         
         JLabel lbltextoCitaspendientes = new JLabel("Citas Pendientes");
         lbltextoCitaspendientes.setForeground(new Color(255, 255, 255));
-        lbltextoCitaspendientes.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoCitaspendientes.setBounds(44, 21, 120, 37);
+        lbltextoCitaspendientes.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lbltextoCitaspendientes.setBounds(44, 21, 183, 37);
         panelCitas.add(lbltextoCitaspendientes);
         
       
@@ -265,12 +270,13 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         CustomPanelOpaco panelOpacoHospita = new CustomPanelOpaco();
         panelOpacoHospita.setLayout(null);
         panelOpacoHospita.setBounds(24, 77, 274, 192);
+        panelOpacoHospita.setBackground(new Color(255, 255, 255, 70));
         panelHospitalizados.add(panelOpacoHospita);
         
         JLabel lbltextoHospitalizados = new JLabel("Últimas hospitalizaciones");
         lbltextoHospitalizados.setForeground(Color.WHITE);
-        lbltextoHospitalizados.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lbltextoHospitalizados.setBounds(37, 11, 185, 27);
+        lbltextoHospitalizados.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lbltextoHospitalizados.setBounds(37, 11, 216, 27);
         panelOpacoHospita.add(lbltextoHospitalizados);
         
         lblDiaHospitalizacion = new JLabel("");
@@ -315,7 +321,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         lblDiaHospitalizacion_2 = new JLabel("");
         lblDiaHospitalizacion_2.setForeground(new Color(255, 255, 255));
         lblDiaHospitalizacion_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblDiaHospitalizacion_2.setBounds(53, 139, 71, 26);
+        lblDiaHospitalizacion_2.setBounds(66, 137, 68, 26);
         panelOpacoHospita.add(lblDiaHospitalizacion_2);
         
         lblClienteHospitalizacion_2 = new JLabel("");
@@ -332,13 +338,13 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         lblHoraHospita_1 = new JLabel("");
         lblHoraHospita_1.setForeground(Color.WHITE);
         lblHoraHospita_1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblHoraHospita_1.setBounds(66, 51, 46, 26);
+        lblHoraHospita_1.setBounds(66, 51, 68, 26);
         panelOpacoHospita.add(lblHoraHospita_1);
         
         lblHoraHospita_2 = new JLabel("");
         lblHoraHospita_2.setForeground(Color.WHITE);
         lblHoraHospita_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblHoraHospita_2.setBounds(66, 113, 46, 26);
+        lblHoraHospita_2.setBounds(66, 113, 68, 26);
         panelOpacoHospita.add(lblHoraHospita_2);
         
         JLabel lbllogoHospitaReloj = new JLabel("");
@@ -431,8 +437,8 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         
         JLabel lbltextoHospitapendientes = new JLabel("Hospitalizados");
         lbltextoHospitapendientes.setForeground(Color.WHITE);
-        lbltextoHospitapendientes.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoHospitapendientes.setBounds(47, 21, 120, 37);
+        lbltextoHospitapendientes.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lbltextoHospitapendientes.setBounds(47, 21, 165, 37);
         panelHospitalizados.add(lbltextoHospitapendientes);
 
     }
@@ -484,12 +490,13 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         CustomPanelOpaco panelOpacoVentas = new CustomPanelOpaco();
         panelOpacoVentas.setLayout(null);
         panelOpacoVentas.setBounds(24, 77, 374, 191);
+        panelOpacoVentas.setBackground(new Color(255, 255, 255, 70));
         panelVentas.add(panelOpacoVentas);
           
         JLabel lbltextoVentas = new JLabel("Últimas ventas");
         lbltextoVentas.setForeground(Color.WHITE);
-        lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoVentas.setBounds(48, 21, 120, 31);
+        lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lbltextoVentas.setBounds(48, 21, 171, 31);
         panelVentas.add(lbltextoVentas);
         
         JLabel lblLogoPanelVentas = new JLabel("");
@@ -528,36 +535,36 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         CustomPanelOpaco panelOpaco = new CustomPanelOpaco();
         panelOpaco.setLayout(null); 
         panelOpaco.setBounds(24, 57, 1065, 160);
-        panelOpaco.setBackground(new Color(255, 255, 255, 80)); // El color se establece aquí pero la opacidad en paintComponent
+        panelOpaco.setBackground(new Color(255, 255, 255, 70)); // El color se establece aquí pero la opacidad en paintComponent
         panelFarmacos.add(panelOpaco);
 
         // Panel de encabezados
-        JPanel panelEncabezados = crearPanelEncabezados();
-        panelEncabezados.setOpaque(false);
-        panelEncabezados.setBounds(10, 10, 1034, 30);
+        JPanel panelEncabezados = crearPanelEncabezadosFarmacos();
+        panelEncabezados.setBounds(10, 10, 1034, 30); // Asegura que los encabezados se colocan correctamente
         panelOpaco.add(panelEncabezados);
 
-        // Panel de datos que contendrá las filas de datos
-        panelDatos = new JPanel(); // Asignar el valor al campo de la clase
+        panelDatos = new JPanel();
         panelDatos.setLayout(new BoxLayout(panelDatos, BoxLayout.Y_AXIS));
-        panelDatos.setBounds(10, 40, 1034, 110); // Ajusta el tamaño y la posición según tus necesidades
-        panelDatos.setOpaque(false); // Hacer el panel transparente
+        panelDatos.setBounds(10, 40, 1034, 110);
+        panelDatos.setOpaque(false);
         panelOpaco.add(panelDatos);
+
+        	
+
+        
         
         JLabel lbltextoUltimosFarmacos = new JLabel("Ultimos fármacos utilizados");
         lbltextoUltimosFarmacos.setForeground(new Color(255, 255, 255));
-        lbltextoUltimosFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbltextoUltimosFarmacos.setBounds(54, 11, 199, 28);
+        lbltextoUltimosFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lbltextoUltimosFarmacos.setBounds(54, 11, 259, 28);
         panelFarmacos.add(lbltextoUltimosFarmacos);
-        
+        cargarDatosFarmacos();
         JLabel lblLogoUltimosFarmacos = new JLabel("");
         lblLogoUltimosFarmacos.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoFarmacos.png")));
         lblLogoUltimosFarmacos.setBounds(24, 11, 26, 28);
         panelFarmacos.add(lblLogoUltimosFarmacos);
 
-        // Agregar algunos datos de ejemplo
-        agregarFilaDatos(new String[]{"10:00", "2024-02-23", "Dr. Smith", "Fido", "Paracetamol", "2", "50mg", "12345"});
-        agregarFilaDatos(new String[]{"11:00", "2024-02-23", "Dr. Jones", "Rex", "Ibuprofeno", "1", "200mg", "67890"});
+  
         
     }
     
@@ -589,39 +596,77 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
   
 
 
-    private JPanel crearPanelEncabezados() {
+    private JPanel crearPanelEncabezadosFarmacos() {
         JPanel panelEncabezados = new JPanel();
-        panelEncabezados.setLayout(new GridLayout(1, 8, 0, 0)); // 8 columnas como en tus datos
-        panelEncabezados.setBackground(new Color(75, 75, 153)); // Un color de fondo
-        panelEncabezados.setBounds(10, 10, 1055, 30); // Tamaño y posición
-        Font fuenteEncabezado = new Font("Segoe UI", Font.BOLD, 15);  //  Fuente del encabezado
+        panelEncabezados.setLayout(new GridLayout(1, 6));  // Asegúrate de que el número de columnas aquí y en las filas de datos sea el mismo
+        panelEncabezados.setPreferredSize(new Dimension(1000, 30)); // Ajusta el tamaño según tus necesidades
+        panelEncabezados.setOpaque(false);
 
-        String[] encabezados = {"Hora", "Fecha", "Veterinario", "Paciente", "Nombre", "Cantidad", "Dosis", "Código"};
+        String[] encabezados = {"Hora", "Fecha", "Nombre Farmaco", "Paciente", "Dosis", "Frecuencia"};
         for (String encabezado : encabezados) {
-            JLabel labelEncabezado = new JLabel(encabezado, SwingConstants.CENTER);
-            labelEncabezado.setForeground(Color.WHITE); // Color de texto
-            labelEncabezado.setFont(fuenteEncabezado);
-            panelEncabezados.add(labelEncabezado);
+            JLabel label = new JLabel(encabezado, SwingConstants.CENTER);
+            label.setForeground(Color.WHITE);
+            label.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            panelEncabezados.add(label);
         }
-
         return panelEncabezados;
     }
-    private void agregarFilaDatos(String[] datos) {
+
+    private void agregarFilaDatos(JPanel panelDatos, String[] datos) {
         JPanel panelFila = new JPanel();
-        panelFila.setLayout(new GridLayout(1, datos.length, 0, 0)); // Asignar un GridLayout
-        panelFila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Altura de la fila
-        panelFila.setOpaque(false); // Hacer el panel transparente
+        panelFila.setLayout(new GridLayout(1, 6)); // Asegúrate de que el número de columnas sea el mismo que en los encabezados
+        panelFila.setPreferredSize(new Dimension(1000, 30)); // Ajusta el tamaño como sea necesario
+        panelFila.setOpaque(false);
 
         for (String dato : datos) {
             JLabel labelDato = new JLabel(dato, SwingConstants.CENTER);
-            labelDato.setForeground(Color.WHITE); // Color de texto
+            labelDato.setForeground(Color.WHITE);
+            labelDato.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             panelFila.add(labelDato);
         }
 
         panelDatos.add(panelFila);
+    }
+
+
+    private void agregarFilaDatos(String[] datos) {
+        JPanel panelFila = new JPanel();
+        panelFila.setLayout(new GridLayout(1, 7, 0, 0)); // Ajustado a 7 columnas
+        panelFila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        panelFila.setOpaque(false);
+
+        for (String dato : datos) {
+            JLabel labelDato = new JLabel(dato, SwingConstants.CENTER);
+            labelDato.setForeground(Color.WHITE);
+            panelFila.add(labelDato);
+        }
+
+        panelDatos.add(panelFila);
+    }
+    
+    private void cargarDatosFarmacos() {
+        List<UsoFarmaco> usosFarmacos = farmacoDAO.obtenerUltimosUsosFarmacos();
+        panelDatos.removeAll(); // Limpia los datos existentes antes de cargar nuevos
+
+        for (UsoFarmaco uso : usosFarmacos) {
+            String[] datosFila = new String[]{
+                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("HH:mm")), // Hora de uso
+                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), // Fecha de uso
+                uso.getNombreFarmaco(), // Nombre del fármaco
+                uso.getNombreMascota(), // Nombre de la mascota tratada
+                String.valueOf(uso.getCantidadUsada()), // Cantidad usada (dosis administrada)
+                uso.getFrecuencia() // Frecuencia de administración del fármaco
+            };
+            agregarFilaDatos(datosFila);
+        }
+
         panelDatos.revalidate();
         panelDatos.repaint();
     }
+
+
+
+
     private JPanel crearPanelEncabezadosVentas() {
         JPanel panelEncabezadosVentas = new JPanel();
         panelEncabezadosVentas.setLayout(new GridLayout(1, 4, 0, 0)); // 4 columnas para las ventas
@@ -632,7 +677,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         for (String encabezado : encabezadosVentas) {
             JLabel labelEncabezado = new JLabel(encabezado, SwingConstants.CENTER);
             labelEncabezado.setForeground(Color.WHITE);
-            labelEncabezado.setFont(new Font("Segoe UI", Font.BOLD, 15));
+            labelEncabezado.setFont(new Font("Segoe UI", Font.BOLD, 16));
             panelEncabezadosVentas.add(labelEncabezado);
         }
         

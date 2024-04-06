@@ -34,7 +34,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	private JTextField txtMascotaNombre;
 	private JTextField txtVeterinarioNombre;
     private JDateChooser dateChooserIngreso;
-    private JDateChooser dateChooserSalida; // Opcional, puede ser null al inicio
+    private JDateChooser dateChooserSalida;
     private JTextArea textAreaMotivo;
     private JTextArea textAreaTratamiento;
     private JComboBox<String> comboBoxEstado;
@@ -288,19 +288,41 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        dialogo.setVisible(true);
 	        if (dialogo.isSeleccionado()) {
 	            Farmaco farmacoSeleccionado = dialogo.getFarmacoSeleccionado();
-	            String dosis = dialogo.getDosis();
+	            String dosis = dialogo.getDosis().replaceAll("\\D+","");  // Limpieza para asegurar que es numérico
 	            String frecuencia = dialogo.getFrecuencia();
 	            
-	            textAreaTratamiento.append(farmacoSeleccionado.getNombre() + " - Dosis: " + dosis + ", Frecuencia: " + frecuencia + "\n");
+	            // Compilar la información del tratamiento actualizado
+	            String tratamientoActualizado = textAreaTratamiento.getText() + farmacoSeleccionado.getNombre() + 
+	                                            " - Dosis: " + dosis + "mg, Frecuencia: " + frecuencia + "\n";
+	            textAreaTratamiento.setText(tratamientoActualizado);
 	            
-	            boolean stockActualizado = farmacoDAO.actualizarStockFarmaco(farmacoSeleccionado.getId(), 1); // Asumiendo que se usa una unidad
-	            
+	            // Actualizar el stock y registrar el uso
+	            if (farmacoDAO.actualizarStockFarmaco(farmacoSeleccionado.getId(), -1)) {
+	                UsoFarmaco uso = new UsoFarmaco();
+	                uso.setIdFarmaco(farmacoSeleccionado.getId());
+	                uso.setIdHospitalizacion(hospitalizacion.getId());
+	                uso.setCantidadUsada(Integer.parseInt(dosis));  // Convertir dosis a entero si es necesario
+	                uso.setFrecuencia(frecuencia);
+	                uso.setFechaHoraUso(LocalDateTime.now());
+
+	                if (farmacoDAO.registrarUsoFarmaco(uso)) {
+	                    hospitalizacion.setTratamiento(tratamientoActualizado);
+	                    if (!hospitalizacionDAO.actualizarHospitalizacion(hospitalizacion)) {
+	                        JOptionPane.showMessageDialog(this, "Error al actualizar el tratamiento.", "Error", JOptionPane.ERROR_MESSAGE);
+	                    }
+	                } else {
+	                    JOptionPane.showMessageDialog(this, "Error al registrar el uso del fármaco.", "Error", JOptionPane.ERROR_MESSAGE);
+	                }
+	            } else {
+	                JOptionPane.showMessageDialog(this, "Error al actualizar el stock de fármacos.", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(this, "Ocurrió un error al abrir el diálogo de selección de fármaco: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        JOptionPane.showMessageDialog(this, "Error al abrir el diálogo de selección de fármaco: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
+
 	 
 	 public void cargarDatosHospitalizacion(Hospitalizacion hospitalizacion) {
 		    this.hospitalizacion = hospitalizacion; // Asegurarse de inicializar la variable de clase con el objeto hospitalizacion pasado como parámetro.

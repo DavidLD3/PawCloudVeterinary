@@ -45,7 +45,6 @@ public class VentanaHospitalizadosDialog extends JDialog {
     private JButton saveButton;
     private JButton cancelButton;
 	private HospitalizacionDAO hospitalizacionDAO;
-	private JButton btnAddFarmaco;
 	private FarmacoDAO farmacoDAO;
 	private JComboBox<Veterinario> comboBoxVeterinarios;
 
@@ -200,7 +199,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	        roundedPanel.add(comboBoxVeterinarios);
 	        llenarComboBoxVeterinarios();
 	        
-	       /* JPanel centerPanel = new JPanel() {
+	       JPanel centerPanel = new JPanel() {
 	            @Override
 	            protected void paintComponent(Graphics g) {
 	                // Personaliza aquí tu componente
@@ -212,9 +211,9 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	                super.paintComponent(g);
 	            }
 	        };
-	        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
+	        centerPanel.setBackground(new Color(255, 255, 255, 70)); // Color de fondo con opacidad
 	        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
-	        centerPanel.setBounds(21, 21, 846, 414);*/
+	        centerPanel.setBounds(21, 21, 846, 414);
 	        
 	        // Agregar los componentes al panel
 	        
@@ -227,7 +226,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	        roundedPanel.add(scrollPaneNotas);
 	        roundedPanel.add(saveButton);
 	        roundedPanel.add(cancelButton);
-	        //roundedPanel.add(centerPanel);
+	        roundedPanel.add(centerPanel);
 	        
 	        JLabel lblMascota = new JLabel("Mascota:");
 	        lblMascota.setForeground(new Color(255, 255, 255));
@@ -276,11 +275,6 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	        lblVeterinario.setFont(new Font("Segoe UI", Font.BOLD, 13));
 	        lblVeterinario.setBounds(569, 96, 79, 30);
 	        roundedPanel.add(lblVeterinario);
-	        
-	        btnAddFarmaco = new JButton("Añadir Fármaco");
-	        btnAddFarmaco.setBounds(369, 396, 150, 25); // Ajusta la posición como necesites
-	        btnAddFarmaco.addActionListener(e -> abrirDialogoSeleccionFarmaco());
-	        roundedPanel.add(btnAddFarmaco);
 	      
 	    }
 	 

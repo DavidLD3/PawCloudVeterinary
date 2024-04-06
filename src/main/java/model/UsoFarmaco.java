@@ -1,15 +1,18 @@
 package model;
 
+import java.time.LocalDateTime;
+
 public class UsoFarmaco {
     private int idFarmaco;
     private int idHospitalizacion;
     private int idVeterinario;
     private int cantidadUsada;
-    // Considera si necesitas realmente el nombre, dosis, frecuencia y código aquí
+    private LocalDateTime fechaHoraUso;
     private String nombreFarmaco;
     private String dosis;
     private String frecuencia;
     private String codigoFarmaco;
+    private String nombreMascota;
 
     // Constructor completo
     public UsoFarmaco(int idFarmaco, int idHospitalizacion, int idVeterinario, int cantidadUsada, String nombreFarmaco, String dosis, String frecuencia, String codigoFarmaco) {
@@ -25,6 +28,9 @@ public class UsoFarmaco {
     public UsoFarmaco() {
     	
     }
+    
+    public LocalDateTime getFechaHoraUso() { return fechaHoraUso; }
+    public void setFechaHoraUso(LocalDateTime fechaHoraUso) { this.fechaHoraUso = fechaHoraUso; }
 
     // Getters y Setters
     public int getIdFarmaco() { return idFarmaco; }
@@ -50,4 +56,12 @@ public class UsoFarmaco {
 
     public String getCodigoFarmaco() { return codigoFarmaco; }
     public void setCodigoFarmaco(String codigoFarmaco) { this.codigoFarmaco = codigoFarmaco; }
+    
+    public String getNombreMascota() {
+        return nombreMascota;
+    }
+
+    public void setNombreMascota(String nombreMascota) {
+        this.nombreMascota = nombreMascota;
+    }
 }
