@@ -25,6 +25,7 @@ public class PanelClienteMascota extends JPanel {
     private ClienteDAO clienteDao;
     private DefaultTableModel modeloTablaMascotas; // Nuevo modelo para mascotas
     private MascotaDAO mascotaDAO;
+    private JScrollPane scrollPaneClientes; // Declaración de la variable scrollPaneClientes como una variable de instancia
     /**
      * Create the panel.
      */
@@ -80,7 +81,30 @@ public class PanelClienteMascota extends JPanel {
                 }
             }
         });
+        txtBuscarClientemascota.addActionListener(e -> {
+            String searchText = txtBuscarClientemascota.getText().trim().toLowerCase(); // Obtenemos el texto y lo convertimos a minúsculas para una búsqueda insensible a mayúsculas
 
+            // Recorremos las filas de la tabla para buscar coincidencias
+            boolean found = false;
+            for (int row = 0; row < tablaMascotas.getRowCount(); row++) {
+                String nombreMascota = tablaMascotas.getValueAt(row, 0).toString().toLowerCase();
+                if (nombreMascota.equals(searchText)) {
+                    // Si encuentra una coincidencia, seleccionar la fila
+                    tablaMascotas.setRowSelectionInterval(row, row);
+                    
+                    // Hacemos que la fila seleccionada sea visible
+                    Rectangle rect = tablaMascotas.getCellRect(row, 0, true);
+                    tablaMascotas.scrollRectToVisible(rect);
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "Mascota no encontrada", "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
+                tablaMascotas.clearSelection();
+            }
+        });
         panel.add(txtBuscarClientemascota); // Agrega el campo de texto al panel
 
         txtBuscarCliente = new JTextField("Buscar cliente"); 			// Creamos un JTextField con texto predeterminado
@@ -102,6 +126,29 @@ public class PanelClienteMascota extends JPanel {
                 }
             }
         });
+        txtBuscarCliente.addActionListener(e -> {
+            String searchText = txtBuscarCliente.getText().trim(); // Obtiene el texto ingresado y elimina espacios en blanco
+            boolean found = false;
+            // Realiza la búsqueda en la tabla de clientes por nombre o DNI
+            for (int row = 0; row < tablaClientes.getRowCount(); row++) {
+                String nombre = tablaClientes.getValueAt(row, 0).toString();
+                String dni = tablaClientes.getValueAt(row, 2).toString();
+                if (nombre.equalsIgnoreCase(searchText) || dni.equals(searchText)) {
+                    // Selecciona la fila correspondiente si se encuentra una coincidencia
+                    tablaClientes.setRowSelectionInterval(row, row);
+                    // Hace que la fila seleccionada sea visible en la tabla
+                    Rectangle rect = tablaClientes.getCellRect(row, 0, true);
+                    tablaClientes.scrollRectToVisible(rect);
+                    // Hace que el scrollPane se enfoque en la tabla
+                    scrollPaneClientes.getViewport().setViewPosition(new Point(rect.x, rect.y));
+                    return; // Sale del bucle después de encontrar la primera coincidencia
+                }
+            }
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "Cliente no encontrado", "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
+                tablaClientes.clearSelection();
+            }
+        });
 
         panel.add(txtBuscarCliente);  // Agrega el campo de texto al pane
 
@@ -111,9 +158,9 @@ public class PanelClienteMascota extends JPanel {
         JScrollPane scrollPaneClientes = new JScrollPane();
         scrollPaneClientes.setBounds(10, 105, 549, 537);
         panel.add(scrollPaneClientes); */
-        JScrollPane scrollPaneClientes = new JScrollPane();
-        scrollPaneClientes.setBounds(10, 105, 549, 537);
-        panel.add(scrollPaneClientes);
+        scrollPaneClientes = new JScrollPane();
+        scrollPaneClientes.setBounds(10, 105, 549, 537); // Ajusta las dimensiones según necesites
+        panel.add(scrollPaneClientes); // Asegúrate de agregarlo al panel adecuado
 
         JScrollPane scrollPaneMascotas = new JScrollPane(); // Nuevo JScrollPane para mascotas
         scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajusta las dimensiones según necesites
