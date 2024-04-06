@@ -247,7 +247,34 @@ public class ClienteDAO {
         return false;
     }
 
-
+    public Cliente obtenerClientePorDni(String dni) {
+        Cliente cliente = null;
+        String consulta = "SELECT * FROM clientes WHERE dni = ?";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(consulta)) {
+            stmt.setString(1, dni);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                cliente = new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("apellidos"),
+                    rs.getDate("fecha_nacimiento").toLocalDate(),
+                    rs.getString("dni"),
+                    rs.getString("nif"),
+                    rs.getString("direccion"),
+                    rs.getString("poblacion"),
+                    rs.getString("provincia"),
+                    rs.getString("telefono_fijo"),
+                    rs.getString("telefono_movil"),
+                    rs.getString("email")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cliente;
+    }
 
    
 }

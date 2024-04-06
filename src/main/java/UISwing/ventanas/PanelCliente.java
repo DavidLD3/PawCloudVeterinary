@@ -155,4 +155,20 @@ public class PanelCliente extends JPanel {
             modeloTabla.addRow(new Object[]{mascota.getId(), mascota.getNombre(), mascota.getEspecie(), mascota.getRaza()});
         }
     }
+    
+    public PanelCliente(String dni) {
+        super(new BorderLayout());
+        clienteDao = new ClienteDAO();
+        this.cliente = clienteDao.obtenerClientePorDni(dni); // Asegúrate de implementar obtenerClientePorDni en ClienteDAO
+        if (this.cliente != null) {
+            initializeUI();
+            actualizarTablaMascotas();
+        } else {
+            add(new JLabel("Cliente no encontrado."), BorderLayout.CENTER);
+        }
+    }
+    
+    
+    
+    
 }
