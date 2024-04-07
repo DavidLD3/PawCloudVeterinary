@@ -49,12 +49,14 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	private JComboBox<Veterinario> comboBoxVeterinarios;
 	private String nombreMascota;
 	private int idMascota;
+	private PanelInfoMascota panelInfoMascota;
 
     
-	public VentanaHospitalizadosDialogMascota(Frame owner, boolean modal, int idMascota, String nombreMascota) {
+	public VentanaHospitalizadosDialogMascota(Frame owner, boolean modal, int idMascota, String nombreMascota, PanelInfoMascota panelInfoMascota) {
 	    super(owner, modal);
-	    this.idMascota = idMascota; // Almacena el ID de la mascota
+	    this.idMascota = idMascota;
 	    this.nombreMascota = nombreMascota;
+	    this.panelInfoMascota = panelInfoMascota;
 	    setTitle("Hospitalizaciones - " + nombreMascota);
 	        setTitle("Hospitalizaciones");
 	        farmacoDAO = new FarmacoDAO();
@@ -347,6 +349,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 		        boolean resultadoInsertar = hospitalizacionDAO.insertarHospitalizacion(hospitalizacion, idVeterinarioSeleccionado);
 		        if (resultadoInsertar) {
 		            JOptionPane.showMessageDialog(this, "Hospitalización guardada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		            panelInfoMascota.actualizarTablaHospitalizaciones(); // Actualiza la tabla de hospitalizaciones
 		            dispose();
 		        } else {
 		            JOptionPane.showMessageDialog(this, "No se pudo guardar la hospitalización.", "Error", JOptionPane.ERROR_MESSAGE);

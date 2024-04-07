@@ -1,17 +1,23 @@
-package UISwing.ventanas;
+ package UISwing.ventanas;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.format.DateTimeFormatter;
 import DB.MascotaDAO;
+import DB.HospitalizacionDAO;
+import model.Hospitalizacion;
 import model.Mascota;
+import java.util.List;
 
 public class PanelInfoMascota extends JPanel {
     private MascotaDAO mascotaDao;
     private Mascota mascota;
     private JTabbedPane tabbedPane;
+    private JTable tablaHospitalizaciones;
 
     public PanelInfoMascota(int idMascota) {
         super(new BorderLayout());
@@ -72,7 +78,7 @@ public class PanelInfoMascota extends JPanel {
         modeloTabla.addColumn("Motivo");
 
         // Aquí deberías llenar el modelo de la tabla con los datos existentes, si los hay.
-        JTable tablaHospitalizaciones = new JTable(modeloTabla);
+        tablaHospitalizaciones = new JTable(modeloTabla);
         JScrollPane scrollPane = new JScrollPane(tablaHospitalizaciones);
         panelHospitalizaciones.add(scrollPane, BorderLayout.CENTER);
 
@@ -82,22 +88,57 @@ public class PanelInfoMascota extends JPanel {
         JPanel panelBoton = new JPanel();
         panelBoton.add(btnAgregarHospitalizacion);
         panelHospitalizaciones.add(panelBoton, BorderLayout.SOUTH);
+        
+        tablaHospitalizaciones.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && tablaHospitalizaciones.getSelectedRow() != -1) {
+                    int selectedRow = tablaHospitalizaciones.getSelectedRow();
+                    int idHospitalizacion = (Integer) tablaHospitalizaciones.getModel().getValueAt(selectedRow, 0); // Asumiendo que el ID está en la columna 0.
+                    abrirDialogoDetalleHospitalizacion(idHospitalizacion);
+                }
+            }
+        });
 
         return panelHospitalizaciones;
     }
+    
 
-    private void abrirDialogoDetalleHospitalizacion() {
+    
+    
+    public void actualizarTablaHospitalizaciones() {
+        HospitalizacionDAO hospitalizacionDAO = new HospitalizacionDAO();
+        List<Hospitalizacion> hospitalizaciones = hospitalizacionDAO.recuperarTodasLasHospitalizaciones(); // O el método que necesites
+        
+        DefaultTableModel modelo = (DefaultTableModel) tablaHospitalizaciones.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla antes de añadir las nuevas filas
+        
+        for (Hospitalizacion hospitalizacion : hospitalizaciones) {
+            modelo.addRow(new Object[]{
+                hospitalizacion.getFechaIngreso().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                hospitalizacion.getMotivo(),
+                // Añade más datos según necesites
+            });
+        }
+    }
+    private void abrirDialogoDetalleHospitalizacion(int idHospitalizacion) {
         if (this.mascota != null) {
             Frame owner = (Frame) SwingUtilities.getWindowAncestor(this);
-            // Asumiendo que `Mascota` tiene un método getId() para obtener su ID
-            int idDeLaMascota = this.mascota.getId();
-            String nombreDeLaMascota = this.mascota.getNombre();
-            VentanaHospitalizadosDialogMascota dialogo = new VentanaHospitalizadosDialogMascota(owner, true, idDeLaMascota, nombreDeLaMascota);
+            HospitalizacionDAO hospitalizacionDAO = new HospitalizacionDAO();
+            
+            // No necesitas cargar la Hospitalizacion aquí si VentanaHospitalizadosDialogMascota
+            // carga los detalles basándose en el ID de hospitalización.
+            // Solo necesitas pasar el ID a la ventana.
+            
+            // Inicializar VentanaHospitalizadosDialogMascota con el ID de hospitalización
+            VentanaHospitalizadosDialogMascota dialogo = new VentanaHospitalizadosDialogMascota(owner, true, idHospitalizacion, mascota.getNombre(), this);
             dialogo.setVisible(true);
+            
         } else {
             JOptionPane.showMessageDialog(this, "Mascota no está inicializada.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private JPanel crearPanelHistorialMedico() {
         JPanel panel = new JPanel(new BorderLayout());
