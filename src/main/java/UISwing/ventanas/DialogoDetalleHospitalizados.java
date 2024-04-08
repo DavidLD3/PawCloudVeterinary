@@ -47,7 +47,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	private Hospitalizacion hospitalizacion;
 	private static ActualizacionListener actualizacionListener;
 	private List<UsoFarmaco> usosFarmacos = new ArrayList<>();
-
+	
 	
 	public interface ActualizacionListener {
 	    void onActualizacion();
@@ -55,9 +55,9 @@ public class DialogoDetalleHospitalizados extends JDialog {
 
 
     
-	public DialogoDetalleHospitalizados(Frame owner, boolean modal, ActualizacionListener actualizacionListener2) {
-	    super(owner, modal);
-	    this.actualizacionListener = actualizacionListener2;
+	 public DialogoDetalleHospitalizados(Frame owner, boolean modal, ActualizacionListener actualizacionListener) {
+	        super(owner, modal);
+	        this.actualizacionListener = actualizacionListener;
 	    setTitle("Hospitalizaciones");
 	    farmacoDAO = new FarmacoDAO();
 	    hospitalizacionDAO = new HospitalizacionDAO(); // Asegúrate de que esta línea esté agregada
@@ -69,9 +69,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	       
 		}
 	 
-	 public DialogoDetalleHospitalizados(Frame ownerFrame, boolean modal, MouseAdapter mouseAdapter) {
-		// TODO Auto-generated constructor stub
-	}
+	 
 
 	private void initDialogComponents() {
 		 	roundedPanel = new RoundedPanel(30, Color.decode("#0483FF"));

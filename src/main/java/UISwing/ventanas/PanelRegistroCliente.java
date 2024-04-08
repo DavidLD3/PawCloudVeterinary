@@ -81,7 +81,15 @@ public class PanelRegistroCliente extends JPanel {
         btnCerrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere cerrar sin guardar?", "Cerrar", JOptionPane.YES_NO_OPTION);
+                // Creación de un JPanel personalizado para el contenido del diálogo
+                JPanel confirmPanel = new JPanel();
+                confirmPanel.add(new JLabel("¿Está seguro de que quiere cerrar sin guardar?"));
+                
+                // Opciones personalizadas para los botones
+                String[] options = {"Sí", "No"};
+                
+                // Mostrar el diálogo personalizado
+                int confirm = JOptionPane.showOptionDialog(null, confirmPanel, "Cerrar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
                 if (confirm == JOptionPane.YES_OPTION) {
                     System.exit(0);
                 }
@@ -290,7 +298,4 @@ public class PanelRegistroCliente extends JPanel {
 	
 			
 }
-
-
-
 
