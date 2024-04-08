@@ -281,7 +281,7 @@ public class PanelClienteMascota extends JPanel {
         } catch (SQLException e) {
             e.printStackTrace(); 
         }// Maneja la excepción de SQL
-        // Aquí podrías mostrar un mensaje de error al usuario si la carga de datos falla.
+        // Aquí podríamos mostrar un mensaje de error al usuario si la carga de datos falla.
     }
 
     private void abrirPanelDetalleClientePorDni(String dni) {
