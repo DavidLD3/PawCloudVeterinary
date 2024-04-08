@@ -1,4 +1,4 @@
-package UISwing.recursos;
+package UISwing.ventanas;
 
 public interface HospitalizacionActualizadaListener {
     void onHospitalizacionActualizada();
