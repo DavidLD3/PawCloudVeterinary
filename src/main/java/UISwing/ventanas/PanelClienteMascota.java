@@ -43,18 +43,24 @@ public class PanelClienteMascota extends JPanel {
         panel.setLayout(null);
 
         JButton btnExportar = new JButton("Exportar");
-        btnExportar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnExportar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnExportar.setBounds(875, 42, 89, 23);
+        btnExportar.setBackground(Color.WHITE); // Establece el color de fondo del botón a blanco
+        btnExportar.setForeground(Color.BLUE);  // Establece el color de la letra del botón a azul
         panel.add(btnExportar);
 
         JButton btnImportar = new JButton("Importar");
-        btnImportar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnImportar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnImportar.setBounds(764, 42, 89, 23);
+        btnImportar.setBackground(Color.WHITE); // Establece el color de fondo del botón a blanco
+        btnImportar.setForeground(Color.BLUE);  // Establece el color de la letra del botón a azul
         panel.add(btnImportar);
 
         JButton btnAnadir = new JButton("Añadir");
-        btnAnadir.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnAnadir.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAnadir.setBounds(186, 42, 89, 23);
+        btnAnadir.setBackground(Color.WHITE); // Establece el color de fondo del botón a blanco
+        btnAnadir.setForeground(Color.BLUE);  // Establece el color de la letra del botón a azul
         panel.add(btnAnadir);
 
         // Añadir ActionListener al botón Añadir
@@ -70,13 +76,8 @@ public class PanelClienteMascota extends JPanel {
             }
         });
 
-        JButton btnMostrarPor = new JButton("Mostrar por");
-        btnMostrarPor.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnMostrarPor.setBounds(302, 42, 89, 23);
-        panel.add(btnMostrarPor);
-
         txtBuscarClientemascota = new JTextField("Buscar mascota"); // Crea un JTextField con texto predeterminado
-        txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 12)); // Establece la fuente del texto
+        txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establece la fuente del texto
         txtBuscarClientemascota.setBounds(569, 43, 161, 20); // Establece la posición y el tamaño del campo de texto
 
         // Agrega un MouseListener para detectar clics en el campo de texto
@@ -123,7 +124,7 @@ public class PanelClienteMascota extends JPanel {
         panel.add(txtBuscarClientemascota); // Agrega el campo de texto al panel
 
         txtBuscarCliente = new JTextField("Buscar cliente"); 			// Creamos un JTextField con texto predeterminado
-        txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 12)); // Establecemos la fuente del texto
+        txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establecemos la fuente del texto
         txtBuscarCliente.setBounds(10, 43, 166, 20);					// Establecemos la posición y el tamaño del campo de texto
      // Agregamos un MouseListener para detectar clics en el campo de texto
         txtBuscarCliente.addMouseListener(new MouseAdapter() {
