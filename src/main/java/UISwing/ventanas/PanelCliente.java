@@ -24,6 +24,8 @@ public class PanelCliente extends JPanel {
     private JTable tablaMascotas;
 
     public PanelCliente(int idCliente) {
+        // Inicializa el panel del cliente buscándolo por ID y prepara la UI.
+
         super(new BorderLayout());
         clienteDao = new ClienteDAO();
         this.cliente = clienteDao.obtenerClientePorId(idCliente);
@@ -32,10 +34,11 @@ public class PanelCliente extends JPanel {
     }
 
     private void initializeUI() {
+     // Configura las pestañas de la interfaz para detalles del cliente y sus mascotas.
         tabbedPane = new JTabbedPane();
         // Crea e inicializa los paneles que se añadirán como pestañas
         JPanel panelInfoCliente = crearPanelInfoCliente();
-        JPanel panelMascotas = crearPanelMascotasTotales(); // Ejemplo de panel para mascotas
+        JPanel panelMascotas = crearPanelMascotasTotales(); 
         
         // Añade los paneles al JTabbedPane
         tabbedPane.addTab("Cliente", panelInfoCliente);
@@ -45,7 +48,8 @@ public class PanelCliente extends JPanel {
     }
 
     private JPanel crearPanelInfoCliente() {
-    	 JPanel panel = new GradientPanel2(); // Utiliza GradientPanel2 para un fondo con degradado
+    // Crea y retorna un panel con los datos del cliente en un fondo con degradado.
+    	 JPanel panel = new GradientPanel2(); 
          panel.setLayout(new GridLayout(0, 2)); 
         if (this.cliente != null) {
             // Añadir los campos de texto y etiquetas al panel
@@ -68,6 +72,7 @@ public class PanelCliente extends JPanel {
     }
 
     private void agregarCampo(JPanel panel, String etiqueta, String valor) {
+     // Añade un campo de texto no editable para mostrar un dato del cliente.
         panel.add(new JLabel(etiqueta));
         JTextField textField = new JTextField(valor, 20);
         textField.setEditable(false);
@@ -75,6 +80,7 @@ public class PanelCliente extends JPanel {
     }
 
     private JPanel crearPanelMascotasTotales() {
+    // Prepara y retorna un panel que lista las mascotas del cliente con opción a añadir más.
         JPanel panelMascotas = new GradientPanel2(); // Usa GradientPanel2 para el fondo
         panelMascotas.setLayout(new BorderLayout());
         panelMascotas.add(new JLabel("Lista de mascotas"), BorderLayout.NORTH);
@@ -93,7 +99,7 @@ public class PanelCliente extends JPanel {
         RoundedButton botonAgregarMascota = new RoundedButton("Añadir Mascota"); // Usa RoundedButton
         botonAgregarMascota.addActionListener(e -> abrirPanelRegistroMascota());
         JPanel panelBoton = new JPanel();
-        panelBoton.setOpaque(false); // Hazlo transparente para que se muestre el fondo degradado
+        panelBoton.setOpaque(false); 
         panelBoton.add(botonAgregarMascota);
         panelMascotas.add(panelBoton, BorderLayout.SOUTH);
 
@@ -113,9 +119,8 @@ public class PanelCliente extends JPanel {
         return panelMascotas;
     }
     private void abrirPanelInfoMascota(int idMascota) {
-        // Aquí debes implementar la lógica para abrir un panel con información detallada de la mascota
-        // Puedes crear un nuevo panel o ventana para mostrar la información de la mascota
-        // Por ejemplo:
+    // Muestra una ventana con información detallada de la mascota seleccionada.
+       
         PanelInfoMascota panelInfoMascota = new PanelInfoMascota(idMascota);
         JFrame frameInfoMascota = new JFrame("Información de la Mascota");
         frameInfoMascota.getContentPane().add(panelInfoMascota);
@@ -125,6 +130,8 @@ public class PanelCliente extends JPanel {
         frameInfoMascota.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
     private void abrirPanelRegistroMascota() {
+     // Abre una ventana para registrar una nueva mascota y actualiza la lista tras cerrarla
+
         PanelRegistroMascota panelRegistroMascota = new PanelRegistroMascota(this.cliente.getId());
         JFrame frameRegistroMascota = new JFrame("Registro de Mascota");
         frameRegistroMascota.getContentPane().add(panelRegistroMascota);
@@ -139,12 +146,13 @@ public class PanelCliente extends JPanel {
             }
         });
 
-        frameRegistroMascota.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Asegúrate de que la ventana se dispose al cerrar
+        frameRegistroMascota.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
     }
 
     public void actualizarTablaMascotas() {
+    // Refresca la tabla de mascotas con los datos actuales del cliente.
         if (tablaMascotas == null) {
-            return; // Si tablaMascotas no se ha inicializado, sal del método.
+            return; // Si tablaMascotas no se ha inicializado, sale del método.
         }
         MascotaDAO mascotaDao = new MascotaDAO();
         List<Mascota> listaMascotas = mascotaDao.obtenerMascotasPorClienteId(this.cliente.getId());

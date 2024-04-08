@@ -2,14 +2,15 @@ package UISwing.ventanas;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import com.toedter.calendar.JDateChooser;
-
 import DB.ClienteDAO;
+import UISwing.recursos.GradientPanel;
 import model.Cliente;
 
 public class PanelRegistroCliente extends JPanel {
@@ -22,19 +23,37 @@ public class PanelRegistroCliente extends JPanel {
     public PanelRegistroCliente() {
         super(new BorderLayout());
         initializeUI();
+        setOpaque(false); // Asegura que el panel sea transparente para ver el gradiente
+    }
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // Esta llamada debe estar al principio para preparar el panel
+
+        // Asegura la calidad del renderizado
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Configura el gradiente
+        GradientPaint gp = new GradientPaint(0, 0, Color.decode("#B3E5FC"), getWidth(), 0, Color.decode("#81D4FA"));
+        g2.setPaint(gp);
+        g2.fillRect(0, 0, getWidth(), getHeight());
+        g2.dispose();
     }
 
+
     private void initializeUI() {
-        setBackground(new Color(134, 206, 249));
+        // Configuración de componentes y layout...
+        setLayout(new BorderLayout());
+        
+        // Panel transparente sobre el que se añadirán el resto de componentes
+        JPanel transparentPanel = new JPanel(new BorderLayout());
+        transparentPanel.setOpaque(false); // Garantiza que este panel no oculte el gradiente.
+        
+        // Agregar tus paneles y componentes a transparentPanel
+        transparentPanel.add(crearPanelClientes(), BorderLayout.CENTER);
+        transparentPanel.add(crearPanelBotones(), BorderLayout.SOUTH);
 
-        add(crearPanelClientes(), BorderLayout.CENTER); // Agregar panelClientes al centro
-
-        JPanel panelBotones = crearPanelBotones();
-        add(panelBotones, BorderLayout.SOUTH);
-
-        JPanel panelPrincipal = new JPanel();
-        add(panelPrincipal, BorderLayout.NORTH);
-        panelPrincipal.setLayout(null);
+        // Finalmente, añadir transparentPanel a this panel
+        this.add(transparentPanel, BorderLayout.CENTER);
     }
 
     private JPanel crearPanelBotones() {
@@ -62,7 +81,15 @@ public class PanelRegistroCliente extends JPanel {
         btnCerrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere cerrar sin guardar?", "Cerrar", JOptionPane.YES_NO_OPTION);
+                // Creación de un JPanel personalizado para el contenido del diálogo
+                JPanel confirmPanel = new JPanel();
+                confirmPanel.add(new JLabel("¿Está seguro de que quiere cerrar sin guardar?"));
+                
+                // Opciones personalizadas para los botones
+                String[] options = {"Sí", "No"};
+                
+                // Mostrar el diálogo personalizado
+                int confirm = JOptionPane.showOptionDialog(null, confirmPanel, "Cerrar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
                 if (confirm == JOptionPane.YES_OPTION) {
                     System.exit(0);
                 }
@@ -117,7 +144,12 @@ public class PanelRegistroCliente extends JPanel {
         
         if (exito) {
             JOptionPane.showMessageDialog(this, "Cliente guardado con éxito");
-            limpiarCampos();
+
+            // Cierra la ventana después de guardar.
+            Window ventana = SwingUtilities.getWindowAncestor(this);
+            if (ventana != null) {
+                ventana.dispose();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Error al guardar el cliente");
         }
@@ -126,6 +158,7 @@ public class PanelRegistroCliente extends JPanel {
 
 	
 		private JPanel crearPanelClientes() {
+			 
 			tfRcliente_Nombre = new JTextField(10);
 			tfRcliente_Apellidos = new JTextField(10);
 			tfRcliente_Fnacimiento = new JTextField(10); // Asegúrate de que este campo se maneje correctamente como una fecha
@@ -138,9 +171,9 @@ public class PanelRegistroCliente extends JPanel {
 			tfRcliente_Tmovil = new JTextField(10);
 			tfRcliente_Email = new JTextField(10);
 			
-		    JPanel Pcliente = new JPanel();
-		    Pcliente.setLayout(null);
-		    Pcliente.setBackground(new Color(255, 255, 255));
+			  GradientPanel Pcliente = new GradientPanel();
+		        Pcliente.setLayout(null);
+		        Pcliente.setOpaque(false);
 
 		    // Nombre
 		    JLabel lbRCliente_Nombre = new JLabel("Nombre");
@@ -160,18 +193,18 @@ public class PanelRegistroCliente extends JPanel {
 
 		    // NIF
 		    JLabel lbRCliente_NIF = new JLabel("NIF");
-		    lbRCliente_NIF.setBounds(609, 95, 46, 14);
+		    lbRCliente_NIF.setBounds(416, 120, 46, 14);
 		    Pcliente.add(lbRCliente_NIF);
 		   
-		    tfRcliente_NIF.setBounds(602, 120, 86, 20);
+		    tfRcliente_NIF.setBounds(416, 136, 86, 20);
 		    Pcliente.add(tfRcliente_NIF);
 
 		    // DNI
 		    JLabel lbRCliente_DNI = new JLabel("DNI");
-		    lbRCliente_DNI.setBounds(416, 95, 46, 14);
+		    lbRCliente_DNI.setBounds(283, 120, 46, 14);
 		    Pcliente.add(lbRCliente_DNI);
 		
-		    tfRcliente_DNI.setBounds(416, 120, 86, 20);
+		    tfRcliente_DNI.setBounds(283, 136, 86, 20);
 		    Pcliente.add(tfRcliente_DNI);
 
 		    // Fecha de Nacimiento
@@ -249,18 +282,20 @@ public class PanelRegistroCliente extends JPanel {
 	
 	
 	
-	
 		public static void main(String[] args) {
-	        JFrame frame = new JFrame("Registro Cliente");
-	        PanelRegistroCliente panelRegistro = new PanelRegistroCliente();
+	        SwingUtilities.invokeLater(() -> {
+	            JFrame frame = new JFrame("Panel de Registro del Cliente");
+	            PanelRegistroCliente panelRegistro = new PanelRegistroCliente();
 
-	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        frame.setSize(800, 600); // Ajusta el tamaño según necesites
-	        frame.getContentPane().add(panelRegistro); // Agrega el panel al frame
-	        frame.setVisible(true); // Hace visible el frame
+	            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	            frame.setSize(578, 450);
+	            frame.setUndecorated(true); // Esto quita la barra de título y bordes de la ventana
+	            frame.add(panelRegistro);
+	            frame.setLocationRelativeTo(null);
+	            frame.setVisible(true);
+	        });
 	    }
-	}
 	
-
-
+			
+}
 
