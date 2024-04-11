@@ -276,5 +276,36 @@ public class ClienteDAO {
         return cliente;
     }
 
-   
+    public List<Cliente> buscarClientes(String texto) {   //Metodo mas flexible para buscar por nombre, apellidos y dni simultaneamente
+        List<Cliente> clientes = new ArrayList<>();
+        // Concatenamos nombre y apellidos en la consulta para buscar en ambos simultáneamente
+        String sql = "SELECT * FROM clientes WHERE LOWER(nombre) LIKE ? OR LOWER(apellidos) LIKE ? OR LOWER(CONCAT(nombre, ' ', apellidos)) LIKE ?";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String textoBusqueda = "%" + texto.toLowerCase() + "%";
+            stmt.setString(1, textoBusqueda);
+            stmt.setString(2, textoBusqueda);
+            stmt.setString(3, textoBusqueda);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                clientes.add(new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("apellidos"),
+                    rs.getDate("fecha_nacimiento").toLocalDate(),
+                    rs.getString("dni"),
+                    rs.getString("nif"),
+                    rs.getString("direccion"),
+                    rs.getString("poblacion"),
+                    rs.getString("provincia"),
+                    rs.getString("telefono_fijo"),
+                    rs.getString("telefono_movil"),
+                    rs.getString("email")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clientes;
+    }
 }

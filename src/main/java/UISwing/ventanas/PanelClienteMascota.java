@@ -143,31 +143,23 @@ public class PanelClienteMascota extends JPanel {
             }
         });
         txtBuscarCliente.addActionListener(e -> {
-            String searchText = txtBuscarCliente.getText().trim().toLowerCase(); // Obtiene el texto ingresado y lo convierte a minúsculas
-            boolean found = false;
+            String searchText = txtBuscarCliente.getText().trim().toLowerCase();
+            if (searchText.isEmpty()) {
+                List<Cliente> todosLosClientes = clienteDao.obtenerTodosLosClientes();
+                actualizarTablaClientes(todosLosClientes);
+            } else {
+                List<Cliente> clientesFiltrados = clienteDao.buscarClientes(searchText);
+                actualizarTablaClientes(clientesFiltrados);
 
-            // Realiza la búsqueda en la tabla de clientes por nombre, apellido o DNI
-            for (int row = 0; row < tablaClientes.getRowCount(); row++) {
-                String nombre = tablaClientes.getValueAt(row, 0).toString().toLowerCase(); // Nombre del cliente
-                String apellidos = tablaClientes.getValueAt(row, 1).toString().toLowerCase(); // Apellidos del cliente
-                String dni = tablaClientes.getValueAt(row, 2).toString().toLowerCase(); // DNI del cliente
-
-                // Concatena nombre y apellido para la búsqueda
-                String fullName = nombre + " " + apellidos;
-
-                if (fullName.contains(searchText) || dni.equals(searchText)) {
-                    // Selecciona la fila correspondiente si se encuentra una coincidencia
-                    tablaClientes.setRowSelectionInterval(row, row);
-                    // Hace que la fila seleccionada sea visible en la tabla
-                    Rectangle rect = tablaClientes.getCellRect(row, 0, true);
+                // Si hay resultados, seleccionamos la primera coincidencia y aseguramos que sea visible
+                if (!clientesFiltrados.isEmpty()) {
+                    tablaClientes.setRowSelectionInterval(0, 0);
+                    Rectangle rect = tablaClientes.getCellRect(0, 0, true);
                     tablaClientes.scrollRectToVisible(rect);
-                    found = true;
-                    break; // Sale del bucle después de encontrar la primera coincidencia
+                } else {
+                    // Si no hay coincidencias, aseguramos despejar cualquier selección previa
+                    tablaClientes.clearSelection();
                 }
-            }
-            if (!found) {
-                JOptionPane.showMessageDialog(this, "Cliente no encontrado", "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
-                tablaClientes.clearSelection();
             }
         });
 
@@ -305,6 +297,17 @@ public class PanelClienteMascota extends JPanel {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         } 
+    }
+    private void actualizarTablaClientes(List<Cliente> listaClientes) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaClientes.getModel();
+        modelo.setRowCount(0); // Limpiamos la tabla antes de agregar nuevos datos
+        for (Cliente cliente : listaClientes) {
+            modelo.addRow(new Object[]{
+                cliente.getNombre(),
+                cliente.getApellidos(),
+                cliente.getDni()
+            });
+        }
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
