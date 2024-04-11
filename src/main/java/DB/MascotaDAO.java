@@ -191,18 +191,5 @@ public class MascotaDAO {
         }
         return mascota;
     }
-    public List<Mascota> obtenerTodasLasMascotas() { //Para recargar la tabla con todas las mascotas en  CLientesMascotas
-        List<Mascota> mascotas = new ArrayList<>();
-        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas";
-        try (Connection conn = conexion.getConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                mascotas.add(crearMascotaDesdeResultSet(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return mascotas;
-    }
+    
 }

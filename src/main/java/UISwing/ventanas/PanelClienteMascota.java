@@ -97,15 +97,30 @@ public class PanelClienteMascota extends JPanel {
                 }
             }
         });
-        txtBuscarClientemascota.addActionListener(e -> {       	
-        	    String searchText = txtBuscarClientemascota.getText().trim().toLowerCase();
-        	    if (!searchText.isEmpty()) {
-        	        List<Mascota> mascotasFiltradas = mascotaDAO.buscarMascotasPorNombre(searchText);
-        	        actualizarTablaMascotas(mascotasFiltradas);
-        	    } else {
-        	        actualizarTablaMascotas(mascotaDAO.obtenerTodasLasMascotas());  // Asumiendo que tienes un método para obtener todas las mascotas
-        	    }
-        	});
+        txtBuscarClientemascota.addActionListener(e -> {
+            String searchText = txtBuscarClientemascota.getText().trim().toLowerCase(); // Obtenemos el texto y lo convertimos a minúsculas para una búsqueda insensible a mayúsculas
+
+            // Recorremos las filas de la tabla para buscar coincidencias
+            boolean found = false;
+            for (int row = 0; row < tablaMascotas.getRowCount(); row++) {
+                String nombreMascota = tablaMascotas.getValueAt(row, 0).toString().toLowerCase();
+                if (nombreMascota.equals(searchText)) {
+                    // Si encuentra una coincidencia, seleccionar la fila
+                    tablaMascotas.setRowSelectionInterval(row, row);
+                    
+                    // Hacemos que la fila seleccionada sea visible
+                    Rectangle rect = tablaMascotas.getCellRect(row, 0, true);
+                    tablaMascotas.scrollRectToVisible(rect);
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "Mascota no encontrada", "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
+                tablaMascotas.clearSelection();
+            }
+        });
         panel.add(txtBuscarClientemascota); // Agrega el campo de texto al panel
 
         txtBuscarCliente = new JTextField("Buscar cliente"); 			// Creamos un JTextField con texto predeterminado
@@ -243,17 +258,22 @@ public class PanelClienteMascota extends JPanel {
     }
     
     private void cargarDatosMascotas() {
-    	List<Mascota> listaMascotas = mascotaDAO.obtenerTodasLasMascotas();
-		DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
-		modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+    	try {
+            List<Mascota> listaMascotas = mascotaDAO.obtenerMascotasOrdenadasPorNombreMicrochip();
+            DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
+            modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
 
-		for (Mascota mascota : listaMascotas) {
-		    modelo.addRow(new Object[]{
-		        mascota.getNombre(),
-		        mascota.getMicrochip(),
-		        mascota.getNombreDueño()  
-		    });
-		}
+            for (Mascota mascota : listaMascotas) {
+                modelo.addRow(new Object[]{
+                    mascota.getNombre(),
+                    mascota.getMicrochip(),
+                    mascota.getNombreDueño()  // Asegúrate de incluir el nombre del dueño
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); 
+        }// Maneja la excepción de SQL
+        // Aquí podríamos mostrar un mensaje de error al usuario si la carga de datos falla.
     }
 
     private void abrirPanelDetalleClientePorDni(String dni) {
@@ -288,7 +308,6 @@ public class PanelClienteMascota extends JPanel {
             });
         }
     }
-    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Panel Cliente Mascota");
@@ -300,16 +319,5 @@ public class PanelClienteMascota extends JPanel {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
-    }
-    private void actualizarTablaMascotas(List<Mascota> listaMascotas) {
-        DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
-        modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
-        for (Mascota mascota : listaMascotas) {
-            modelo.addRow(new Object[]{
-                mascota.getNombre(),
-                mascota.getMicrochip(),
-                mascota.getNombreDueño()  // Asumiendo que tienes esta propiedad en Mascota
-            });
-        }
     }
 }
