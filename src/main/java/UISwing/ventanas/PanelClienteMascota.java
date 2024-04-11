@@ -288,7 +288,17 @@ public class PanelClienteMascota extends JPanel {
             });
         }
     }
-    
+    private void actualizarTablaMascotas(List<Mascota> listaMascotas) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+        for (Mascota mascota : listaMascotas) {
+            modelo.addRow(new Object[]{
+                mascota.getNombre(),
+                mascota.getMicrochip(),
+                mascota.getNombreDueño()  // Asumiendo que tienes esta propiedad en Mascota
+            });
+        }
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Panel Cliente Mascota");
@@ -301,15 +311,5 @@ public class PanelClienteMascota extends JPanel {
             frame.setVisible(true);
         });
     }
-    private void actualizarTablaMascotas(List<Mascota> listaMascotas) {
-        DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
-        modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
-        for (Mascota mascota : listaMascotas) {
-            modelo.addRow(new Object[]{
-                mascota.getNombre(),
-                mascota.getMicrochip(),
-                mascota.getNombreDueño()  // Asumiendo que tienes esta propiedad en Mascota
-            });
-        }
-    }
+    
 }
