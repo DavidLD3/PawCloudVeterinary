@@ -97,15 +97,26 @@ public class PanelClienteMascota extends JPanel {
                 }
             }
         });
-        txtBuscarClientemascota.addActionListener(e -> {       	
-        	    String searchText = txtBuscarClientemascota.getText().trim().toLowerCase();
-        	    if (!searchText.isEmpty()) {
-        	        List<Mascota> mascotasFiltradas = mascotaDAO.buscarMascotasPorNombre(searchText);
-        	        actualizarTablaMascotas(mascotasFiltradas);
-        	    } else {
-        	        actualizarTablaMascotas(mascotaDAO.obtenerTodasLasMascotas());  // Asumiendo que tienes un método para obtener todas las mascotas
-        	    }
-        	});
+        txtBuscarClientemascota.addActionListener(e -> {
+            String searchText = txtBuscarClientemascota.getText().trim().toLowerCase();
+            if (!searchText.isEmpty()) {
+                List<Mascota> mascotasFiltradas = mascotaDAO.buscarMascotasPorNombre(searchText);
+                actualizarTablaMascotas(mascotasFiltradas);
+
+                // Si hay resultados, seleccionamos la primera coincidencia y aseguramos que sea visible
+                if (!mascotasFiltradas.isEmpty()) {
+                    tablaMascotas.setRowSelectionInterval(0, 0);
+                    Rectangle rect = tablaMascotas.getCellRect(0, 0, true);
+                    tablaMascotas.scrollRectToVisible(rect);
+                } else {
+                    // Si no hay coincidencias, aseguramos despejar cualquier selección previa
+                    tablaMascotas.clearSelection();
+                }
+            } else {
+                List<Mascota> todasLasMascotas = mascotaDAO.obtenerTodasLasMascotas();
+                actualizarTablaMascotas(todasLasMascotas);
+            }
+        });
         panel.add(txtBuscarClientemascota); // Agrega el campo de texto al panel
 
         txtBuscarCliente = new JTextField("Buscar cliente"); 			// Creamos un JTextField con texto predeterminado
@@ -157,11 +168,11 @@ public class PanelClienteMascota extends JPanel {
         scrollPaneClientes.setBounds(10, 105, 549, 537);
         panel.add(scrollPaneClientes); */
         scrollPaneClientes = new JScrollPane();
-        scrollPaneClientes.setBounds(10, 105, 549, 537); // Ajusta las dimensiones según necesites
-        panel.add(scrollPaneClientes); // Asegúrate de agregarlo al panel adecuado
+        scrollPaneClientes.setBounds(10, 105, 549, 537); // Ajusta las dimensiones 
+        panel.add(scrollPaneClientes); 
 
         JScrollPane scrollPaneMascotas = new JScrollPane(); // Nuevo JScrollPane para mascotas
-        scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajusta las dimensiones según necesites
+        scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajusta las dimensiones 
         panel.add(scrollPaneMascotas);
     }
 
