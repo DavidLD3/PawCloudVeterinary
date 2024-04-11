@@ -213,7 +213,7 @@ public class PanelClienteMascota extends JPanel {
     
     private void inicializarComponentesMascotas(JPanel panel) {
     	 // Configuramos el modelo de la tabla para mascotas
-    	modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Microchip"}, 0) {
+    	modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Microchip", "Dueño"}, 0) {
     	    @Override
     	    public boolean isCellEditable(int row, int column) {
     	        return false;  // Hacer que la tabla no sea editable
@@ -258,16 +258,16 @@ public class PanelClienteMascota extends JPanel {
     }
     
     private void cargarDatosMascotas() {
-        try {
+    	try {
             List<Mascota> listaMascotas = mascotaDAO.obtenerMascotasOrdenadasPorNombreMicrochip();
-
             DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
             modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
 
             for (Mascota mascota : listaMascotas) {
                 modelo.addRow(new Object[]{
                     mascota.getNombre(),
-                    mascota.getMicrochip()
+                    mascota.getMicrochip(),
+                    mascota.getNombreDueño()  // Asegúrate de incluir el nombre del dueño
                 });
             }
         } catch (SQLException e) {
