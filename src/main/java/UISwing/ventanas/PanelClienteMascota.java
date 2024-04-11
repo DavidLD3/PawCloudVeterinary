@@ -213,12 +213,12 @@ public class PanelClienteMascota extends JPanel {
     
     private void inicializarComponentesMascotas(JPanel panel) {
     	 // Configuramos el modelo de la tabla para mascotas
-        modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Especie", "Microchip"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;  // Hacer que la tabla no sea editable
-            }
-        };
+    	modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Microchip"}, 0) {
+    	    @Override
+    	    public boolean isCellEditable(int row, int column) {
+    	        return false;  // Hacer que la tabla no sea editable
+    	    }
+    	};
 
         tablaMascotas = new JTable(modeloTablaMascotas);
         tablaMascotas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -228,7 +228,7 @@ public class PanelClienteMascota extends JPanel {
                 if (e.getClickCount() == 2) {  // Doble clic
                     int filaSeleccionada = tablaMascotas.getSelectedRow();
                     if (filaSeleccionada != -1) {
-                        String microchip = (String) modeloTablaMascotas.getValueAt(filaSeleccionada, 2);  
+                        String microchip = (String) modeloTablaMascotas.getValueAt(filaSeleccionada, 1);  
                         abrirPanelDetalleMascotaPorMicrochip(microchip);
                     }
                 }
@@ -259,16 +259,15 @@ public class PanelClienteMascota extends JPanel {
     
     private void cargarDatosMascotas() {
         try {
-            List<Mascota> listaMascotas = mascotaDAO.obtenerMascotasOrdenadasPorNombreEspecieMicrochip();
+            List<Mascota> listaMascotas = mascotaDAO.obtenerMascotasOrdenadasPorNombreMicrochip();
 
             DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
             modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
 
             for (Mascota mascota : listaMascotas) {
                 modelo.addRow(new Object[]{
-                        mascota.getNombre(),
-                        mascota.getEspecie(),
-                        mascota.getMicrochip()
+                    mascota.getNombre(),
+                    mascota.getMicrochip()
                 });
             }
         } catch (SQLException e) {
