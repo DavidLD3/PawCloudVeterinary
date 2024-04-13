@@ -191,5 +191,26 @@ public class MascotaDAO {
         }
         return mascota;
     }
-    
+    public List<Mascota> buscarMascotasPorNombreIncluyendoDueño(String nombre) throws SQLException {
+        List<Mascota> mascotas = new ArrayList<>();
+        String sql = "SELECT m.nombre, m.microchip, c.nombre AS nombre_cliente, c.apellidos FROM mascotas m " +
+                     "JOIN clientes c ON m.id_cliente = c.id " +
+                     "WHERE LOWER(m.nombre) LIKE ?";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + nombre + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String dueño = rs.getString("apellidos") + ", " + rs.getString("nombre_cliente");
+                    Mascota mascota = new Mascota();
+                    // Asumiendo que tienes setters adecuados para establecer los valores
+                    mascota.setNombre(rs.getString("nombre"));
+                    mascota.setMicrochip(rs.getString("microchip"));
+                    mascota.setNombreDueño(dueño);
+                    mascotas.add(mascota);
+                }
+            }
+        }
+        return mascotas;
+    }
 }

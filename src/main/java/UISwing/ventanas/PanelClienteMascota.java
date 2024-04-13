@@ -160,11 +160,14 @@ public class PanelClienteMascota extends JPanel {
             private void realizarBusqueda() {
                 String searchText = txtBuscarClientemascota.getText().trim().toLowerCase();
                 if (!searchText.isEmpty()) {
-                    List<Mascota> resultados = mascotaDAO.buscarMascotasPorNombre(searchText);
-                    actualizarTablaMascotas(resultados);
+                    try {
+                        List<Mascota> resultados = mascotaDAO.buscarMascotasPorNombreIncluyendoDueño(searchText); // Asume este método incluye la info del dueño
+                        actualizarTablaMascotas(resultados);
+                    } catch (SQLException e) {
+                        e.printStackTrace();  // Manejo de la excepción SQL
+                    }
                 } else {
-                    // Opcional: limpiar la tabla o recargar todos los datos si el campo está vacío
-                    cargarDatosMascotas();
+                    cargarDatosMascotas(); // Opcional: recargar todos los datos si el campo está vacío
                 }
             }
         });
