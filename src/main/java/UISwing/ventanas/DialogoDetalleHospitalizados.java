@@ -97,7 +97,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        roundedPanel.add(dateChooserIngreso);
 	        // Selector de fecha de salida (opcional al inicio)
 	        dateChooserSalida = new JDateChooser();
-	        dateChooserSalida.setBounds(319, 127, 200, 30);
+	        dateChooserSalida.setBounds(329, 127, 200, 30);
 
 	     // Reemplazo de JTextField por JTextArea para el motivo de la hospitalización
 	        textAreaMotivo = new JTextArea();
@@ -112,7 +112,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        // ComboBox para el estado inicial de la mascota
 	        comboBoxEstado = new JComboBox<>(new String[]{"Estable", "Crítico", "En observación"});
 	        comboBoxEstado.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-	        comboBoxEstado.setBounds(319, 55, 200, 30);
+	        comboBoxEstado.setBounds(329, 55, 200, 30);
 	        
 
 	        // Botones
@@ -144,7 +144,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 
 	        cancelButton = new JButton("Cancelar");
 	        cancelButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-	        cancelButton.setBounds(590, 392, 100, 30);
+	        cancelButton.setBounds(40, 392, 100, 30);
 	        cancelButton.setBackground(Color.WHITE);
 	        cancelButton.setForeground(Color.decode("#0057FF")); // Letras en color azul
 	        cancelButton.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -234,7 +234,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        JLabel lblEstado = new JLabel("Estado:");
 	        lblEstado.setForeground(new Color(255, 255, 255));
 	        lblEstado.setFont(new Font("Segoe UI", Font.BOLD, 13));
-	        lblEstado.setBounds(319, 26, 79, 30);
+	        lblEstado.setBounds(329, 26, 79, 30);
 	        roundedPanel.add(lblEstado);
 	        
 	        JLabel lblMotivo = new JLabel("Motivo:");
@@ -252,7 +252,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        JLabel lblFechaSalida = new JLabel("Fecha salida:");
 	        lblFechaSalida.setForeground(new Color(255, 255, 255));
 	        lblFechaSalida.setFont(new Font("Segoe UI", Font.BOLD, 13));
-	        lblFechaSalida.setBounds(319, 94, 111, 30);
+	        lblFechaSalida.setBounds(329, 94, 111, 30);
 	        roundedPanel.add(lblFechaSalida);
 	        
 	        JLabel lblTratamiento = new JLabel("Tratamiento:");
@@ -274,7 +274,28 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        roundedPanel.add(lblVeterinario);
 	        
 	        btnAddFarmaco = new JButton("Añadir Fármaco");
-	        btnAddFarmaco.setBounds(369, 396, 150, 25); // Ajusta la posición como necesites
+	        btnAddFarmaco.setBounds(582, 392, 126, 30);
+	        btnAddFarmaco.setFont(new Font("Tahoma", Font.BOLD, 12));
+	        btnAddFarmaco.setBackground(Color.WHITE);
+	        btnAddFarmaco.setForeground(Color.decode("#0057FF")); // Letras en color azul
+	        btnAddFarmaco.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+	        btnAddFarmaco.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+	        btnAddFarmaco.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+	        btnAddFarmaco.setOpaque(true);
+	        btnAddFarmaco.setRolloverEnabled(true);
+	        btnAddFarmaco.addMouseListener(new java.awt.event.MouseAdapter() {
+	            @Override
+	            public void mouseEntered(java.awt.event.MouseEvent evt) {
+	                btnAddFarmaco.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+	                btnAddFarmaco.setForeground(Color.WHITE);
+	            }
+
+	            @Override
+	            public void mouseExited(java.awt.event.MouseEvent evt) {
+	                btnAddFarmaco.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+	                btnAddFarmaco.setForeground(Color.decode("#0057FF"));
+	            }
+	        });
 	        btnAddFarmaco.addActionListener(e -> abrirDialogoSeleccionFarmaco());
 	        roundedPanel.add(btnAddFarmaco);
 	      
@@ -373,13 +394,6 @@ public class DialogoDetalleHospitalizados extends JDialog {
 		        JOptionPane.showMessageDialog(this, "Error al guardar los cambios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		    }
 		}
-
-
-
-
-	 
-	 
-
 
 
 

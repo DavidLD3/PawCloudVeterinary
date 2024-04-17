@@ -32,8 +32,10 @@ public class PanelCalendario extends JPanel {
     private List<CitaActualizadaListener> listeners = new ArrayList<>();
 
     public PanelCalendario() {
+    	setPreferredSize(new Dimension(1112, 640));
         fechaInicioSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
         setLayout(null);
+        setOpaque(false); 
         inicializarModeloYTabla();
         inicializarComponentes();
         cargarCitas();
@@ -100,26 +102,71 @@ public class PanelCalendario extends JPanel {
 
     private void inicializarComponentes() {
         JPanel panelHeader = crearPanelHeader();
-        panelHeader.setBounds(0, 0, 1092, 50); // Ajustar a tu layout
+        panelHeader.setBounds(0, 0, 1112, 50); // Ajustar a tu layout
         add(panelHeader);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 50, 1092, 590); // Ajustar a tu layout
+        scrollPane.setBounds(0, 50, 1112, 590); // Ajustar a tu layout
         add(scrollPane);
         actualizarModeloTabla();
     }
 
     private JPanel crearPanelHeader() {
         JPanel panelHeader = new JPanel(new FlowLayout());
+        panelHeader.setOpaque(false);
+        
         JButton prevWeekButton = new JButton("<");
+        prevWeekButton.setFont(new Font("Tahoma", Font.BOLD, 12));  // Ajusta el tipo de letra a Bold y tamaño 12
+        prevWeekButton.setBackground(Color.WHITE);
+        prevWeekButton.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        prevWeekButton.setFocusPainted(false);  // No mostrar el foco alrededor del botón al hacer clic
+        prevWeekButton.setBorderPainted(false);  // No mostrar el borde predeterminado
+        prevWeekButton.setContentAreaFilled(false);  // No rellenar el área del contenido para permitir el fondo
+        prevWeekButton.setOpaque(true);  // Hacer que el botón sea opaco
+        prevWeekButton.setRolloverEnabled(true);  // Habilitar el cambio de estilo al pasar el ratón por encima
+        prevWeekButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                prevWeekButton.setBackground(Color.decode("#003366")); // Cambio a color azul oscuro cuando el ratón pasa por encima
+                prevWeekButton.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                prevWeekButton.setBackground(Color.WHITE);  // Volver al color blanco cuando el ratón sale
+                prevWeekButton.setForeground(Color.decode("#0057FF"));
+            }
+        });
         prevWeekButton.addActionListener(e -> navegar(-1));
         panelHeader.add(prevWeekButton);
 
         lblCurrentDate = new JLabel();
+        lblCurrentDate.setFont(new Font("Tahoma", Font.BOLD, 12));
         panelHeader.add(lblCurrentDate);
         actualizarFechaActual();
 
         JButton nextWeekButton = new JButton(">");
+        nextWeekButton.setFont(new Font("Tahoma", Font.BOLD, 12));  // Ajusta el tipo de letra a Bold y tamaño 12
+        nextWeekButton.setBackground(Color.WHITE);
+        nextWeekButton.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        nextWeekButton.setFocusPainted(false);  // No mostrar el foco alrededor del botón al hacer clic
+        nextWeekButton.setBorderPainted(false);  // No mostrar el borde predeterminado
+        nextWeekButton.setContentAreaFilled(false);  // No rellenar el área del contenido para permitir el fondo
+        nextWeekButton.setOpaque(true);  // Hacer que el botón sea opaco
+        nextWeekButton.setRolloverEnabled(true);  // Habilitar el cambio de estilo al pasar el ratón por encima
+        nextWeekButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nextWeekButton.setBackground(Color.decode("#003366")); // Cambio a color azul oscuro cuando el ratón pasa por encima
+                nextWeekButton.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nextWeekButton.setBackground(Color.WHITE);  // Volver al color blanco cuando el ratón sale
+                nextWeekButton.setForeground(Color.decode("#0057FF"));
+            }
+        });
         nextWeekButton.addActionListener(e -> navegar(1));
         panelHeader.add(nextWeekButton);
 
@@ -253,6 +300,8 @@ public class PanelCalendario extends JPanel {
             return this;
         }
     }
+    
+    
 
 
 }

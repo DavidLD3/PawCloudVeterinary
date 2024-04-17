@@ -49,12 +49,11 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
     private FarmacoDAO farmacoDAO;	
 
     public PanelHome() {
-        setLayout(null); // Usando layout nulo para control total sobre la posición de los componentes
+        setLayout(null);
         setOpaque(false);
         this.farmacoDAO = new FarmacoDAO(); 
-
         inicializarPanelCitas();
-        mostrarCitasProximas(); // Luego puedes llamar a mostrarCitasProximas()
+        mostrarCitasProximas(); 
         inicializarPanelHospitalizados();
         mostrarHospitalizacionesRecientes();
         inicializarPanelVentas(); // Lo mismo que farmacos pero mas corto

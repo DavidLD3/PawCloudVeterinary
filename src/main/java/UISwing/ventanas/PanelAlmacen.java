@@ -1,5 +1,7 @@
 package UISwing.ventanas;
 
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 
 public class PanelAlmacen extends JPanel {
@@ -10,6 +12,9 @@ public class PanelAlmacen extends JPanel {
 	 * Create the panel.
 	 */
 	public PanelAlmacen() {
+		setPreferredSize(new Dimension(1112, 640));  
+        setLayout(null);
+        setOpaque(false);
 
 	}
 

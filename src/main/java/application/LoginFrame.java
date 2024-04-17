@@ -42,9 +42,6 @@ public class LoginFrame extends JFrame {
     private JLabel lblNewLabel_2;
     private JLabel lblNewLabel_3;
 
-    /**
-     * Launch the application.
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -58,9 +55,6 @@ public class LoginFrame extends JFrame {
         });
     }
 
-    /**
-     * Create the frame.
-     */
     public LoginFrame() {
         setBounds(100, 100, 497, 524);
         setUndecorated(true);
