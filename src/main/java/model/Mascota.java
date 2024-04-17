@@ -17,7 +17,8 @@ public class Mascota {
     private String tipoPelo;
     private Sexo sexo; // Cambio de String a enum
     private boolean esterilizado;
-
+    private String nombreDueño; // Nuevo campo para el nombre del dueño
+    
     public enum Sexo {
         MACHO, HEMBRA
     }
@@ -199,5 +200,12 @@ public class Mascota {
                 ", sexo='" + (sexo != null ? sexo.name() : "null") + '\'' +
                 ", esterilizado=" + esterilizado +
                 '}';
+    }
+    public String getNombreDueño() {
+        return nombreDueño;
+    }
+
+    public void setNombreDueño(String nombreDueño) {
+        this.nombreDueño = nombreDueño;
     }
 }

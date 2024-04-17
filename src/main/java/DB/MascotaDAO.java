@@ -13,7 +13,7 @@ import java.util.List;
 public class MascotaDAO {
 
     private Conexion conexion = new Conexion();
-
+    
     public List<Mascota> buscarMascotasPorNombre(String nombre) {
         List<Mascota> mascotas = new ArrayList<>();
         String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE nombre LIKE ?";
@@ -153,17 +153,22 @@ public class MascotaDAO {
         return mascota;
     }
     
-    public List<Mascota> obtenerMascotasOrdenadasPorNombreEspecieMicrochip() throws SQLException {
+    
+    public List<Mascota> obtenerMascotasOrdenadasPorNombreMicrochip() throws SQLException {
         List<Mascota> mascotas = new ArrayList<>();
-        String sql = "SELECT nombre, especie, microchip FROM mascotas ORDER BY nombre, especie, microchip";
+        String sql = "SELECT m.nombre, m.microchip, c.apellidos, c.nombre AS nombre_cliente FROM mascotas m " +
+                     "JOIN clientes c ON m.id_cliente = c.id " +
+                     "ORDER BY m.nombre, m.microchip";
         try (Connection conn = conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Mascota mascota = new Mascota();
                 mascota.setNombre(rs.getString("nombre"));
-                mascota.setEspecie(rs.getString("especie"));
                 mascota.setMicrochip(rs.getString("microchip"));
+                // Concatena los apellidos y nombre del dueño
+                String dueño = rs.getString("apellidos") + ", " + rs.getString("nombre_cliente");
+                mascota.setNombreDueño(dueño);
                 mascotas.add(mascota);
             }
         }
