@@ -251,6 +251,38 @@ public class CitaDAO {
 
         return cita;
     }
+    public List<Cita> recuperarCitasPorCliente(int idCliente) {
+        List<Cita> citas = new ArrayList<>();
+        String sql = "SELECT c.*, cl.nombre AS nombre_cliente, m.nombre AS nombre_mascota " +
+                     "FROM citas c " +
+                     "JOIN clientes cl ON c.id_cliente = cl.id " +
+                     "JOIN mascotas m ON c.id_mascota = m.id " +
+                     "WHERE c.id_cliente = ? " +
+                     "ORDER BY c.fecha ASC, c.hora ASC";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cita cita = new Cita(
+                    rs.getInt("id"),
+                    rs.getString("titulo"),
+                    rs.getDate("fecha").toLocalDate(),
+                    rs.getTime("hora").toLocalTime(),
+                    rs.getString("notas"),
+                    rs.getInt("id_cliente"),
+                    rs.getInt("id_mascota"),
+                    // Suponiendo que Cita tiene constructores para manejar estos datos, o puedes asignarlos después
+                    rs.getString("nombre_cliente"), // Opcional, si necesitas mostrar el nombre en la interfaz
+                    rs.getString("nombre_mascota") // Opcional, si necesitas mostrar el nombre en la interfaz
+                );
+                citas.add(cita);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return citas;
+    }
 
 
 

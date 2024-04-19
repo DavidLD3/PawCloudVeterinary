@@ -38,7 +38,7 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.JButton;
 
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame  {
 
     private static final long serialVersionUID = 1L;
     private CardLayout cardLayout = new CardLayout(); // CardLayout para gestionar paneles intercambiables

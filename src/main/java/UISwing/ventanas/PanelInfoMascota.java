@@ -9,7 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.format.DateTimeFormatter;
 import DB.MascotaDAO;
+import DB.HistorialMedicoDAO;
 import DB.HospitalizacionDAO;
+import model.HistorialMedico;
 import model.Hospitalizacion;
 import model.Mascota;
 import java.util.List;
@@ -19,27 +21,30 @@ public class PanelInfoMascota extends JPanel {
     private Mascota mascota;
     private JTabbedPane tabbedPane;
     private HospitalizacionDAO hospitalizacionDao;
+    private HistorialMedicoDAO historialMedicoDAO;
+    private JTable tablaHistorial;
 
     public PanelInfoMascota(int idMascota) {
         super(new BorderLayout());
         mascotaDao = new MascotaDAO();
-        hospitalizacionDao = new HospitalizacionDAO(); // Asegúrate de que esta línea está aquí
+        hospitalizacionDao = new HospitalizacionDAO(); 
+        this.historialMedicoDAO = new HistorialMedicoDAO();
         
         this.mascota = mascotaDao.obtenerMascotaPorId(idMascota);
         if (mascota != null) {
             tabbedPane = new JTabbedPane();
 
-            JPanel panelInfoGeneral = crearPanelInfoMascota();
-            JPanel panelHospitalizaciones = crearPanelHospitalizaciones();
+            JPanel panelInfoGeneral = crearPanelInfoMascota();           
             JPanel panelHistorialMedico = crearPanelHistorialMedico();
             JPanel panelVacunas = crearPanelVacunas();
-            JPanel panelCuidadosEspeciales = crearPanelCuidadosEspeciales();
+            JPanel panelHospitalizaciones = crearPanelHospitalizaciones();
+            
 
             tabbedPane.addTab("General", null, panelInfoGeneral, "Información General");
             tabbedPane.addTab("Hospitalizaciones", null, panelHospitalizaciones, "Historial de hospitalizaciones");
             tabbedPane.addTab("Historial Médico", null, panelHistorialMedico, "Historial médico de la mascota");
             tabbedPane.addTab("Vacunas", null, panelVacunas, "Registro de vacunas");
-            tabbedPane.addTab("Cuidados Especiales", null, panelCuidadosEspeciales, "Cuidados especiales de la mascota");
+            
 
             add(tabbedPane, BorderLayout.CENTER);
         }   else {
@@ -152,9 +157,71 @@ public class PanelInfoMascota extends JPanel {
     }
 
     private JPanel crearPanelHistorialMedico() {
-        JPanel panel = new JPanel(new BorderLayout());
-        // Aquí tu código para mostrar el historial médico...
-        return panel;
+        JPanel panelHistorialMedico = new JPanel(new BorderLayout());
+
+        String[] columnas = {"ID", "Fecha", "Diagnóstico", "Tratamiento"};
+        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Para evitar edición directa en la tabla
+            }
+        };
+
+        tablaHistorial = new JTable(modeloTabla); // Asegurarse de que tablaHistorial es accesible a nivel de clase
+        tablaHistorial.removeColumn(tablaHistorial.getColumnModel().getColumn(0)); // Oculta la columna ID
+        JScrollPane scrollPane = new JScrollPane(tablaHistorial);
+        panelHistorialMedico.add(scrollPane, BorderLayout.CENTER);
+
+        // Evento de doble clic para editar registros
+        tablaHistorial.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    int filaSeleccionada = tablaHistorial.getSelectedRow();
+                    if (filaSeleccionada != -1) {
+                        int idHistorial = (int) modeloTabla.getValueAt(filaSeleccionada, 0);
+                        abrirDialogoAgregarEditarRegistro(idHistorial);
+                    }
+                }
+            }
+        });
+
+        // Panel de botones
+        JPanel panelBotones = new JPanel();
+        JButton btnAgregar = new JButton("Añadir Registro");
+        btnAgregar.addActionListener(e -> abrirDialogoAgregarEditarRegistro(null)); // null para un nuevo registro
+        panelBotones.add(btnAgregar);
+
+        panelHistorialMedico.add(panelBotones, BorderLayout.SOUTH);
+
+        // Carga los registros del historial médico de la base de datos
+        cargarDatosHistorialMedico(modeloTabla, tablaHistorial);
+
+        return panelHistorialMedico;
+    }
+
+
+    private void cargarDatosHistorialMedico(DefaultTableModel modeloTabla, JTable tablaHistorial) {
+        List<HistorialMedico> registros = historialMedicoDAO.obtenerHistorialesPorMascota(mascota.getId());
+        for (HistorialMedico registro : registros) {
+            modeloTabla.addRow(new Object[]{
+                    registro.getId(),
+                    registro.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    registro.getDiagnostico(),
+                    registro.getTratamiento()
+            });
+        }
+    }
+    private void abrirDialogoAgregarEditarRegistro(Integer idHistorial) {
+        HistorialMedico registro = null;
+        if (idHistorial != null) {
+            registro = historialMedicoDAO.obtenerHistorialPorId(idHistorial);
+        }
+        DialogoHistorialMedico dialogo = new DialogoHistorialMedico((Frame) SwingUtilities.getWindowAncestor(this), true, registro);
+        dialogo.setVisible(true);
+        if (dialogo.isConfirmado()) {
+            cargarDatosHistorialMedico((DefaultTableModel) tablaHistorial.getModel(), tablaHistorial); 
+        }
     }
 
     private JPanel crearPanelVacunas() {
@@ -163,11 +230,7 @@ public class PanelInfoMascota extends JPanel {
         return panel;
     }
 
-    private JPanel crearPanelCuidadosEspeciales() {
-        JPanel panel = new JPanel(new BorderLayout());
-        // Aquí tu código para mostrar los cuidados especiales...
-        return panel;
-    }
+  
     // Método para obtener el nombre de la ventana basado en la mascota
     public String obtenerTituloVentana() {
         if (mascota != null) {
