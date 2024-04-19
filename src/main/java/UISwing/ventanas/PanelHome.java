@@ -527,7 +527,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
     	RoundedPanel panelFarmacos = new RoundedPanel(20); // Radio Borde
         panelFarmacos.setLayout(null);
         panelFarmacos.setBackground(Color.decode("#5C8CCD"));
-        panelFarmacos.setBounds(0, 413, 1112, 240); 
+        panelFarmacos.setBounds(0, 413, 1112, 238); 
         add(panelFarmacos);
 
         // Panel opaco que contendrá tanto el panel de encabezados como el panel de datos

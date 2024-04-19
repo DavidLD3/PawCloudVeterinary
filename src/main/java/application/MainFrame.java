@@ -28,6 +28,7 @@ import UISwing.ventanas.PanelCalendario;
 import UISwing.ventanas.PanelCitas;
 import UISwing.ventanas.PanelClienteMascota;
 import UISwing.ventanas.PanelHome;
+import UISwing.ventanas.PanelVentas;
 
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -76,8 +77,8 @@ public class MainFrame extends JFrame  {
         panelHome = new PanelHome(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelHome, "PanelHome");
         // Inicialización y adición de PanelCitas al cardPanel
-        PanelCitas panelCitas = new PanelCitas(); // Asume que esta clase ya está definida correctamente
-        cardPanel.add(panelCitas, "PanelCitas");
+        PanelVentas panelVentas = new PanelVentas();
+        cardPanel.add(panelVentas, "PanelVentas");
         PanelClienteMascota panelClienteMascota = new PanelClienteMascota(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelClienteMascota, "PanelClienteMascota");
         PanelCalendario panelCalendario = new PanelCalendario(); // Asume que esta clase ya está definida correctamente
@@ -147,23 +148,25 @@ public class MainFrame extends JFrame  {
         lblNewLabel_1.setBounds(25, 183, 20, 28);
         panelMenu.add(lblNewLabel_1);
         
-        //Para el menu de citas
-        JLabel lblVentas = new JLabel("Ventas");
-        lblVentas.setForeground(new Color(255, 255, 255));
-        lblVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblVentas.setBounds(55, 222, 102, 28);
-        panelMenu.add(lblVentas);
-        lblVentas.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                cardLayout.show(cardPanel, "PanelCitas"); // Cambiar al PanelCitas
-            }
-        });
-        
+      
+     // Ícono para el menú de Ventas
         JLabel lblNewLabel_2 = new JLabel("");
         lblNewLabel_2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoVentas.png")));
         lblNewLabel_2.setBounds(25, 222, 20, 28);
         panelMenu.add(lblNewLabel_2);
+
+        // Etiqueta para el texto "Ventas"
+        JLabel lblVentas = new JLabel("Ventas");
+        lblVentas.setForeground(Color.WHITE);
+        lblVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblVentas.setBounds(55, 222, 130, 28);
+        panelMenu.add(lblVentas);
+        lblVentas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(cardPanel, "PanelVentas"); // Cambiar al PanelVentas
+            }
+        });
         
         JLabel lblcalendario = new JLabel("Calendario");
         lblcalendario.setForeground(new Color(255, 255, 255));
