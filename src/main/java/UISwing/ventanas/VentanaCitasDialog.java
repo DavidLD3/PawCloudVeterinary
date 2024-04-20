@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDateChooser;
+
 import DB.CitaDAO;
 import DB.ClienteDAO;
 import DB.MascotaDAO;
@@ -37,7 +39,7 @@ public class VentanaCitasDialog extends JDialog {
     private JComboBox<String> comboBoxTipo;
     private boolean cargaInicialCompleta = false;
     private RoundedPanel roundedPanel;
-
+    private JDateChooser dateChooser;
     public VentanaCitasDialog(Frame owner, boolean modal) {
         super(owner, modal);
         setTitle("Programar Cita");
@@ -133,11 +135,14 @@ public class VentanaCitasDialog extends JDialog {
             @Override
             public void itemStateChanged(ItemEvent event) {
                 if (event.getStateChange() == ItemEvent.SELECTED) {
-                    Cliente clienteSeleccionado = (Cliente) event.getItem();
-                    actualizarMascotasPorCliente(clienteSeleccionado.getId());
+                    if (cargaInicialCompleta) { // Solo carga mascotas si la UI está completamente cargada
+                        Cliente clienteSeleccionado = (Cliente) event.getItem();
+                        actualizarMascotasPorCliente(clienteSeleccionado.getId());
+                    }
                 }
             }
         });
+
 
         comboBoxClientes.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -305,17 +310,14 @@ public class VentanaCitasDialog extends JDialog {
 	
 	
 	private void configurarSeleccionFechaHora() {
-	    dateSpinner = new JSpinner(new SpinnerDateModel());
-	    JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
-	    dateSpinner.setEditor(dateEditor);
-	    dateSpinner.setBounds(434, 137, 155, 25);
-	    roundedPanel.add(dateSpinner);
+	    // Selector de fecha con JDateChooser
+	    dateChooser = new JDateChooser();
+	    dateChooser.setDate(new Date());
+	    dateChooser.setDateFormatString("dd/MM/yyyy"); // Establece el formato de fecha
+	    dateChooser.setBounds(434, 137, 155, 25); // Ajusta la posición y tamaño según tus necesidades
+	    roundedPanel.add(dateChooser);
 
-	    calendarButton = new JButton(new ImageIcon(getClass().getResource("/imagenes/logoBotonCalendario.png")));
-	    calendarButton.setBounds(588, 137, 25, 25);
-	    calendarButton.addActionListener(e -> mostrarCalendario());
-	    roundedPanel.add(calendarButton);
-
+	    // Configuración del JSpinner para la hora sigue igual
 	    timeSpinner = new JSpinner(new SpinnerDateModel());
 	    JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
 	    timeSpinner.setEditor(timeEditor);
@@ -435,8 +437,13 @@ public class VentanaCitasDialog extends JDialog {
 	private void guardarCita() {
 	    try {
 	        String titulo = textFieldTituloVisita.getText();
-	        java.util.Date fechaUtil = (java.util.Date) dateSpinner.getValue();
+	        Date fechaUtil = dateChooser.getDate(); // Obtiene la fecha del JDateChooser
+	        if (fechaUtil == null) {
+	            JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
 	        java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime());
+
 	        Calendar cal = Calendar.getInstance();
 	        cal.setTime((java.util.Date) timeSpinner.getValue());
 	        LocalTime hora = LocalTime.of(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
@@ -444,9 +451,8 @@ public class VentanaCitasDialog extends JDialog {
 
 	        Cliente clienteSeleccionado = (Cliente) comboBoxClientes.getSelectedItem();
 	        Mascota.MascotaContenedor contenedorMascota = (Mascota.MascotaContenedor) comboBoxMascotas.getSelectedItem();
-	        Mascota mascotaSeleccionada = contenedorMascota.getMascota();
+	        Mascota mascotaSeleccionada = contenedorMascota != null ? contenedorMascota.getMascota() : null;
 	        
-			// Aquí obtenemos el tipo de la cita desde el comboBoxTipo
 	        String tipoCita = comboBoxTipo.getSelectedItem() == null ? "" : comboBoxTipo.getSelectedItem().toString();
 
 	        if (clienteSeleccionado == null || mascotaSeleccionada == null) {
@@ -454,7 +460,6 @@ public class VentanaCitasDialog extends JDialog {
 	            return;
 	        }
 
-	        // Asegúrate de añadir un constructor en tu clase Cita que incluya el tipo, o usa el setter para tipo
 	        Cita cita = new Cita(0, titulo, fechaSql.toLocalDate(), hora, notas, clienteSeleccionado.getId(), mascotaSeleccionada.getId());
 	        cita.setTipo(tipoCita); // Asegúrate de que este setter exista y esté implementado correctamente
 
@@ -466,6 +471,7 @@ public class VentanaCitasDialog extends JDialog {
 	        JOptionPane.showMessageDialog(this, "Error al guardar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
+
 	
 	public void setFecha(java.util.Date fecha) {
         // Establece el valor del spinner de fecha. Asegúrate de que dateSpinner es accesible aquí.

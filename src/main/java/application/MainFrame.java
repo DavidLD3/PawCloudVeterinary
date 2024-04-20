@@ -248,24 +248,6 @@ public class MainFrame extends JFrame {
         btnLogOut.setMargin(new Insets(0, 10, 0, 10));
         panelMenu.add(btnLogOut);
 
-        
-        
-        
-        
-        
-        
-        /*JLabel lbllogout = new JLabel("Logout");
-        lbllogout.setForeground(new Color(255, 255, 255));
-        lbllogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbllogout.setBounds(50, 712, 75, 28);
-        panelMenu.add(lbllogout);
-        lbllogout.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.exit(0); // Cierra la aplicación
-            }
-        });*/
-     
         RoundedPanel panelHeader = new RoundedPanel(20);  // Redondeado del panel
         panelHeader.setBounds(234, 11, 1112, 82);
         panelHeader.setBackground(new Color(255, 255, 255, 123)); // Establece el color de fondo y la opacidad

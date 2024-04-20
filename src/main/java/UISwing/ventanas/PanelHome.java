@@ -570,18 +570,19 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
     private void mostrarCitasProximas() {
         CitaDAO citaDAO = new CitaDAO();
         List<Cita> citasProximas = citaDAO.recuperarCitasFuturas();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         if (!citasProximas.isEmpty()) {
             Cita primeraCita = citasProximas.get(0);
             lblHoraCita.setText(primeraCita.getHora() != null ? primeraCita.getHora().toString() : "Hora no disponible");
-            lblDiaCita.setText(primeraCita.getFecha() != null ? primeraCita.getFecha().toString() : "Fecha no disponible");
+            lblDiaCita.setText(primeraCita.getFecha() != null ? dateFormatter.format(primeraCita.getFecha()) : "Fecha no disponible");
             lblMascotaCita.setText(primeraCita.getNombreMascota());
             lblClienteCita.setText(primeraCita.getNombreCliente());
 
             if (citasProximas.size() > 1) {
                 Cita segundaCita = citasProximas.get(1);
                 lblHoraCita_2.setText(segundaCita.getHora() != null ? segundaCita.getHora().toString() : "Hora no disponible");
-                lblDiaCita_2.setText(segundaCita.getFecha() != null ? segundaCita.getFecha().toString() : "Fecha no disponible");
+                lblDiaCita_2.setText(segundaCita.getFecha() != null ? dateFormatter.format(segundaCita.getFecha()) : "Fecha no disponible");
                 lblMascotaCita_2.setText(segundaCita.getNombreMascota());
                 lblNombreCliente2.setText(segundaCita.getNombreCliente());
             }
@@ -590,6 +591,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         panelOpacoCitas.revalidate();
         panelOpacoCitas.repaint();
     }
+
 
 
   
@@ -650,7 +652,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         for (UsoFarmaco uso : usosFarmacos) {
             String[] datosFila = new String[]{
                 uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("HH:mm")), // Hora de uso
-                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), // Fecha de uso
+                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), // Fecha de uso
                 uso.getNombreFarmaco(), // Nombre del fármaco
                 uso.getNombreMascota(), // Nombre de la mascota tratada
                 String.valueOf(uso.getCantidadUsada()), // Cantidad usada (dosis administrada)

@@ -26,7 +26,7 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
         setSize(new Dimension(500, 400));
         setLocationRelativeTo(null);
 
-        roundedPanel = new RoundedPanel(30, Color.decode("#0483FF")); // Cambiado el color para diferenciarlo
+        roundedPanel = new RoundedPanel(30, Color.decode("#4D94FF"));
         roundedPanel.setLayout(null);
         roundedPanel.setBounds(0, 0, 500, 400);
         roundedPanel.setOpaque(false);
