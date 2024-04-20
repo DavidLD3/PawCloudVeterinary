@@ -29,7 +29,8 @@ public class HistorialMedicoDAO {
                         resultados.getInt("id_mascota"),
                         resultados.getDate("fecha").toLocalDate(),
                         resultados.getString("diagnostico"),
-                        resultados.getString("tratamiento")
+                        resultados.getString("tratamiento"),
+                        resultados.getString("tipo_intervencion")  // Añade el manejo del nuevo campo aquí
                 );
             }
         } catch (SQLException e) {
@@ -41,12 +42,13 @@ public class HistorialMedicoDAO {
 
     public boolean insertarHistorial(HistorialMedico historial) {
         try (Connection conn = conexion.getConexion()) {
-            String consulta = "INSERT INTO historial_medico (id_mascota, fecha, diagnostico, tratamiento) VALUES (?, ?, ?, ?)";
+            String consulta = "INSERT INTO historial_medico (id_mascota, fecha, diagnostico, tratamiento, tipo_intervencion) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(consulta);
             statement.setInt(1, historial.getIdMascota());
             statement.setDate(2, java.sql.Date.valueOf(historial.getFecha()));
             statement.setString(3, historial.getDiagnostico());
             statement.setString(4, historial.getTratamiento());
+            statement.setString(5, historial.getTipoIntervencion());  // Inserta el nuevo campo aquí
             int filasInsertadas = statement.executeUpdate();
             return filasInsertadas > 0;
         } catch (SQLException e) {
@@ -57,12 +59,13 @@ public class HistorialMedicoDAO {
 
     public boolean actualizarHistorial(HistorialMedico historial) {
         try (Connection conn = conexion.getConexion()) {
-            String consulta = "UPDATE historial_medico SET fecha = ?, diagnostico = ?, tratamiento = ? WHERE id = ?";
+            String consulta = "UPDATE historial_medico SET fecha = ?, diagnostico = ?, tratamiento = ?, tipo_intervencion = ? WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(consulta);
             statement.setDate(1, java.sql.Date.valueOf(historial.getFecha()));
             statement.setString(2, historial.getDiagnostico());
             statement.setString(3, historial.getTratamiento());
-            statement.setInt(4, historial.getId());
+            statement.setString(4, historial.getTipoIntervencion());  // Actualiza el nuevo campo aquí
+            statement.setInt(5, historial.getId());
             int filasActualizadas = statement.executeUpdate();
             return filasActualizadas > 0;
         } catch (SQLException e) {
@@ -73,13 +76,14 @@ public class HistorialMedicoDAO {
 
     public boolean eliminarHistorial(int id) {
         try (Connection conn = conexion.getConexion()) {
-            String consulta = "DELETE FROM historial_medico WHERE id = ?";
-            PreparedStatement statement = conn.prepareStatement(consulta);
-            statement.setInt(1, id);
-            int filasEliminadas = statement.executeUpdate();
-            return filasEliminadas > 0;
+            String sql = "DELETE FROM historial_medico WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                int affectedRows = stmt.executeUpdate();
+                return affectedRows > 0;
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Error al eliminar el registro: " + e.getMessage());
             return false;
         }
     }
@@ -96,7 +100,8 @@ public class HistorialMedicoDAO {
                         rs.getInt("id_mascota"),
                         rs.getDate("fecha").toLocalDate(),
                         rs.getString("diagnostico"),
-                        rs.getString("tratamiento")
+                        rs.getString("tratamiento"),
+                        rs.getString("tipo_intervencion") // Asegúrate de recuperar y manejar el nuevo campo
                 );
                 historiales.add(historial);
             }

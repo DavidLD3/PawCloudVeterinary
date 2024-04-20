@@ -159,7 +159,8 @@ public class PanelInfoMascota extends JPanel {
     private JPanel crearPanelHistorialMedico() {
         JPanel panelHistorialMedico = new JPanel(new BorderLayout());
 
-        String[] columnas = {"ID", "Fecha", "Diagnóstico", "Tratamiento"};
+        // Añadiendo 'ID' como una columna que será ocultada más tarde
+        String[] columnas = {"ID", "Fecha", "Tipo de Intervención", "Diagnóstico"};
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -167,8 +168,9 @@ public class PanelInfoMascota extends JPanel {
             }
         };
 
-        tablaHistorial = new JTable(modeloTabla); // Asegurarse de que tablaHistorial es accesible a nivel de clase
-        tablaHistorial.removeColumn(tablaHistorial.getColumnModel().getColumn(0)); // Oculta la columna ID
+        tablaHistorial = new JTable(modeloTabla);
+        // Ocultar la columna 'ID' inmediatamente después de crear la tabla
+        tablaHistorial.removeColumn(tablaHistorial.getColumnModel().getColumn(0));
         JScrollPane scrollPane = new JScrollPane(tablaHistorial);
         panelHistorialMedico.add(scrollPane, BorderLayout.CENTER);
 
@@ -179,7 +181,8 @@ public class PanelInfoMascota extends JPanel {
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     int filaSeleccionada = tablaHistorial.getSelectedRow();
                     if (filaSeleccionada != -1) {
-                        int idHistorial = (int) modeloTabla.getValueAt(filaSeleccionada, 0);
+                        // Obtener el ID del registro seleccionado a partir del modelo (nota: ajusta el índice si es necesario)
+                        int idHistorial = (int) modeloTabla.getValueAt(filaSeleccionada, 0); // Aquí asumimos que el ID está en la columna 0 del modelo
                         abrirDialogoAgregarEditarRegistro(idHistorial);
                     }
                 }
@@ -189,17 +192,41 @@ public class PanelInfoMascota extends JPanel {
         // Panel de botones
         JPanel panelBotones = new JPanel();
         JButton btnAgregar = new JButton("Añadir Registro");
+        JButton btnEliminar = new JButton("Eliminar Registro");
         btnAgregar.addActionListener(e -> abrirDialogoAgregarEditarRegistro(null)); // null para un nuevo registro
+        btnEliminar.addActionListener(this::accionEliminarRegistro);
         panelBotones.add(btnAgregar);
-
+        panelBotones.add(btnEliminar);
         panelHistorialMedico.add(panelBotones, BorderLayout.SOUTH);
 
-        // Carga los registros del historial médico de la base de datos
+        // Cargar los registros del historial médico desde la base de datos
         cargarDatosHistorialMedico(modeloTabla, tablaHistorial);
 
         return panelHistorialMedico;
     }
 
+    private void accionEliminarRegistro(ActionEvent e) {
+        int filaSeleccionada = tablaHistorial.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de que desea eliminar este registro?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+            
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                int idHistorial = (int) tablaHistorial.getModel().getValueAt(filaSeleccionada, 0);
+                if (historialMedicoDAO.eliminarHistorial(idHistorial)) {
+                    ((DefaultTableModel) tablaHistorial.getModel()).removeRow(filaSeleccionada);
+                    JOptionPane.showMessageDialog(this, "Registro eliminado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al eliminar el registro.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor seleccione un registro para eliminar.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 
     private void cargarDatosHistorialMedico(DefaultTableModel modeloTabla, JTable tablaHistorial) {
         List<HistorialMedico> registros = historialMedicoDAO.obtenerHistorialesPorMascota(mascota.getId());
@@ -208,7 +235,8 @@ public class PanelInfoMascota extends JPanel {
                     registro.getId(),
                     registro.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     registro.getDiagnostico(),
-                    registro.getTratamiento()
+                    registro.getTratamiento(),
+                    registro.getTipoIntervencion()
             });
         }
     }
@@ -217,13 +245,13 @@ public class PanelInfoMascota extends JPanel {
         if (idHistorial != null) {
             registro = historialMedicoDAO.obtenerHistorialPorId(idHistorial);
         }
-        DialogoHistorialMedico dialogo = new DialogoHistorialMedico((Frame) SwingUtilities.getWindowAncestor(this), true, registro);
+        // Pasa el ID de la mascota al constructor del diálogo
+        DialogoHistorialMedico dialogo = new DialogoHistorialMedico((Frame) SwingUtilities.getWindowAncestor(this), true, mascota.getId(), registro);
         dialogo.setVisible(true);
         if (dialogo.isConfirmado()) {
-            cargarDatosHistorialMedico((DefaultTableModel) tablaHistorial.getModel(), tablaHistorial); 
+            cargarDatosHistorialMedico((DefaultTableModel) tablaHistorial.getModel(), tablaHistorial);
         }
     }
-
     private JPanel crearPanelVacunas() {
         JPanel panel = new JPanel(new BorderLayout());
         // Aquí tu código para mostrar el registro de vacunas...
