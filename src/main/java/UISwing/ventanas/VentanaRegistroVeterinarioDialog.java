@@ -28,7 +28,7 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 		setSize(new Dimension(500, 400));
 		setLocationRelativeTo(null);
 
-		roundedPanel = new RoundedPanel(30, Color.decode("#76A5FF"));
+		roundedPanel = new RoundedPanel(30, Color.decode("#7074B2"));
 		roundedPanel.setLayout(null);
 		roundedPanel.setBounds(0, 0, 500, 400);
 		roundedPanel.setOpaque(false);

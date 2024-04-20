@@ -83,7 +83,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        txtMascotaNombre = new JTextField();
 	        txtMascotaNombre.setBounds(40, 55, 244, 30);
 	        txtMascotaNombre.setEditable(false); // Para que no se pueda editar
-	        txtMascotaNombre.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+	        txtMascotaNombre.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
 	       // txtMascotaNombre.setForeground(Color.WHITE); // Texto en blanco
 	        txtMascotaNombre.setOpaque(true); // Fondo transparente
 	        txtMascotaNombre.setBorder(null); // Sin borde
@@ -94,14 +94,16 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        // Selector de fecha de ingreso
 	        dateChooserIngreso = new JDateChooser();
 	        dateChooserIngreso.setBounds(40, 127, 244, 30);
+	        dateChooserIngreso.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
 	        roundedPanel.add(dateChooserIngreso);
 	        // Selector de fecha de salida (opcional al inicio)
 	        dateChooserSalida = new JDateChooser();
 	        dateChooserSalida.setBounds(329, 127, 200, 30);
+	        dateChooserSalida.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
 
 	     // Reemplazo de JTextField por JTextArea para el motivo de la hospitalización
 	        textAreaMotivo = new JTextArea();
-	        textAreaMotivo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+	        textAreaMotivo.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
 	        textAreaMotivo.setLineWrap(true);
 	        textAreaMotivo.setWrapStyleWord(true);
 	        JScrollPane scrollPaneMotivo = new JScrollPane(textAreaMotivo);
@@ -111,14 +113,14 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	     
 	        // ComboBox para el estado inicial de la mascota
 	        comboBoxEstado = new JComboBox<>(new String[]{"Estable", "Crítico", "En observación"});
-	        comboBoxEstado.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+	        comboBoxEstado.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
 	        comboBoxEstado.setBounds(329, 55, 200, 30);
 	        
 
 	        // Botones
 	        saveButton = new JButton("Guardar");
 	        saveButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-	        saveButton.setBounds(748, 392, 100, 30);
+	        saveButton.setBounds(708, 392, 140, 30);
 	        saveButton.setBackground(Color.WHITE);
 	        saveButton.setForeground(Color.decode("#0057FF")); // Letras en color azul
 	        saveButton.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -144,7 +146,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 
 	        cancelButton = new JButton("Cancelar");
 	        cancelButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-	        cancelButton.setBounds(40, 392, 100, 30);
+	        cancelButton.setBounds(40, 392, 140, 30);
 	        cancelButton.setBackground(Color.WHITE);
 	        cancelButton.setForeground(Color.decode("#0057FF")); // Letras en color azul
 	        cancelButton.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
@@ -171,7 +173,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        
 	        // Área de texto para el tratamiento
 	        textAreaTratamiento = new JTextArea();
-	        textAreaTratamiento.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+	        textAreaTratamiento.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
 	        textAreaTratamiento.setLineWrap(true);
 	        textAreaTratamiento.setWrapStyleWord(true);
 	        JScrollPane scrollPaneTratamiento = new JScrollPane(textAreaTratamiento); // Asocias el JTextArea al JScrollPane
@@ -180,7 +182,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        	        
 	        // Área de texto para notas adicionales
 	        textAreaNotas = new JTextArea();
-	        textAreaNotas.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+	        textAreaNotas.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
 	        textAreaNotas.setLineWrap(true);
 	        textAreaNotas.setWrapStyleWord(true);
 	        JScrollPane scrollPaneNotas = new JScrollPane(textAreaNotas); // Asocias el JTextArea al JScrollPane
@@ -189,14 +191,14 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        
 	        txtVeterinarioNombre = new JTextField();
 	        txtVeterinarioNombre.setBounds(569, 127, 279, 30);
-	        txtVeterinarioNombre.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+	        txtVeterinarioNombre.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
 	        txtVeterinarioNombre.setEditable(false); // Para que no se pueda editar
 	        //txtVeterinarioNombre.setForeground(Color.WHITE); // Texto en blanco
 	        txtVeterinarioNombre.setOpaque(true); // Fondo transparente
 	        txtVeterinarioNombre.setBorder(null); // Sin borde
 	        roundedPanel.add(txtVeterinarioNombre);
 	        
-	       /* JPanel centerPanel = new JPanel() {
+	       JPanel centerPanel = new JPanel() {
 	            @Override
 	            protected void paintComponent(Graphics g) {
 	                // Personaliza aquí tu componente
@@ -208,9 +210,9 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	                super.paintComponent(g);
 	            }
 	        };
-	        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
+	        centerPanel.setBackground(new Color(255, 255, 255, 70)); // Color de fondo con opacidad
 	        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
-	        centerPanel.setBounds(21, 21, 846, 414);*/
+	        centerPanel.setBounds(21, 21, 846, 414);
 	        
 	        // Agregar los componentes al panel
 	        
@@ -223,7 +225,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        roundedPanel.add(scrollPaneNotas);
 	        roundedPanel.add(saveButton);
 	        roundedPanel.add(cancelButton);
-	        //roundedPanel.add(centerPanel);
+	        roundedPanel.add(centerPanel);
 	        
 	        JLabel lblMascota = new JLabel("Mascota:");
 	        lblMascota.setForeground(new Color(255, 255, 255));
@@ -274,7 +276,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        roundedPanel.add(lblVeterinario);
 	        
 	        btnAddFarmaco = new JButton("Añadir Fármaco");
-	        btnAddFarmaco.setBounds(582, 392, 126, 30);
+	        btnAddFarmaco.setBounds(532, 392, 140, 30);
 	        btnAddFarmaco.setFont(new Font("Tahoma", Font.BOLD, 12));
 	        btnAddFarmaco.setBackground(Color.WHITE);
 	        btnAddFarmaco.setForeground(Color.decode("#0057FF")); // Letras en color azul

@@ -8,6 +8,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import model.Hospitalizacion;
 import DB.HospitalizacionDAO;
@@ -56,8 +57,8 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
         table.setIntercellSpacing(new Dimension(10, 4)); // Aumenta la separación entre las celdas
 
         // Ajustes visuales
-        table.setBackground(Color.decode("#5694F9"));
-        table.setForeground(Color.WHITE);
+        table.setBackground(Color.decode("#96B8F6"));
+        table.setForeground(Color.decode("#1B2582"));
         table.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Tamaño de fuente aumentado
         table.setRowHeight(table.getRowHeight() + 10); // Aumentar el espaciamiento entre filas
         table.getTableHeader().setBackground(Color.decode("#0483FF"));
@@ -101,19 +102,22 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
     
 
     private void cargarHospitalizados() {
-        // Primero, limpia todos los datos existentes en la tabla
-        model.setRowCount(0);
+        model.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
 
-        // Luego, carga los datos actualizados
         List<Hospitalizacion> hospitalizaciones = hospitalizacionDAO.recuperarTodasLasHospitalizaciones();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");  // Formateador de fecha
+
         for (Hospitalizacion hospitalizacion : hospitalizaciones) {
-            String nombreVeterinario = hospitalizacion.getNombreVeterinario() != null ? hospitalizacion.getNombreVeterinario() : "No asignado";
+            // Usando el formateador para convertir LocalDateTime a String en el formato deseado
+            String fechaIngresoFormateada = hospitalizacion.getFechaIngreso().format(formatter);
+            String fechaSalidaFormateada = hospitalizacion.getFechaSalida() != null ? hospitalizacion.getFechaSalida().format(formatter) : "Hospitalizado";  // Manejo de fechas nulas
+
             model.addRow(new Object[]{
                 hospitalizacion.getId(),
                 hospitalizacion.getNombreMascota(),
-                nombreVeterinario,
-                hospitalizacion.getFechaIngreso(),
-                hospitalizacion.getFechaSalida(),
+                hospitalizacion.getNombreVeterinario(),
+                fechaIngresoFormateada,
+                fechaSalidaFormateada,
                 hospitalizacion.getMotivo(),
                 hospitalizacion.getTratamiento(),
                 hospitalizacion.getEstado(),
@@ -121,6 +125,7 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
             });
         }
     }
+
 
     private void mostrarDialogoDetalleHospitalizacion(Hospitalizacion hospitalizacion) {
         // Asegúrate de que este método esté siendo llamado correctamente cuando sea necesario.

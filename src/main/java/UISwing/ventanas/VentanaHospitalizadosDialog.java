@@ -99,8 +99,10 @@ public class VentanaHospitalizadosDialog extends JDialog {
 			dateChooserIngreso = new JDateChooser();
 			dateChooserIngreso.setDate(new Date()); // Establecer a la fecha actual
 			dateChooserIngreso.setBounds(40, 127, 244, 30);
+			dateChooserIngreso.setDateFormatString("dd/MM/yyyy"); // Establece el formato de fecha
 	        // Selector de fecha de salida (opcional al inicio)
 	        dateChooserSalida = new JDateChooser();
+	        dateChooserSalida.setDateFormatString("dd/MM/yyyy"); // Establece el formato de fecha
 	        dateChooserSalida.setBounds(319, 127, 200, 30);
 
 	     // Reemplazo de JTextField por JTextArea para el motivo de la hospitalización

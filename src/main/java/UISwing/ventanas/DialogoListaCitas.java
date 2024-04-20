@@ -8,6 +8,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import model.Cita;
 import DB.CitaDAO;
@@ -126,19 +127,26 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
 
     private void cargarCitas() {
         List<Cita> citas = citaDAO.recuperarCitas();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Formato para la fecha
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Formato para la hora si es necesario
+
         model.setRowCount(0); // Limpia la tabla antes de cargar datos nuevos
         for (Cita cita : citas) {
-            // Añade el ID de la cita como el primer elemento de cada fila
+            String fechaFormateada = cita.getFecha().format(dateFormatter); // Formatear la fecha
+            String horaFormateada = cita.getHora().format(timeFormatter); // Formatear la hora
+
             model.addRow(new Object[]{
                 cita.getId(), // ID de la cita (se ocultará más adelante)
-                cita.getTitulo(), cita.getFecha(), cita.getHora(), cita.getNombreCliente(), cita.getNombreMascota(), cita.getNotas()
+                cita.getTitulo(), fechaFormateada, horaFormateada, cita.getNombreCliente(), cita.getNombreMascota(), cita.getNotas()
             });
         }
+
         // Opción para ocultar la columna del ID si no lo has hecho aún
         table.getColumnModel().getColumn(0).setMinWidth(0);
         table.getColumnModel().getColumn(0).setMaxWidth(0);
         table.getColumnModel().getColumn(0).setWidth(0);
     }
+
     public void setCitaActualizadaListener(CitaActualizadaListener listener) {
         this.citaActualizadaListener = listener;
     }
