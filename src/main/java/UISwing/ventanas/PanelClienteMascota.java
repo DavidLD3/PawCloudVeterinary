@@ -97,8 +97,9 @@ public class PanelClienteMascota extends JPanel {
         txtBuscarClientemascota.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                if (txtBuscarClientemascota.getText().isEmpty()) { // Comprueba si el campo de texto está vacío
-                    txtBuscarClientemascota.setText("Buscar mascota"); // Restablece el texto predeterminado si está vacío
+                if (txtBuscarClientemascota.getText().isEmpty()) {
+                    txtBuscarClientemascota.setText("Buscar mascota");
+                    cargarDatosMascotas();  // Método para cargar todos los datos de las mascotas
                 }
             }
         });
@@ -332,9 +333,10 @@ public class PanelClienteMascota extends JPanel {
         }
     }
     private void actualizarTablaMascotas(List<Mascota> listaMascotas) {
-        modeloTablaMascotas.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+        DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
+        modelo.setRowCount(0);  // Limpiar la tabla antes de agregar nuevos datos
         for (Mascota mascota : listaMascotas) {
-            modeloTablaMascotas.addRow(new Object[]{
+            modelo.addRow(new Object[]{
                 mascota.getNombre(),
                 mascota.getMicrochip(),
                 mascota.getNombreDueño()
