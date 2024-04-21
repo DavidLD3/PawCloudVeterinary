@@ -84,17 +84,22 @@ public class PanelRegistroCliente extends JPanel {
                 // Creación de un JPanel personalizado para el contenido del diálogo
                 JPanel confirmPanel = new JPanel();
                 confirmPanel.add(new JLabel("¿Está seguro de que quiere cerrar sin guardar?"));
-                
+
                 // Opciones personalizadas para los botones
                 String[] options = {"Sí", "No"};
-                
+
                 // Mostrar el diálogo personalizado
                 int confirm = JOptionPane.showOptionDialog(null, confirmPanel, "Cerrar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    System.exit(0);
+                    // Cambio aquí: usar dispose() en lugar de System.exit(0)
+                    Window ventana = SwingUtilities.getWindowAncestor(PanelRegistroCliente.this);
+                    if (ventana != null) {
+                        ventana.dispose(); // Esto cierra la ventana del panel, no toda la aplicación
+                    }
                 }
             }
         });
+
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panelBotones.add(btnEliminar);
