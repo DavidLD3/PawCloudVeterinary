@@ -70,11 +70,6 @@ public class PanelClienteMascota extends JPanel {
             }
         });
 
-        JButton btnMostrarPor = new JButton("Mostrar por");
-        btnMostrarPor.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnMostrarPor.setBounds(302, 42, 89, 23);
-        panel.add(btnMostrarPor);
-
         txtBuscarClientemascota = new JTextField("Buscar mascota"); // Crea un JTextField con texto predeterminado
         txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 12)); // Establece la fuente del texto
         txtBuscarClientemascota.setBounds(569, 43, 161, 20); // Establece la posición y el tamaño del campo de texto
