@@ -191,5 +191,30 @@ public class MascotaDAO {
         }
         return mascota;
     }
-    
+    public List<Mascota> buscarMascotasPorNombreConDueño(String nombre) {
+        List<Mascota> mascotas = new ArrayList<>();
+        String sql = "SELECT m.*, c.nombre AS nombre_dueño, c.apellidos AS apellidos_dueño FROM mascotas m " +
+                     "JOIN clientes c ON m.id_cliente = c.id " +
+                     "WHERE m.nombre LIKE ?";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + nombre + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Mascota mascota = crearMascotaConDueñoDesdeResultSet(rs);
+                    mascotas.add(mascota);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mascotas;
+    }
+
+    private Mascota crearMascotaConDueñoDesdeResultSet(ResultSet rs) throws SQLException {
+        Mascota mascota = crearMascotaDesdeResultSet(rs);
+        String dueño = rs.getString("apellidos_dueño") + ", " + rs.getString("nombre_dueño");
+        mascota.setNombreDueño(dueño);
+        return mascota;
+    }
 }
