@@ -1,6 +1,8 @@
 package UISwing.ventanas;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -43,13 +45,17 @@ public class PanelClienteMascota extends JPanel {
         panel.setLayout(null);
 
         JButton btnExportar = new JButton("Exportar");
-        btnExportar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnExportar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnExportar.setBounds(875, 42, 89, 23);
+        btnExportar.setBackground(Color.WHITE); // Establece el color de fondo del botón a blanco
+        btnExportar.setForeground(Color.BLUE);  // Establece el color de la letra del botón a azul
         panel.add(btnExportar);
 
         JButton btnImportar = new JButton("Importar");
-        btnImportar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnImportar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnImportar.setBounds(764, 42, 89, 23);
+        btnImportar.setBackground(Color.WHITE); // Establece el color de fondo del botón a blanco
+        btnImportar.setForeground(Color.BLUE);  // Establece el color de la letra del botón a azul
         panel.add(btnImportar);
 
         JButton btnAnadir = new JButton("Añadir");
@@ -95,14 +101,17 @@ public class PanelClienteMascota extends JPanel {
         });
 
         txtBuscarClientemascota = new JTextField("Buscar mascota"); // Crea un JTextField con texto predeterminado
-        txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 12)); // Establece la fuente del texto
+        txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establece la fuente del texto
         txtBuscarClientemascota.setBounds(569, 43, 161, 20); // Establece la posición y el tamaño del campo de texto
 
         // Agrega un MouseListener para detectar clics en el campo de texto
         txtBuscarClientemascota.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                txtBuscarClientemascota.setText(""); // Borra el texto cuando se hace clic en el campo de texto
+                // Verificar si el texto actual es igual al mensaje predeterminado
+                if (txtBuscarClientemascota.getText().equals("Buscar mascota")) {
+                    txtBuscarClientemascota.setText(""); // Borra el texto solo si es el mensaje predeterminado
+                }
             }
         });
 
@@ -110,8 +119,9 @@ public class PanelClienteMascota extends JPanel {
         txtBuscarClientemascota.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                if (txtBuscarClientemascota.getText().isEmpty()) { // Comprueba si el campo de texto está vacío
-                    txtBuscarClientemascota.setText("Buscar mascota"); // Restablece el texto predeterminado si está vacío
+                if (txtBuscarClientemascota.getText().isEmpty()) {
+                    txtBuscarClientemascota.setText("Buscar mascota");
+                    cargarDatosMascotas();  // Método para cargar todos los datos de las mascotas
                 }
             }
         });
@@ -142,13 +152,16 @@ public class PanelClienteMascota extends JPanel {
         panel.add(txtBuscarClientemascota); // Agrega el campo de texto al panel
 
         txtBuscarCliente = new JTextField("Buscar cliente"); 			// Creamos un JTextField con texto predeterminado
-        txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 12)); // Establecemos la fuente del texto
+        txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establecemos la fuente del texto
         txtBuscarCliente.setBounds(10, 43, 166, 20);					// Establecemos la posición y el tamaño del campo de texto
      // Agregamos un MouseListener para detectar clics en el campo de texto
         txtBuscarCliente.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                txtBuscarCliente.setText(""); // Borramos el texto cuando se hace clic en el campo de texto
+                // Verificar si el texto actual es igual al mensaje predeterminado
+                if (txtBuscarCliente.getText().equals("Buscar cliente")) {
+                    txtBuscarCliente.setText(""); // Borra el texto solo si es el mensaje predeterminado
+                }
             }
         });
      // Agregamos un FocusListener para detectar cuando el campo de texto pierde el foco
@@ -157,35 +170,78 @@ public class PanelClienteMascota extends JPanel {
             public void focusLost(FocusEvent e) {
                 if (txtBuscarCliente.getText().isEmpty()) { 	 // Comprueba si el campo de texto está vacío
                     txtBuscarCliente.setText("Buscar cliente");	 // Restablece el texto predeterminado si está vacío
+                    cargarDatosClientes(); //Metodo para cargar los datos de los cientes
                 }
             }
         });
+        txtBuscarClientemascota.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                realizarBusqueda();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                realizarBusqueda();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                // Esta no se llama en texto plano
+            }
+
+            private void realizarBusqueda() {
+            	 String searchText = txtBuscarClientemascota.getText().trim().toLowerCase();
+                 if (!searchText.isEmpty()) {
+                     List<Mascota> resultados = mascotaDAO.buscarMascotasPorNombreConDueño(searchText);
+                     actualizarTablaMascotas(resultados);
+                 } else {
+                     cargarDatosMascotas();  // Asegúrate de que este método carga todos los datos necesarios
+                 }
+             }
+         });
         txtBuscarCliente.addActionListener(e -> {
-            String searchText = txtBuscarCliente.getText().trim().toLowerCase(); // Obtiene el texto ingresado y lo convierte a minúsculas
-            boolean found = false;
+            String searchText = txtBuscarCliente.getText().trim().toLowerCase();
+            if (searchText.isEmpty()) {
+                List<Cliente> todosLosClientes = clienteDao.obtenerTodosLosClientes();
+                actualizarTablaClientes(todosLosClientes);
+            } else {
+                List<Cliente> clientesFiltrados = clienteDao.buscarClientes(searchText);
+                actualizarTablaClientes(clientesFiltrados);
 
-            // Realiza la búsqueda en la tabla de clientes por nombre, apellido o DNI
-            for (int row = 0; row < tablaClientes.getRowCount(); row++) {
-                String nombre = tablaClientes.getValueAt(row, 0).toString().toLowerCase(); // Nombre del cliente
-                String apellidos = tablaClientes.getValueAt(row, 1).toString().toLowerCase(); // Apellidos del cliente
-                String dni = tablaClientes.getValueAt(row, 2).toString().toLowerCase(); // DNI del cliente
-
-                // Concatena nombre y apellido para la búsqueda
-                String fullName = nombre + " " + apellidos;
-
-                if (fullName.contains(searchText) || dni.equals(searchText)) {
-                    // Selecciona la fila correspondiente si se encuentra una coincidencia
-                    tablaClientes.setRowSelectionInterval(row, row);
-                    // Hace que la fila seleccionada sea visible en la tabla
-                    Rectangle rect = tablaClientes.getCellRect(row, 0, true);
+                // Si hay resultados, seleccionamos la primera coincidencia y aseguramos que sea visible
+                if (!clientesFiltrados.isEmpty()) {
+                    tablaClientes.setRowSelectionInterval(0, 0);
+                    Rectangle rect = tablaClientes.getCellRect(0, 0, true);
                     tablaClientes.scrollRectToVisible(rect);
-                    found = true;
-                    break; // Sale del bucle después de encontrar la primera coincidencia
+                } else {
+                    // Si no hay coincidencias, aseguramos despejar cualquier selección previa
+                    tablaClientes.clearSelection();
                 }
             }
-            if (!found) {
-                JOptionPane.showMessageDialog(this, "Cliente no encontrado", "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
-                tablaClientes.clearSelection();
+        });
+        txtBuscarCliente.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                buscarCliente();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                buscarCliente();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Esta función no se llama en campos de texto plano
+            }
+
+            private void buscarCliente() {
+                String searchText = txtBuscarCliente.getText().trim().toLowerCase();
+                if (searchText.isEmpty()) {
+                    List<Cliente> todosLosClientes = clienteDao.obtenerTodosLosClientes();
+                    actualizarTablaClientes(todosLosClientes);
+                } else {
+                    List<Cliente> clientesFiltrados = clienteDao.buscarClientes(searchText);
+                    actualizarTablaClientes(clientesFiltrados);
+                }
             }
         });
 
@@ -239,12 +295,12 @@ public class PanelClienteMascota extends JPanel {
     
     private void inicializarComponentesMascotas(JPanel panel) {
     	 // Configuramos el modelo de la tabla para mascotas
-        modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Especie", "Microchip"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;  // Hacer que la tabla no sea editable
-            }
-        };
+    	modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Microchip", "Dueño"}, 0) {
+    	    @Override
+    	    public boolean isCellEditable(int row, int column) {
+    	        return false;  // Hacer que la tabla no sea editable
+    	    }
+    	};
 
         tablaMascotas = new JTable(modeloTablaMascotas);
         tablaMascotas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -254,7 +310,7 @@ public class PanelClienteMascota extends JPanel {
                 if (e.getClickCount() == 2) {  // Doble clic
                     int filaSeleccionada = tablaMascotas.getSelectedRow();
                     if (filaSeleccionada != -1) {
-                        String microchip = (String) modeloTablaMascotas.getValueAt(filaSeleccionada, 2);  
+                        String microchip = (String) modeloTablaMascotas.getValueAt(filaSeleccionada, 1);  
                         abrirPanelDetalleMascotaPorMicrochip(microchip);
                     }
                 }
@@ -285,22 +341,12 @@ public class PanelClienteMascota extends JPanel {
     
     private void cargarDatosMascotas() {
         try {
-            List<Mascota> listaMascotas = mascotaDAO.obtenerMascotasOrdenadasPorNombreEspecieMicrochip();
-
-            DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
-            modelo.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
-
-            for (Mascota mascota : listaMascotas) {
-                modelo.addRow(new Object[]{
-                        mascota.getNombre(),
-                        mascota.getEspecie(),
-                        mascota.getMicrochip()
-                });
-            }
+            List<Mascota> listaMascotas = mascotaDAO.obtenerMascotasOrdenadasPorNombreMicrochip();
+            actualizarTablaMascotas(listaMascotas);
         } catch (SQLException e) {
             e.printStackTrace(); 
-        }// Maneja la excepción de SQL
-        // Aquí podríamos mostrar un mensaje de error al usuario si la carga de datos falla.
+            // Aquí podríamos mostrar un mensaje de error al usuario si la carga de datos falla.
+        }
     }
 
     private void abrirPanelDetalleClientePorDni(String dni) {
@@ -323,6 +369,28 @@ public class PanelClienteMascota extends JPanel {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         } 
+    }
+    private void actualizarTablaClientes(List<Cliente> listaClientes) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaClientes.getModel();
+        modelo.setRowCount(0); // Limpiamos la tabla antes de agregar nuevos datos
+        for (Cliente cliente : listaClientes) {
+            modelo.addRow(new Object[]{
+                cliente.getNombre(),
+                cliente.getApellidos(),
+                cliente.getDni()
+            });
+        }
+    }
+    private void actualizarTablaMascotas(List<Mascota> listaMascotas) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
+        modelo.setRowCount(0);  // Limpiar la tabla antes de agregar nuevos datos
+        for (Mascota mascota : listaMascotas) {
+            modelo.addRow(new Object[]{
+                mascota.getNombre(),
+                mascota.getMicrochip(),
+                mascota.getNombreDueño()
+            });
+        }
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
