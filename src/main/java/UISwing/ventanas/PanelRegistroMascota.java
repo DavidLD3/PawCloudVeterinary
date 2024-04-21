@@ -10,7 +10,7 @@ import DB.MascotaDAO;
 import model.Mascota;
 
 public class PanelRegistroMascota extends JPanel {
-    private JTextField tfMascotaNombre, tfMascotaEspecie, tfMascotaRaza, tfMascotaEdad, tfMascotaMicrochip, tfMascotaCaracter, tfMascotaColor, tfMascotaTipoPelo;
+    private JTextField tfMascotaNombre, tfMascotaEspecie, tfMascotaRaza, tfMascotapasaporte, tfMascotaMicrochip, tfMascotaCaracter, tfMascotaColor, tfMascotaTipoPelo;
     private JCheckBox cbMascotaEsterilizado;
     private JDateChooser dateChooserNacimiento;
     private JComboBox<String> cbMascotaSexo;
@@ -34,7 +34,7 @@ public class PanelRegistroMascota extends JPanel {
         tfMascotaNombre = new JTextField();
         tfMascotaEspecie = new JTextField();
         tfMascotaRaza = new JTextField();
-        tfMascotaEdad = new JTextField();
+        tfMascotapasaporte = new JTextField();
         tfMascotaMicrochip = new JTextField();
         dateChooserNacimiento = new JDateChooser();
         tfMascotaCaracter = new JTextField();
@@ -54,8 +54,8 @@ public class PanelRegistroMascota extends JPanel {
         panelDatos.add(tfMascotaEspecie);
         panelDatos.add(new JLabel("Raza:"));
         panelDatos.add(tfMascotaRaza);
-        panelDatos.add(new JLabel("Edad:"));
-        panelDatos.add(tfMascotaEdad);
+        panelDatos.add(new JLabel("pasaporte:"));
+        panelDatos.add(tfMascotapasaporte);
         panelDatos.add(new JLabel("Microchip:"));
         panelDatos.add(tfMascotaMicrochip);
         panelDatos.add(new JLabel("Fecha de Nacimiento:"));
@@ -95,7 +95,7 @@ public class PanelRegistroMascota extends JPanel {
         tfMascotaNombre.setText("");
         tfMascotaEspecie.setText("");
         tfMascotaRaza.setText("");
-        tfMascotaEdad.setText("");
+        tfMascotapasaporte.setText("");
         tfMascotaMicrochip.setText("");
         dateChooserNacimiento.setCalendar(null);
         tfMascotaCaracter.setText("");
@@ -105,36 +105,29 @@ public class PanelRegistroMascota extends JPanel {
         cbMascotaEsterilizado.setSelected(false);
     }
 
-
     private void guardarMascota() {
         // Suponiendo que has validado la entrada del usuario
         Mascota nuevaMascota = new Mascota();
-        // Asegúrate de implementar un constructor en Mascota que acepte todos estos parámetros
-        // O establece los valores uno por uno con los setters después de crear el objeto con un constructor vacío o parcial
-        nuevaMascota.setNombre(tfMascotaNombre.getText());
-        nuevaMascota.setEspecie(tfMascotaEspecie.getText());
-        nuevaMascota.setRaza(tfMascotaRaza.getText());
-        try {
-            nuevaMascota.setEdad(Integer.parseInt(tfMascotaEdad.getText()));
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "La edad debe ser un número válido.");
-            return; // Previene el cierre si la edad no es válida
-        }
-        nuevaMascota.setMicrochip(tfMascotaMicrochip.getText());
+        // Utiliza trim() en cada uno de los campos de texto para eliminar espacios innecesarios
+        nuevaMascota.setNombre(tfMascotaNombre.getText().trim());
+        nuevaMascota.setEspecie(tfMascotaEspecie.getText().trim());
+        nuevaMascota.setRaza(tfMascotaRaza.getText().trim());
+        nuevaMascota.setPasaporte(tfMascotapasaporte.getText().trim()); // Aquí se ha cambiado para tratar el pasaporte como una cadena
+        nuevaMascota.setMicrochip(tfMascotaMicrochip.getText().trim());
         if (dateChooserNacimiento.getDate() != null) {
             nuevaMascota.setFechaNacimiento(dateChooserNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha de nacimiento.");
             return; // Previene el cierre si la fecha de nacimiento no es válida
         }
-        nuevaMascota.setCaracter(tfMascotaCaracter.getText());
-        nuevaMascota.setColor(tfMascotaColor.getText());
-        nuevaMascota.setTipoPelo(tfMascotaTipoPelo.getText());
+        nuevaMascota.setCaracter(tfMascotaCaracter.getText().trim());
+        nuevaMascota.setColor(tfMascotaColor.getText().trim());
+        nuevaMascota.setTipoPelo(tfMascotaTipoPelo.getText().trim());
         // Asegúrate de que la conversión a enum aquí sea segura
         nuevaMascota.setSexo(Mascota.Sexo.valueOf(cbMascotaSexo.getSelectedItem().toString().toUpperCase()));
         nuevaMascota.setEsterilizado(cbMascotaEsterilizado.isSelected());
         nuevaMascota.setIdCliente(this.idCliente); // Asegúrate de que esta línea esté correctamente implementada
-        
+
         MascotaDAO mascotaDao = new MascotaDAO();
         boolean exito = mascotaDao.insertarMascota(nuevaMascota);
 
@@ -150,6 +143,7 @@ public class PanelRegistroMascota extends JPanel {
             JOptionPane.showMessageDialog(this, "Error al guardar la mascota");
         }
     }
+
 }  
   
 
