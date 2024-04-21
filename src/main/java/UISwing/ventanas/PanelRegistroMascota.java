@@ -109,27 +109,26 @@ public class PanelRegistroMascota extends JPanel {
     private void guardarMascota() {
         // Suponiendo que has validado la entrada del usuario
         Mascota nuevaMascota = new Mascota();
-        // Asegúrate de implementar un constructor en Mascota que acepte todos estos parámetros
-        // O establece los valores uno por uno con los setters después de crear el objeto con un constructor vacío o parcial
-        nuevaMascota.setNombre(tfMascotaNombre.getText());
-        nuevaMascota.setEspecie(tfMascotaEspecie.getText());
-        nuevaMascota.setRaza(tfMascotaRaza.getText());
+        // Utiliza trim() en cada uno de los campos de texto para eliminar espacios innecesarios
+        nuevaMascota.setNombre(tfMascotaNombre.getText().trim());
+        nuevaMascota.setEspecie(tfMascotaEspecie.getText().trim());
+        nuevaMascota.setRaza(tfMascotaRaza.getText().trim());
         try {
-            nuevaMascota.setEdad(Integer.parseInt(tfMascotaEdad.getText()));
+            nuevaMascota.setEdad(Integer.parseInt(tfMascotaEdad.getText().trim()));
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "La edad debe ser un número válido.");
             return; // Previene el cierre si la edad no es válida
         }
-        nuevaMascota.setMicrochip(tfMascotaMicrochip.getText());
+        nuevaMascota.setMicrochip(tfMascotaMicrochip.getText().trim());
         if (dateChooserNacimiento.getDate() != null) {
             nuevaMascota.setFechaNacimiento(dateChooserNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha de nacimiento.");
             return; // Previene el cierre si la fecha de nacimiento no es válida
         }
-        nuevaMascota.setCaracter(tfMascotaCaracter.getText());
-        nuevaMascota.setColor(tfMascotaColor.getText());
-        nuevaMascota.setTipoPelo(tfMascotaTipoPelo.getText());
+        nuevaMascota.setCaracter(tfMascotaCaracter.getText().trim());
+        nuevaMascota.setColor(tfMascotaColor.getText().trim());
+        nuevaMascota.setTipoPelo(tfMascotaTipoPelo.getText().trim());
         // Asegúrate de que la conversión a enum aquí sea segura
         nuevaMascota.setSexo(Mascota.Sexo.valueOf(cbMascotaSexo.getSelectedItem().toString().toUpperCase()));
         nuevaMascota.setEsterilizado(cbMascotaEsterilizado.isSelected());
@@ -150,6 +149,7 @@ public class PanelRegistroMascota extends JPanel {
             JOptionPane.showMessageDialog(this, "Error al guardar la mascota");
         }
     }
+
 }  
   
 
