@@ -53,8 +53,32 @@ public class PanelClienteMascota extends JPanel {
         panel.add(btnImportar);
 
         JButton btnAnadir = new JButton("Añadir");
-        btnAnadir.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnAnadir.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAnadir.setBounds(186, 42, 89, 23);
+        btnAnadir.setBackground(Color.WHITE);
+        btnAnadir.setForeground(Color.decode("#0057FF"));
+        btnAnadir.setFocusPainted(false);
+        btnAnadir.setBorderPainted(false);
+        btnAnadir.setContentAreaFilled(false);
+        btnAnadir.setOpaque(true);
+
+        // Personalización del efecto rollover
+        btnAnadir.setRolloverEnabled(true);
+        btnAnadir.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAnadir.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnAnadir.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAnadir.setBackground(Color.WHITE);
+                btnAnadir.setForeground(Color.decode("#0057FF"));
+            }
+        });
+
+        // Añadir a tu panel
         panel.add(btnAnadir);
 
         // Añadir ActionListener al botón Añadir
