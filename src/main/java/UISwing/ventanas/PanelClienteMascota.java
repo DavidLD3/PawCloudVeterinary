@@ -86,7 +86,10 @@ public class PanelClienteMascota extends JPanel {
         txtBuscarClientemascota.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                txtBuscarClientemascota.setText(""); // Borra el texto cuando se hace clic en el campo de texto
+                // Verificar si el texto actual es igual al mensaje predeterminado
+                if (txtBuscarClientemascota.getText().equals("Buscar mascota")) {
+                    txtBuscarClientemascota.setText(""); // Borra el texto solo si es el mensaje predeterminado
+                }
             }
         });
 
@@ -132,7 +135,10 @@ public class PanelClienteMascota extends JPanel {
         txtBuscarCliente.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                txtBuscarCliente.setText(""); // Borramos el texto cuando se hace clic en el campo de texto
+                // Verificar si el texto actual es igual al mensaje predeterminado
+                if (txtBuscarCliente.getText().equals("Buscar cliente")) {
+                    txtBuscarCliente.setText(""); // Borra el texto solo si es el mensaje predeterminado
+                }
             }
         });
      // Agregamos un FocusListener para detectar cuando el campo de texto pierde el foco
