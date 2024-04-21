@@ -125,19 +125,19 @@ public class PanelRegistroCliente extends JPanel {
         }
         
         Cliente cliente = new Cliente(
-        	    0,
-        	    tfRcliente_Nombre.getText(),
-        	    tfRcliente_Apellidos.getText(),
-        	    fechaNacimiento,
-        	    tfRcliente_DNI.getText(),
-        	    tfRcliente_NIF.getText(),
-        	    tfRcliente_Direccion.getText(),
-        	    tfRcliente_Poblacion.getText(),
-        	    tfRcliente_Provincia.getText(),
-        	    tfRcliente_Tfijo.getText(),
-        	    tfRcliente_Tmovil.getText(),
-        	    tfRcliente_Email.getText()
-        	);
+            0,
+            tfRcliente_Nombre.getText().trim(),
+            tfRcliente_Apellidos.getText().trim(),
+            fechaNacimiento,
+            tfRcliente_DNI.getText().trim(),
+            tfRcliente_NIF.getText().trim(),
+            tfRcliente_Direccion.getText().trim(),
+            tfRcliente_Poblacion.getText().trim(),
+            tfRcliente_Provincia.getText().trim(),
+            tfRcliente_Tfijo.getText().trim(),
+            tfRcliente_Tmovil.getText().trim(),
+            tfRcliente_Email.getText().trim()
+        );
         
         ClienteDAO clienteDao = new ClienteDAO();
         boolean exito = clienteDao.insertarCliente(cliente);
