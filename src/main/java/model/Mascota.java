@@ -8,38 +8,38 @@ public class Mascota {
     private String nombre;
     private String especie;
     private String raza;
-    private int edad;
-    private int idCliente; // Clave foránea que apunta al ID del cliente
+    private String pasaporte;  // Cambiado de int a String
+    private int idCliente;
     private String microchip;
     private LocalDate fechaNacimiento;
     private String caracter;
     private String color;
     private String tipoPelo;
-    private Sexo sexo; // Cambio de String a enum
+    private Sexo sexo;
     private boolean esterilizado;
 
     public enum Sexo {
         MACHO, HEMBRA
     }
 
-    // Constructor modificado para aceptar Sexo como enum
-    public Mascota(int id, String nombre, String especie, String raza, int edad, int idCliente, 
+    // Constructor modificado para incluir pasaporte como String
+    public Mascota(int id, String nombre, String especie, String raza, String pasaporte, int idCliente, 
                    String microchip, LocalDate fechaNacimiento, String caracter, String color, 
                    String tipoPelo, Sexo sexo, boolean esterilizado) {
         this.id = id;
         this.nombre = nombre;
         this.especie = especie;
         this.raza = raza;
-        this.edad = edad;
+        this.pasaporte = pasaporte;  // Tipo String
         this.idCliente = idCliente;
         this.microchip = microchip;
         this.fechaNacimiento = fechaNacimiento;
         this.caracter = caracter;
         this.color = color;
         this.tipoPelo = tipoPelo;
-        this.sexo = sexo; // Asignar directamente el enum
+        this.sexo = sexo;
         this.esterilizado = esterilizado;
-    }
+    } 
 
     public Mascota() {
         // Constructor vacío
@@ -81,14 +81,14 @@ public class Mascota {
         this.raza = raza;
     }
 
-    public int getEdad() {
-        return edad;
+    public void setPasaporte(String pasaporte) {
+        this.pasaporte = pasaporte; // Método para establecer el pasaporte
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
+    public String getPasaporte() {
+        return pasaporte; // Método para obtener el pasaporte
     }
-
+    
     public int getIdCliente() {
         return idCliente;
     }
@@ -189,7 +189,7 @@ public class Mascota {
                 ", nombre='" + nombre + '\'' +
                 ", especie='" + especie + '\'' +
                 ", raza='" + raza + '\'' +
-                ", edad=" + edad +
+                ", pasaporte='" + pasaporte + '\'' +  // Mostrar como String
                 ", idCliente=" + idCliente +
                 ", microchip='" + microchip + '\'' +
                 ", fechaNacimiento=" + fechaNacimiento +

@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import DB.MascotaDAO;
 import DB.HistorialMedicoDAO;
@@ -59,9 +61,17 @@ public class PanelInfoMascota extends JPanel {
         agregarCampo(panel, "Nombre:", mascota.getNombre());
         agregarCampo(panel, "Especie:", mascota.getEspecie());
         agregarCampo(panel, "Raza:", mascota.getRaza());
-        agregarCampo(panel, "Edad:", String.valueOf(mascota.getEdad()));
+        agregarCampo(panel, "Pasaporte:", String.valueOf(mascota.getPasaporte()));
         agregarCampo(panel, "Microchip:", mascota.getMicrochip());
-        agregarCampo(panel, "Fecha de Nacimiento:", mascota.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        
+        // Formatear y mostrar la fecha de nacimiento
+        String fechaNacimiento = mascota.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        agregarCampo(panel, "Fecha de Nacimiento:", fechaNacimiento);
+
+        // Calcular y mostrar la edad
+        String edad = calcularEdad(mascota.getFechaNacimiento());
+        agregarCampo(panel, "Edad:", edad);
+
         agregarCampo(panel, "Carácter:", mascota.getCaracter());
         agregarCampo(panel, "Color:", mascota.getColor());
         agregarCampo(panel, "Tipo de pelo:", mascota.getTipoPelo());
@@ -70,7 +80,12 @@ public class PanelInfoMascota extends JPanel {
 
         return panel;
     }
-
+    private String calcularEdad(LocalDate fechaNacimiento) {
+        LocalDate hoy = LocalDate.now();
+        Period periodo = Period.between(fechaNacimiento, hoy);
+        return String.format("%d años, %d meses, %d días", periodo.getYears(), periodo.getMonths(), periodo.getDays());
+    }
+    
     private void agregarCampo(JPanel panel, String etiqueta, String valor) {
         panel.add(new JLabel(etiqueta));
         JTextField textField = new JTextField(valor, 20);
