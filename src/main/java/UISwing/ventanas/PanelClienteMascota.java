@@ -148,6 +148,7 @@ public class PanelClienteMascota extends JPanel {
             public void focusLost(FocusEvent e) {
                 if (txtBuscarCliente.getText().isEmpty()) { 	 // Comprueba si el campo de texto está vacío
                     txtBuscarCliente.setText("Buscar cliente");	 // Restablece el texto predeterminado si está vacío
+                    cargarDatosClientes(); //Metodo para cargar los datos de los cientes
                 }
             }
         });
@@ -192,6 +193,33 @@ public class PanelClienteMascota extends JPanel {
                 } else {
                     // Si no hay coincidencias, aseguramos despejar cualquier selección previa
                     tablaClientes.clearSelection();
+                }
+            }
+        });
+        txtBuscarCliente.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                buscarCliente();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                buscarCliente();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Esta función no se llama en campos de texto plano
+            }
+
+            private void buscarCliente() {
+                String searchText = txtBuscarCliente.getText().trim().toLowerCase();
+                if (searchText.isEmpty()) {
+                    List<Cliente> todosLosClientes = clienteDao.obtenerTodosLosClientes();
+                    actualizarTablaClientes(todosLosClientes);
+                } else {
+                    List<Cliente> clientesFiltrados = clienteDao.buscarClientes(searchText);
+                    actualizarTablaClientes(clientesFiltrados);
                 }
             }
         });
