@@ -10,7 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 
+import DB.FarmacoDAO;
 import DB.HistorialMedicoDAO;
+import model.Farmaco;
 import model.HistorialMedico;
 
 public class DialogoHistorialMedico extends JDialog {
@@ -31,51 +33,82 @@ public class DialogoHistorialMedico extends JDialog {
 	    cargarDatosHistorial(historialMedico);
 	}
 
-    private void inicializarComponentes() {
-        setTitle("Historial Médico");
-        setLayout(new BorderLayout());
+	private void inicializarComponentes() {
+	    setTitle("Historial Médico");
+	    setLayout(new BorderLayout());
 
-        JPanel panelCampos = new JPanel(new GridLayout(0, 2));
-        dateChooser = new JDateChooser();
-        dateChooser.setDateFormatString("dd/MM/yyyy");
-        dateChooser.setDate(new Date());
+	    JPanel panelCampos = new JPanel(new GridLayout(0, 2));
+	    dateChooser = new JDateChooser();
+	    dateChooser.setDateFormatString("dd/MM/yyyy");
+	    dateChooser.setDate(new Date());
 
-        txtDiagnostico = new JTextArea(5, 20);
-        txtTratamiento = new JTextArea(5, 20);
-        JScrollPane scrollDiagnostico = new JScrollPane(txtDiagnostico);
-        JScrollPane scrollTratamiento = new JScrollPane(txtTratamiento);
+	    txtDiagnostico = new JTextArea(5, 20);
+	    txtTratamiento = new JTextArea(5, 20);
+	    JScrollPane scrollDiagnostico = new JScrollPane(txtDiagnostico);
+	    JScrollPane scrollTratamiento = new JScrollPane(txtTratamiento);
 
-        comboTipoIntervencion = new JComboBox<>(new String[]{
-            "Evaluación general y anamnesis", "Examen físico", "Vacunación",
-            "Desparasitación", "Pruebas de diagnóstico",
-            "Asesoramiento nutricional y de comportamiento", "Planificación preventiva",
-            "Recomendaciones de cuidado general"
-        });
+	    comboTipoIntervencion = new JComboBox<>(new String[]{
+	        "Evaluación general y anamnesis", "Examen físico", "Vacunación",
+	        "Desparasitación", "Pruebas de diagnóstico",
+	        "Asesoramiento nutricional y de comportamiento", "Planificación preventiva",
+	        "Recomendaciones de cuidado general"
+	    });
 
-        panelCampos.add(new JLabel("Fecha:"));
-        panelCampos.add(dateChooser);
-        panelCampos.add(new JLabel("Tipo de intervención:"));
-        panelCampos.add(comboTipoIntervencion);
-        panelCampos.add(new JLabel("Diagnóstico:"));
-        panelCampos.add(scrollDiagnostico);
-        panelCampos.add(new JLabel("Tratamiento:"));
-        panelCampos.add(scrollTratamiento);
+	    panelCampos.add(new JLabel("Fecha:"));
+	    panelCampos.add(dateChooser);
+	    panelCampos.add(new JLabel("Tipo de intervención:"));
+	    panelCampos.add(comboTipoIntervencion);
+	    panelCampos.add(new JLabel("Diagnóstico:"));
+	    panelCampos.add(scrollDiagnostico);
+	    panelCampos.add(new JLabel("Tratamiento:"));
+	    panelCampos.add(scrollTratamiento);
 
-        JButton btnGuardar = new JButton("Guardar");
-        btnGuardar.addActionListener(this::guardarRegistro); 
-        JButton btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener(e -> setVisible(false));
+	    // Mejorar la disposición del botón y el campo de tratamiento
+	    JPanel panelBotonesTratamiento = new JPanel(new BorderLayout());
+	    panelBotonesTratamiento.add(scrollTratamiento, BorderLayout.CENTER);  // Campo de texto en el centro
+	    JButton btnSeleccionarFarmaco = new JButton("Añadir Fármaco");
+	    btnSeleccionarFarmaco.addActionListener(this::abrirDialogoSeleccionFarmaco);
+	    panelBotonesTratamiento.add(btnSeleccionarFarmaco, BorderLayout.SOUTH); // Botón debajo del campo de texto
 
-        JPanel panelBotones = new JPanel();
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCancelar);
+	    // Agregar este panel modificado
+	    panelCampos.add(panelBotonesTratamiento);
 
-        add(panelCampos, BorderLayout.CENTER);
-        add(panelBotones, BorderLayout.SOUTH);
+	    JButton btnGuardar = new JButton("Guardar");
+	    btnGuardar.addActionListener(this::guardarRegistro); 
+	    JButton btnCancelar = new JButton("Cancelar");
+	    btnCancelar.addActionListener(e -> setVisible(false));
 
-        pack();
-    }
+	    JPanel panelBotones = new JPanel();
+	    panelBotones.add(btnGuardar);
+	    panelBotones.add(btnCancelar);
+
+	    add(panelCampos, BorderLayout.CENTER);
+	    add(panelBotones, BorderLayout.SOUTH);
+
+	    pack();
+	}
         
+    private void abrirDialogoSeleccionFarmaco(ActionEvent e) {
+        // Crear una instancia del diálogo con referencia a this como owner y modalidad
+        DialogoSeleccionFarmaco dialogoFarmaco = new DialogoSeleccionFarmaco((Frame) SwingUtilities.getWindowAncestor(this), true, new FarmacoDAO());
+        dialogoFarmaco.setVisible(true);
+
+        // Comprobar si el diálogo fue confirmado
+        if (dialogoFarmaco.isSeleccionado()) {
+            // Obtener la información del fármaco seleccionado y los detalles proporcionados
+            Farmaco farmacoSeleccionado = dialogoFarmaco.getFarmacoSeleccionado();
+            String dosis = dialogoFarmaco.getDosis();
+            String frecuencia = dialogoFarmaco.getFrecuencia();
+            
+            // Formatear la descripción del tratamiento con la información del fármaco
+            if (farmacoSeleccionado != null) {
+                String descripcionFarmaco = String.format("Fármaco: %s, Dosis: %s, Frecuencia: %s",
+                                                          farmacoSeleccionado.getNombre(), dosis, frecuencia);
+                // Añadir esta descripción al campo de texto de tratamiento existente
+                txtTratamiento.setText(txtTratamiento.getText() + "\n" + descripcionFarmaco);
+            }
+        }
+    }
     private void guardarRegistro(ActionEvent e) {
         try {
             LocalDate fecha = dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
