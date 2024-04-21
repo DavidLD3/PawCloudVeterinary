@@ -84,14 +84,12 @@ public class DialogoHistorialMedico extends JDialog {
             String tipoIntervencion = (String) comboTipoIntervencion.getSelectedItem();
 
             if (historialMedicoActual == null) {
-                // Crear un nuevo registro con el ID de la mascota adecuado
                 historialMedicoActual = new HistorialMedico(idMascota, fecha, diagnostico, tratamiento, tipoIntervencion);
                 if (historialMedicoDAO.insertarHistorial(historialMedicoActual)) {
                     confirmado = true;
                     setVisible(false);
                 }
             } else {
-                // Actualizar el registro existente
                 historialMedicoActual.setFecha(fecha);
                 historialMedicoActual.setDiagnostico(diagnostico);
                 historialMedicoActual.setTratamiento(tratamiento);
@@ -107,7 +105,6 @@ public class DialogoHistorialMedico extends JDialog {
             JOptionPane.showMessageDialog(this, "Error al guardar el registro: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
         
     public boolean isConfirmado() {
         return confirmado;

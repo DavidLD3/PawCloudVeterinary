@@ -159,18 +159,16 @@ public class PanelInfoMascota extends JPanel {
     private JPanel crearPanelHistorialMedico() {
         JPanel panelHistorialMedico = new JPanel(new BorderLayout());
 
-        // Añadiendo 'ID' como una columna que será ocultada más tarde
-        String[] columnas = {"ID", "Fecha", "Tipo de Intervención", "Diagnóstico"};
+        String[] columnas = {"ID", "Fecha", "Tipo de Intervención", "Diagnóstico"};  // Asegúrate de que el orden de los nombres de las columnas sea correcto
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Para evitar edición directa en la tabla
             }
         };
-
+        
         tablaHistorial = new JTable(modeloTabla);
-        // Ocultar la columna 'ID' inmediatamente después de crear la tabla
-        tablaHistorial.removeColumn(tablaHistorial.getColumnModel().getColumn(0));
+        tablaHistorial.removeColumn(tablaHistorial.getColumnModel().getColumn(0));  // Eliminamos la columna ID que no queremos mostrar
         JScrollPane scrollPane = new JScrollPane(tablaHistorial);
         panelHistorialMedico.add(scrollPane, BorderLayout.CENTER);
 
@@ -229,14 +227,15 @@ public class PanelInfoMascota extends JPanel {
     }
 
     private void cargarDatosHistorialMedico(DefaultTableModel modeloTabla, JTable tablaHistorial) {
+        modeloTabla.setRowCount(0); // Limpia el modelo de la tabla primero
+
         List<HistorialMedico> registros = historialMedicoDAO.obtenerHistorialesPorMascota(mascota.getId());
         for (HistorialMedico registro : registros) {
             modeloTabla.addRow(new Object[]{
-                    registro.getId(),
-                    registro.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    registro.getDiagnostico(),
-                    registro.getTratamiento(),
-                    registro.getTipoIntervencion()
+                registro.getId(),  // ID de la hospitalización, no visible en la tabla
+                registro.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                registro.getTipoIntervencion(),
+                registro.getDiagnostico()
             });
         }
     }
@@ -250,15 +249,50 @@ public class PanelInfoMascota extends JPanel {
         dialogo.setVisible(true);
         if (dialogo.isConfirmado()) {
             cargarDatosHistorialMedico((DefaultTableModel) tablaHistorial.getModel(), tablaHistorial);
+            actualizarTablas();  // Este método ahora maneja la actualización correcta
         }
     }
     private JPanel crearPanelVacunas() {
-        JPanel panel = new JPanel(new BorderLayout());
-        // Aquí tu código para mostrar el registro de vacunas...
-        return panel;
-    }
+        JPanel panelVacunas = new JPanel(new BorderLayout());
+        String[] columnasVacunas = {"Fecha", "Tipo de Intervención", "Diagnóstico"};
+        DefaultTableModel modeloVacunas = new DefaultTableModel(columnasVacunas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-  
+        JTable tablaVacunas = new JTable(modeloVacunas);
+        JScrollPane scrollPaneVacunas = new JScrollPane(tablaVacunas);
+        panelVacunas.add(scrollPaneVacunas, BorderLayout.CENTER);
+
+        cargarDatosVacunas(modeloVacunas);
+        return panelVacunas;
+    }
+    private void cargarDatosVacunas(DefaultTableModel modeloVacunas) {
+        modeloVacunas.setRowCount(0); // Limpiar tabla antes de cargar datos
+
+        List<HistorialMedico> registros = historialMedicoDAO.obtenerHistorialesPorMascota(mascota.getId());
+        for (HistorialMedico registro : registros) {
+            if (registro.getTipoIntervencion().equals("Vacunación")) {
+                modeloVacunas.addRow(new Object[]{
+                    registro.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    registro.getTipoIntervencion(),
+                    registro.getDiagnostico()
+                });
+            }
+        }
+    }
+    private void actualizarTablas() {
+        // Accede a la pestaña correcta del JTabbedPane
+        JPanel panelVacunas = (JPanel) tabbedPane.getComponentAt(3); // Asumiendo que 3 es el índice de la pestaña de vacunas
+        JScrollPane scrollPane = (JScrollPane) panelVacunas.getComponent(0); // Asumiendo que el JScrollPane es el primer (y único) componente
+        JTable tablaVacunas = (JTable) scrollPane.getViewport().getView();
+
+        // Ahora puedes acceder al modelo de la tabla
+        DefaultTableModel modeloVacunas = (DefaultTableModel) tablaVacunas.getModel();
+        cargarDatosVacunas(modeloVacunas);
+    }
     // Método para obtener el nombre de la ventana basado en la mascota
     public String obtenerTituloVentana() {
         if (mascota != null) {
