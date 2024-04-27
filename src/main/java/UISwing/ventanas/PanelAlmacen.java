@@ -107,6 +107,15 @@ public class PanelAlmacen extends JPanel {
 	    
 	    tablaServicios = new JTable();
 	    scrollPane_1.setViewportView(tablaServicios);
+	    
+	    JPanel GestionFarmacos = new JPanel();
+	    GestionFarmacos.setToolTipText("");
+	    tabbedPane.addTab("Gestion de Farmacos", null, GestionFarmacos, null);
+	    GestionFarmacos.setLayout(null);
+	    
+	    JPanel Historial = new JPanel();
+	    tabbedPane.addTab("Historial", null, Historial, null);
+	    Historial.setLayout(null);
 
 	    // Resto de la configuración del PanelAlmacen...
 	}

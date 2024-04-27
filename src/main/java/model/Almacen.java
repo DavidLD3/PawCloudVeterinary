@@ -24,29 +24,29 @@ public class Almacen {
     private String observaciones;
 
     // Constructor
-    public Almacen(int idAlmacen, String nombreProducto, String descripcion, String categoria, int cantidadStock,
-            String unidadMedida, int puntoReorden, double precioCompraSinIVA, double precioCompraConIVA,
-            double precioVentaSinIVA, double precioVentaConIVA, String proveedor, LocalDate fechaUltimaCompra,
-            String numeroLote, LocalDate fechaCaducidad, String ubicacion, String codigoBarras, String observaciones) {
- this.idAlmacen = idAlmacen;
- this.nombreProducto = nombreProducto;
- this.descripcion = descripcion;
- this.categoria = categoria;
- this.cantidadStock = cantidadStock;
- this.unidadMedida = unidadMedida;
- this.puntoReorden = puntoReorden;
- this.precioCompraSinIVA = precioCompraSinIVA;
- this.precioCompraConIVA = precioCompraConIVA;
- this.precioVentaSinIVA = precioVentaSinIVA;
- this.precioVentaConIVA = precioVentaConIVA;
- this.proveedor = proveedor;
- this.fechaUltimaCompra = fechaUltimaCompra;
- this.numeroLote = numeroLote;
- this.fechaCaducidad = fechaCaducidad;
- this.ubicacion = ubicacion;
- this.codigoBarras = codigoBarras;
- this.observaciones = observaciones;
-}
+    public Almacen(int idAlmacen, String nombreProducto, String descripcion, String categoria, int cantidadStock, String unidadMedida,
+                   int puntoReorden, double precioCompraSinIVA, double precioCompraConIVA, double precioVentaSinIVA, double precioVentaConIVA,
+                   String proveedor, LocalDate fechaUltimaCompra, String numeroLote, LocalDate fechaCaducidad, String ubicacion, 
+                   String codigoBarras, String observaciones) {
+        this.idAlmacen = idAlmacen;
+        this.nombreProducto = nombreProducto;
+        this.descripcion = descripcion;
+        this.categoria = categoria;
+        this.cantidadStock = cantidadStock;
+        this.unidadMedida = unidadMedida;
+        this.puntoReorden = puntoReorden;
+        this.precioCompraSinIVA = precioCompraSinIVA;
+        this.precioCompraConIVA = precioCompraConIVA;
+        this.precioVentaSinIVA = precioVentaSinIVA;
+        this.precioVentaConIVA = precioVentaConIVA;
+        this.proveedor = proveedor;
+        this.fechaUltimaCompra = fechaUltimaCompra;
+        this.numeroLote = numeroLote;
+        this.fechaCaducidad = fechaCaducidad;
+        this.ubicacion = ubicacion;
+        this.codigoBarras = codigoBarras;
+        this.observaciones = observaciones;
+    }
 
     // Getters and Setters
     public int getIdAlmacen() {
