@@ -312,18 +312,19 @@ public class VentanaCitasDialog extends JDialog {
 	private void configurarSeleccionFechaHora() {
 	    // Selector de fecha con JDateChooser
 	    dateChooser = new JDateChooser();
-	    dateChooser.setDate(new Date());
+	    dateChooser.setMinSelectableDate(new Date()); // Establece la fecha mínima seleccionable como la fecha actual
 	    dateChooser.setDateFormatString("dd/MM/yyyy"); // Establece el formato de fecha
 	    dateChooser.setBounds(434, 137, 155, 25); // Ajusta la posición y tamaño según tus necesidades
 	    roundedPanel.add(dateChooser);
 
-	    // Configuración del JSpinner para la hora sigue igual
-	    timeSpinner = new JSpinner(new SpinnerDateModel());
+	    // Configuración del JSpinner para la hora
+	    timeSpinner = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY));
 	    JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
 	    timeSpinner.setEditor(timeEditor);
 	    timeSpinner.setBounds(657, 138, 179, 25);
 	    roundedPanel.add(timeSpinner);
 	}
+
 
 	private void mostrarCalendario() {
 	    JDialog dialog = new JDialog();
@@ -474,16 +475,14 @@ public class VentanaCitasDialog extends JDialog {
 
 	
 	public void setFecha(java.util.Date fecha) {
-        // Establece el valor del spinner de fecha. Asegúrate de que dateSpinner es accesible aquí.
-        SpinnerDateModel model = (SpinnerDateModel) dateSpinner.getModel();
-        model.setValue(fecha);
-    }
+	    dateChooser.setDate(fecha);  // Establece la fecha en JDateChooser correctamente
+	}
 	
 	public void setHora(java.util.Date hora) {
-        // Establece el valor del spinner de hora. Asegúrate de que timeSpinner es accesible aquí.
-        SpinnerDateModel model = (SpinnerDateModel) timeSpinner.getModel();
-        model.setValue(hora);
-    }
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(hora);
+	    timeSpinner.setValue(calendar.getTime());  // Ajusta la hora en JSpinner correctamente
+	}
 
 
     

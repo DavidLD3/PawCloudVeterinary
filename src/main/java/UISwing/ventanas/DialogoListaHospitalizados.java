@@ -44,7 +44,7 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
 
     private void initUI() {
         // Añadir columna "Veterinario"
-        String[] columnNames = {"ID Hospitalización", "Mascota", "Veterinario", "Fecha ingreso", "Fecha salida", "Motivo", "Tratamiento", "Estado", "Notas"};
+    	String[] columnNames = {"ID Hospitalización", "Mascota", "Veterinario", "Fecha ingreso", "Fecha salida", "Motivo", "Estado"};
         model = new DefaultTableModel(null, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -119,9 +119,7 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
                 fechaIngresoFormateada,
                 fechaSalidaFormateada,
                 hospitalizacion.getMotivo(),
-                hospitalizacion.getTratamiento(),
-                hospitalizacion.getEstado(),
-                hospitalizacion.getNotas()
+                hospitalizacion.getEstado()
             });
         }
     }

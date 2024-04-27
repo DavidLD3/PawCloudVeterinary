@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -364,11 +365,21 @@ public class DialogoDetalleHospitalizados extends JDialog {
 
 	 private void guardarCambios() {
 		    try {
-		        // Recolectar datos de la UI
 		        LocalDateTime fechaSalida = null;
 		        if (dateChooserSalida.getDate() != null) {
 		            fechaSalida = LocalDateTime.ofInstant(dateChooserSalida.getDate().toInstant(), ZoneId.systemDefault());
+		            // Obtener solo la fecha, sin la hora, para la comparación
+		            LocalDate fechaSalidaSoloFecha = fechaSalida.toLocalDate();
+		            LocalDate hoy = LocalDate.now();
+
+		            // Validación para asegurar que la fecha de salida no es pasada
+		            if (fechaSalidaSoloFecha.isBefore(hoy)) {
+		                JOptionPane.showMessageDialog(this, "La fecha de salida no puede ser una fecha pasada.", "Error", JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
 		        }
+
+		        // Recolectar datos de la UI
 		        String tratamiento = textAreaTratamiento.getText();
 		        String notas = textAreaNotas.getText();
 		        String estado = comboBoxEstado.getSelectedItem().toString();
@@ -396,6 +407,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 		        JOptionPane.showMessageDialog(this, "Error al guardar los cambios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		    }
 		}
+
 
 
 

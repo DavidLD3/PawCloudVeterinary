@@ -112,66 +112,97 @@ public class PanelCalendario extends JPanel {
     }
 
     private JPanel crearPanelHeader() {
-        JPanel panelHeader = new JPanel(new FlowLayout());
+        JPanel panelHeader = new JPanel(new GridBagLayout());
         panelHeader.setOpaque(false);
         
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
+        // Panel central con los botones y la fecha
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        centerPanel.setOpaque(false);
+
         JButton prevWeekButton = new JButton("<");
-        prevWeekButton.setFont(new Font("Tahoma", Font.BOLD, 12));  // Ajusta el tipo de letra a Bold y tamaño 12
-        prevWeekButton.setBackground(Color.WHITE);
-        prevWeekButton.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        prevWeekButton.setFocusPainted(false);  // No mostrar el foco alrededor del botón al hacer clic
-        prevWeekButton.setBorderPainted(false);  // No mostrar el borde predeterminado
-        prevWeekButton.setContentAreaFilled(false);  // No rellenar el área del contenido para permitir el fondo
-        prevWeekButton.setOpaque(true);  // Hacer que el botón sea opaco
-        prevWeekButton.setRolloverEnabled(true);  // Habilitar el cambio de estilo al pasar el ratón por encima
-        prevWeekButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                prevWeekButton.setBackground(Color.decode("#003366")); // Cambio a color azul oscuro cuando el ratón pasa por encima
-                prevWeekButton.setForeground(Color.WHITE);
-            }
+        styleButton(prevWeekButton, "#0057FF", "#003366");
+        centerPanel.add(prevWeekButton);
 
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                prevWeekButton.setBackground(Color.WHITE);  // Volver al color blanco cuando el ratón sale
-                prevWeekButton.setForeground(Color.decode("#0057FF"));
-            }
-        });
-        prevWeekButton.addActionListener(e -> navegar(-1));
-        panelHeader.add(prevWeekButton);
-
-        lblCurrentDate = new JLabel();
+        lblCurrentDate = new JLabel("Fecha Actual", SwingConstants.CENTER);
         lblCurrentDate.setFont(new Font("Tahoma", Font.BOLD, 12));
-        panelHeader.add(lblCurrentDate);
-        actualizarFechaActual();
+        centerPanel.add(lblCurrentDate);
 
         JButton nextWeekButton = new JButton(">");
-        nextWeekButton.setFont(new Font("Tahoma", Font.BOLD, 12));  // Ajusta el tipo de letra a Bold y tamaño 12
-        nextWeekButton.setBackground(Color.WHITE);
-        nextWeekButton.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        nextWeekButton.setFocusPainted(false);  // No mostrar el foco alrededor del botón al hacer clic
-        nextWeekButton.setBorderPainted(false);  // No mostrar el borde predeterminado
-        nextWeekButton.setContentAreaFilled(false);  // No rellenar el área del contenido para permitir el fondo
-        nextWeekButton.setOpaque(true);  // Hacer que el botón sea opaco
-        nextWeekButton.setRolloverEnabled(true);  // Habilitar el cambio de estilo al pasar el ratón por encima
-        nextWeekButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                nextWeekButton.setBackground(Color.decode("#003366")); // Cambio a color azul oscuro cuando el ratón pasa por encima
-                nextWeekButton.setForeground(Color.WHITE);
-            }
+        styleButton(nextWeekButton, "#0057FF", "#003366");
+        centerPanel.add(nextWeekButton);
 
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                nextWeekButton.setBackground(Color.WHITE);  // Volver al color blanco cuando el ratón sale
-                nextWeekButton.setForeground(Color.decode("#0057FF"));
-            }
-        });
-        nextWeekButton.addActionListener(e -> navegar(1));
-        panelHeader.add(nextWeekButton);
+        gbc.gridx = 1;
+        gbc.weightx = 0.9; // Ajusta este valor para cambiar el ancho relativo del panel central
+        gbc.anchor = GridBagConstraints.CENTER;
+        panelHeader.add(centerPanel, gbc);
+
+        // Panel de leyenda para los colores, configurado para estar más cerca del centro
+        JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        legendPanel.setOpaque(false);
+        addColorLegend(legendPanel, new Color(0, 153, 0), "Visita");
+        addColorLegend(legendPanel, Color.BLUE, "Consulta");
+        addColorLegend(legendPanel, Color.RED, "Urgencia");
+        gbc.gridx = 2;
+        gbc.weightx = 0.0; // Ajusta este valor para controlar la posición horizontal de la leyenda
+        gbc.anchor = GridBagConstraints.EAST; // Alineación al este para acercarlo al centro
+        panelHeader.add(legendPanel, gbc);
 
         return panelHeader;
     }
+
+
+    private void styleButton(JButton button, String textColor, String hoverColor) {
+        button.setFont(new Font("Tahoma", Font.BOLD, 12));
+        button.setForeground(Color.decode(textColor));
+        button.setBackground(Color.WHITE);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(Color.decode(hoverColor));
+                button.setForeground(Color.WHITE);
+            }
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(Color.WHITE);
+                button.setForeground(Color.decode(textColor));
+            }
+        });
+        button.addActionListener(e -> navegar(button.getText().equals(">") ? 1 : -1));
+    }
+
+    private void addColorLegend(JPanel panel, Color color, String text) {
+        JLabel label = new JLabel(text, new ColorIcon(color), JLabel.LEFT);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        panel.add(label);
+    }
+
+    class ColorIcon implements Icon {
+        private final int ICON_SIZE = 10;
+        private Color color;
+
+        public ColorIcon(Color color) {
+            this.color = color;
+        }
+
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            g.setColor(this.color);
+            g.fillRect(x, y, ICON_SIZE, ICON_SIZE);
+        }
+
+        public int getIconWidth() {
+            return ICON_SIZE;
+        }
+
+        public int getIconHeight() {
+            return ICON_SIZE;
+        }
+    }
+
 
     private void navegar(int semanas) {
         fechaInicioSemana = fechaInicioSemana.plusWeeks(semanas);
@@ -225,22 +256,27 @@ public class PanelCalendario extends JPanel {
         posicionACitaId.clear(); // Limpiar el mapa antes de llenarlo nuevamente
         for (int i = 1; i < model.getColumnCount(); i++) {
             for (int j = 0; j < model.getRowCount(); j++) {
-                model.setValueAt("", j, i);
+                model.setValueAt("", j, i); // Asegúrate de limpiar la celda
             }
         }
-        // El resto del proceso de carga de citas...
+
         citas.forEach(cita -> {
             LocalDate fechaCita = cita.getFecha();
             LocalTime horaCita = cita.getHora();
-            int columna = fechaCita.getDayOfWeek().getValue();
-            int fila = ((horaCita.getHour() - 8) * 4) + (horaCita.getMinute() / 15); // Ajustar según cómo estás llenando las filas
-            
-            String infoCita = cita.getTitulo() + " - " + cita.getTipo(); // O cualquier otro dato que estés mostrando
-            model.setValueAt(infoCita, fila, columna);
-            
-            posicionACitaId.put(new Point(fila, columna), cita.getId()); // Asociar la posición de la celda con el ID de la cita
+            int columna = fechaCita.getDayOfWeek().getValue(); // Obtén la columna basada en el día de la semana
+            int fila = ((horaCita.getHour() - 8) * 4) + (horaCita.getMinute() / 15);
+            if (fila < model.getRowCount() && columna < model.getColumnCount()) {
+                // Concatena el nombre de la mascota y el tipo de cita
+                String infoCita = cita.getNombreMascota() + " - " + cita.getTipo();
+                model.setValueAt(infoCita, fila, columna);
+                posicionACitaId.put(new Point(fila, columna), cita.getId());
+            } else {
+                System.out.println("Índice fuera de límites intentado: Fila " + fila + ", Columna " + columna);
+            }
         });
     }
+
+
     
     public void addCitaActualizadaListener(CitaActualizadaListener listener) {
         listeners.add(listener);

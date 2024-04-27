@@ -165,7 +165,7 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         roundedPanel.add(btnCancel);
 
         btnDelete = new JButton("Eliminar Empleado");
-        btnDelete.setBounds(499, 328, 139, 30);
+        btnDelete.setBounds(499, 328, 146, 30);
         btnDelete.setFont(new Font("Tahoma", Font.BOLD, 12));
         btnDelete.setBackground(Color.WHITE);
         btnDelete.setForeground(Color.decode("#0057FF")); // Letras en color azul
