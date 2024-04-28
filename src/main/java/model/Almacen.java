@@ -22,7 +22,8 @@ public class Almacen {
     private String ubicacion;
     private String codigoBarras;
     private String observaciones;
-
+    private String nombreCategoria;
+    private boolean esServicio;
     // Constructor sin parámetros
     public Almacen() {
     }
@@ -192,5 +193,20 @@ public class Almacen {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
+    }
+
+    public boolean isEsServicio() {
+        return esServicio;
+    }
+
+    public void setEsServicio(boolean esServicio) {
+        this.esServicio = esServicio;
     }
 }

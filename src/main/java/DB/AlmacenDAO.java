@@ -32,6 +32,23 @@ public class AlmacenDAO {
             statement.setString(16, almacen.getCodigoBarras());
             statement.setString(17, almacen.getObservaciones());
 
+            // Obtener el nombre de la categoría y si es un servicio o no
+            String categoriaNombre = null;
+            boolean esServicio = false;
+            String categoriaSql = "SELECT categoria_nombre, tipo FROM categoria WHERE id = ?";
+            try (PreparedStatement categoriaStmt = conn.prepareStatement(categoriaSql)) {
+                categoriaStmt.setInt(1, almacen.getCategoriaId());
+                ResultSet rs = categoriaStmt.executeQuery();
+                if (rs.next()) {
+                    categoriaNombre = rs.getString("categoria_nombre");
+                    esServicio = rs.getBoolean("tipo");
+                }
+            }
+
+            // Establecer el nombre de la categoría y si es un servicio o no en el objeto Almacen
+            almacen.setNombreCategoria(categoriaNombre);
+            almacen.setEsServicio(esServicio);
+
             int filasInsertadas = statement.executeUpdate();
             return filasInsertadas > 0;
         } catch (SQLException e) {
@@ -39,10 +56,12 @@ public class AlmacenDAO {
             return false;
         }
     }
-
     public Almacen obtenerAlmacenPorId(int id) {
         Almacen almacen = null;
-        String sql = "SELECT * FROM almacen WHERE id_almacen = ?";
+        String sql = "SELECT a.*, c.categoria_nombre, c.tipo " +
+                     "FROM almacen a " +
+                     "INNER JOIN categoria c ON a.categoria_id = c.id " +
+                     "WHERE a.id_almacen = ?";
         try (Connection conn = conexion.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -66,6 +85,9 @@ public class AlmacenDAO {
                 almacen.setUbicacion(rs.getString("ubicacion"));
                 almacen.setCodigoBarras(rs.getString("codigo_barras"));
                 almacen.setObservaciones(rs.getString("observaciones"));
+                // Agregar información de la categoría
+                almacen.setNombreCategoria(rs.getString("categoria_nombre"));
+                almacen.setEsServicio(rs.getBoolean("tipo"));
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener el almacen por ID: " + e.getMessage());
@@ -96,6 +118,23 @@ public class AlmacenDAO {
             statement.setString(17, almacen.getObservaciones());
             statement.setInt(18, almacen.getIdAlmacen());
 
+            // Obtener el nombre de la categoría y si es un servicio o no
+            String categoriaNombre = null;
+            boolean esServicio = false;
+            String categoriaSql = "SELECT categoria_nombre, tipo FROM categoria WHERE id = ?";
+            try (PreparedStatement categoriaStmt = conn.prepareStatement(categoriaSql)) {
+                categoriaStmt.setInt(1, almacen.getCategoriaId());
+                ResultSet rs = categoriaStmt.executeQuery();
+                if (rs.next()) {
+                    categoriaNombre = rs.getString("categoria_nombre");
+                    esServicio = rs.getBoolean("tipo");
+                }
+            }
+
+            // Establecer el nombre de la categoría y si es un servicio o no en el objeto Almacen
+            almacen.setNombreCategoria(categoriaNombre);
+            almacen.setEsServicio(esServicio);
+
             int filasActualizadas = statement.executeUpdate();
             return filasActualizadas > 0;
         } catch (SQLException e) {
@@ -115,4 +154,5 @@ public class AlmacenDAO {
             return false;
         }
     }
+  
 }
