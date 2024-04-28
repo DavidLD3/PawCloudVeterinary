@@ -14,11 +14,11 @@ import java.awt.event.FocusEvent;
 public class PanelAlmacen extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField BuscarProducto;
-	private JTextField BuscarServicio;
+	private JTextField buscarProducto;
+	private JTextField buscarServicio;
 	private JTable tablaAlmacen;
 	private JTable tablaServicios;
-	private JTextField BuscarFarmaco;
+	private JTextField buscarFarmaco;
 	private JTable tablaFarmacos;
 	
 
@@ -36,39 +36,39 @@ public class PanelAlmacen extends JPanel {
 	    tabbedPane.setBounds(0, 0, 1112, 653); // Tamaño ampliado para incluir el área de contenido
 	    add(tabbedPane);
 	    
-	    JPanel GestionAlmacen = new JPanel();    // Crea el panel para la pestaña "Gestión de Almacén"
-	    tabbedPane.addTab("Gestion de Almacen", null, GestionAlmacen, null);     // Agrega la pestaña "Gestión de Almacén" y su contenido al JTabbedPane
-	    GestionAlmacen.setLayout(null);
+	    JPanel gestionAlmacen = new JPanel();    // Crea el panel para la pestaña "Gestión de Almacén"
+	    tabbedPane.addTab("Gestion de Almacen", null, gestionAlmacen, null);     // Agrega la pestaña "Gestión de Almacén" y su contenido al JTabbedPane
+	    gestionAlmacen.setLayout(null);
 	    
-	    BuscarProducto = new JTextField();
-	    BuscarProducto.setText("Buscar Producto");
-	    BuscarProducto.setBounds(0, 11, 130, 20);
-	    GestionAlmacen.add(BuscarProducto);
-	    BuscarProducto.setColumns(10);
+	    buscarProducto = new JTextField();
+	    buscarProducto.setText("Buscar Producto");
+	    buscarProducto.setBounds(0, 11, 130, 20);
+	    gestionAlmacen.add(buscarProducto);
+	    buscarProducto.setColumns(10);
 	    
 	 // Agregando el FocusListener a txtBuscarProducto
-        BuscarProducto.addFocusListener(new FocusAdapter() {
+        buscarProducto.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (BuscarProducto.getText().equals("Buscar Producto")) {
-                    BuscarProducto.setText("");
+                if (buscarProducto.getText().equals("Buscar Producto")) {
+                    buscarProducto.setText("");
                 }
             }
             @Override
             public void focusLost(FocusEvent e) {
-                if (BuscarProducto.getText().isEmpty()) {
-                    BuscarProducto.setText("Buscar Producto");
+                if (buscarProducto.getText().isEmpty()) {
+                    buscarProducto.setText("Buscar Producto");
                 }
             }
         });
 	    
-	    JButton AñadirProducto = new JButton("Añadir producto");
-	    AñadirProducto.setBounds(183, 10, 130, 23);
-	    GestionAlmacen.add(AñadirProducto);
+	    JButton añadirProducto = new JButton("Añadir producto");
+	    añadirProducto.setBounds(183, 10, 130, 23);
+	    gestionAlmacen.add(añadirProducto);
 	    
 	    JScrollPane scrollPane = new JScrollPane();
 	    scrollPane.setBounds(0, 48, 1107, 577);
-	    GestionAlmacen.add(scrollPane);
+	    gestionAlmacen.add(scrollPane);
 	    
 	    tablaAlmacen = new JTable();
 	    scrollPane.setViewportView(tablaAlmacen);
@@ -77,31 +77,31 @@ public class PanelAlmacen extends JPanel {
 	    tabbedPane.addTab("Gestion de Servicios", null, GestionServicios, null);  // Agrega la pestaña "Gestión de Servicios" y su contenido al JTabbedPane
 	    GestionServicios.setLayout(null);
 	    
-	    BuscarServicio = new JTextField();
-	    BuscarServicio.setText("Buscar Servicio");
-	    BuscarServicio.setBounds(0, 11, 130, 20);
-	    GestionServicios.add(BuscarServicio);
-	    BuscarServicio.setColumns(10);
+	    buscarServicio = new JTextField();
+	    buscarServicio.setText("Buscar Servicio");
+	    buscarServicio.setBounds(0, 11, 130, 20);
+	    GestionServicios.add(buscarServicio);
+	    buscarServicio.setColumns(10);
 	    
 	    // Agregando el FocusListener a txtBuscarServicio
-        BuscarServicio.addFocusListener(new FocusAdapter() {
+        buscarServicio.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (BuscarServicio.getText().equals("Buscar Servicio")) {
-                    BuscarServicio.setText("");
+                if (buscarServicio.getText().equals("Buscar Servicio")) {
+                    buscarServicio.setText("");
                 }
             }
             @Override
             public void focusLost(FocusEvent e) {
-                if (BuscarServicio.getText().isEmpty()) {
-                    BuscarServicio.setText("Buscar Servicio");
+                if (buscarServicio.getText().isEmpty()) {
+                    buscarServicio.setText("Buscar Servicio");
                 }
             }
         });
 	    
-	    JButton AñadirServicio = new JButton("Añadir Servicio");
-	    AñadirServicio.setBounds(183, 10, 130, 23);
-	    GestionServicios.add(AñadirServicio);
+	    JButton añadirServicio = new JButton("Añadir Servicio");
+	    añadirServicio.setBounds(183, 10, 130, 23);
+	    GestionServicios.add(añadirServicio);
 	    
 	    JScrollPane scrollPane_1 = new JScrollPane();
 	    scrollPane_1.setBounds(0, 47, 1107, 578);
@@ -122,15 +122,15 @@ public class PanelAlmacen extends JPanel {
 	    tablaFarmacos = new JTable();
 	    scrollPane_2.setViewportView(tablaFarmacos);
 	    
-	    BuscarFarmaco = new JTextField();
-	    BuscarFarmaco.setText("Buscar Farmaco");
-	    BuscarFarmaco.setBounds(0, 11, 130, 20);
-	    GestionFarmacos.add(BuscarFarmaco);
-	    BuscarFarmaco.setColumns(10);
+	    buscarFarmaco = new JTextField();
+	    buscarFarmaco.setText("Buscar Farmaco");
+	    buscarFarmaco.setBounds(0, 11, 130, 20);
+	    GestionFarmacos.add(buscarFarmaco);
+	    buscarFarmaco.setColumns(10);
 	    
-	    JButton AñadirFarmaco = new JButton("Añadir Farmaco");
-	    AñadirFarmaco.setBounds(180, 10, 130, 23);
-	    GestionFarmacos.add(AñadirFarmaco);
+	    JButton añadirFarmaco = new JButton("Añadir Farmaco");
+	    añadirFarmaco.setBounds(180, 10, 130, 23);
+	    GestionFarmacos.add(añadirFarmaco);
 	    
 	    JPanel Historial = new JPanel();
 	    tabbedPane.addTab("Historial", null, Historial, null);
