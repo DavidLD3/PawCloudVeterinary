@@ -16,7 +16,7 @@ public class PanelAlmacen extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField buscarProducto;
 	private JTextField buscarServicio;
-	private JTable tablaAlmacen;
+	private JTable tablaProductos;
 	private JTable tablaServicios;
 	private JTextField buscarFarmaco;
 	private JTable tablaFarmacos;
@@ -70,8 +70,8 @@ public class PanelAlmacen extends JPanel {
 	    scrollPane.setBounds(0, 48, 1107, 577);
 	    gestionProductos.add(scrollPane);
 	    
-	    tablaAlmacen = new JTable();
-	    scrollPane.setViewportView(tablaAlmacen);
+	    tablaProductos = new JTable();
+	    scrollPane.setViewportView(tablaProductos);
 	    
 	    JPanel gestionServicios = new JPanel();  // Crea otro panel para la pestaña "Gestión de Servicios"
 	    tabbedPane.addTab("Gestion de Servicios", null, gestionServicios, null);  // Agrega la pestaña "Gestión de Servicios" y su contenido al JTabbedPane
