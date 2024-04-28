@@ -48,13 +48,13 @@ public class PanelAlmacen extends JPanel {
 	    
 	 // Agregando el FocusListener a txtBuscarProducto
         buscarProducto.addFocusListener(new FocusAdapter() {
-            @Override
+          
             public void focusGained(FocusEvent e) {
                 if (buscarProducto.getText().equals("Buscar Producto")) {
                     buscarProducto.setText("");
                 }
             }
-            @Override
+          
             public void focusLost(FocusEvent e) {
                 if (buscarProducto.getText().isEmpty()) {
                     buscarProducto.setText("Buscar Producto");
@@ -62,9 +62,9 @@ public class PanelAlmacen extends JPanel {
             }
         });
 	    
-	    JButton añadirProducto = new JButton("Añadir producto");
-	    añadirProducto.setBounds(183, 10, 130, 23);
-	    gestionProductos.add(añadirProducto);
+	    JButton añadirProductoServicio = new JButton("Añadir al almacen");
+	    añadirProductoServicio.setBounds(183, 10, 153, 23);
+	    gestionProductos.add(añadirProductoServicio);
 	    
 	    JScrollPane scrollPane = new JScrollPane();
 	    scrollPane.setBounds(0, 48, 1107, 577);
@@ -85,23 +85,19 @@ public class PanelAlmacen extends JPanel {
 	    
 	    // Agregando el FocusListener a txtBuscarServicio
         buscarServicio.addFocusListener(new FocusAdapter() {
-            @Override
+          
             public void focusGained(FocusEvent e) {
                 if (buscarServicio.getText().equals("Buscar Servicio")) {
                     buscarServicio.setText("");
                 }
             }
-            @Override
+           
             public void focusLost(FocusEvent e) {
                 if (buscarServicio.getText().isEmpty()) {
                     buscarServicio.setText("Buscar Servicio");
                 }
             }
         });
-	    
-	    JButton añadirServicio = new JButton("Añadir Servicio");
-	    añadirServicio.setBounds(183, 10, 130, 23);
-	    gestionServicios.add(añadirServicio);
 	    
 	    JScrollPane scrollPane_1 = new JScrollPane();
 	    scrollPane_1.setBounds(0, 47, 1107, 578);

@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Almacen {
-    private int idAlmacen;
+	private int idAlmacen;
     private String nombreProducto;
     private String descripcion;
-    private Categoria categoria; // Utiliza el enum Categoria en lugar de String
+    private Categoria categoria;
     private int cantidadStock;
     private BigDecimal precioCompraSinIVA;
     private BigDecimal precioCompraConIVA;
@@ -24,8 +24,33 @@ public class Almacen {
     public enum Categoria {
         Normal, Cobertura, Servicio, Cargo, Estancia_Hospitalizacion, Estancia_Residencia, Peticion_Analitica, Intervencion, Vacuna, Alimento, Medicamento, Suplemento, Producto_Higienico, Accesorio, Alimento_Especializado, Equipamiento_Medico, Prueba_Diagnostica, Articulo_Educaional, Servicio_Estetico, Plan_Salud
     }
+    // Constructor modificado
+    public Almacen(int idAlmacen, String nombreProducto, String descripcion, Categoria categoria, 
+            int cantidadStock, BigDecimal precioCompraSinIVA, BigDecimal precioCompraConIVA, 
+            BigDecimal precioVentaSinIVA, BigDecimal precioVentaConIVA, String proveedor, 
+            LocalDate fechaUltimaCompra, String numeroLote, LocalDate fechaCaducidad, 
+            String codigoBarras, String observaciones) {
+    	this.idAlmacen = idAlmacen;
+    	this.nombreProducto = nombreProducto;
+    	this.descripcion = descripcion;
+    	this.categoria = categoria;
+    	this.cantidadStock = cantidadStock;
+    	this.precioCompraSinIVA = precioCompraSinIVA;
+    	this.precioCompraConIVA = precioCompraConIVA;
+    	this.precioVentaSinIVA = precioVentaSinIVA;
+    	this.precioVentaConIVA = precioVentaConIVA;
+    	this.proveedor = proveedor;
+    	this.fechaUltimaCompra = fechaUltimaCompra;
+    	this.numeroLote = numeroLote;
+    	this.fechaCaducidad = fechaCaducidad;
+    	this.codigoBarras = codigoBarras;
+    	this.observaciones = observaciones;
+}
 
-    // Getters
+
+
+
+	// Getters
     public int getIdAlmacen() {
         return idAlmacen;
     }

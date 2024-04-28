@@ -90,30 +90,34 @@ public class AlmacenDAO {
     }
 
     // Método para buscar un producto por su ID
-    public Almacen obtenerAlmacenPorId(int idAlmacen) throws SQLException {
-        String sql = "SELECT * FROM almacen WHERE id_almacen = ?";
+    public Almacen obtenerAlmacenPorId(int idAlmacen) {
         Almacen almacen = null;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        String consulta = "SELECT * FROM almacen WHERE id_almacen = ?";
+        try (PreparedStatement statement = this.connection.prepareStatement(consulta)) {
             statement.setInt(1, idAlmacen);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                almacen = new Almacen();
-                almacen.setIdAlmacen(resultSet.getInt("id_almacen"));
-                almacen.setNombreProducto(resultSet.getString("nombre_producto"));
-                almacen.setDescripcion(resultSet.getString("descripcion"));
-                almacen.setCategoria(Almacen.Categoria.valueOf(resultSet.getString("categoria")));
-                almacen.setCantidadStock(resultSet.getInt("cantidad_stock"));
-                almacen.setPrecioCompraSinIVA(resultSet.getBigDecimal("precio_compra_sin_iva"));
-                almacen.setPrecioCompraConIVA(resultSet.getBigDecimal("precio_compra_con_iva"));
-                almacen.setPrecioVentaSinIVA(resultSet.getBigDecimal("precio_venta_sin_iva"));
-                almacen.setPrecioVentaConIVA(resultSet.getBigDecimal("precio_venta_con_iva"));
-                almacen.setProveedor(resultSet.getString("proveedor"));
-                almacen.setFechaUltimaCompra(resultSet.getDate("fecha_ultima_compra").toLocalDate());
-                almacen.setNumeroLote(resultSet.getString("numero_lote"));
-                almacen.setFechaCaducidad(resultSet.getDate("fecha_caducidad").toLocalDate());
-                almacen.setCodigoBarras(resultSet.getString("codigo_barras"));
-                almacen.setObservaciones(resultSet.getString("observaciones"));
+            ResultSet resultados = statement.executeQuery();
+            if (resultados.next()) {
+                almacen = new Almacen(
+                    resultados.getInt("id_almacen"),
+                    resultados.getString("nombre_producto"),
+                    resultados.getString("descripcion"),
+                    Almacen.Categoria.valueOf(resultados.getString("categoria")),
+                    resultados.getInt("cantidad_stock"),
+                    resultados.getBigDecimal("precio_compra_sin_iva"),
+                    resultados.getBigDecimal("precio_compra_con_iva"),
+                    resultados.getBigDecimal("precio_venta_sin_iva"),
+                    resultados.getBigDecimal("precio_venta_con_iva"),
+                    resultados.getString("proveedor"),
+                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    resultados.getString("numero_lote"),
+                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    resultados.getString("codigo_barras"),
+                    resultados.getString("observaciones")
+                );
             }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener el almacen por ID: " + e.getMessage());
+            e.printStackTrace();
         }
         return almacen;
     }
