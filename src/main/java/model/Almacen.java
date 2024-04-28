@@ -1,20 +1,20 @@
 package model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Almacen {
-
     private int idAlmacen;
     private String nombreProducto;
     private String descripcion;
-    private String categoria;
+    private int categoriaId;
     private int cantidadStock;
     private String unidadMedida;
     private int puntoReorden;
-    private double precioCompraSinIVA;
-    private double precioCompraConIVA;
-    private double precioVentaSinIVA;
-    private double precioVentaConIVA;
+    private BigDecimal precioCompraSinIva;
+    private BigDecimal precioCompraConIva;
+    private BigDecimal precioVentaSinIva;
+    private BigDecimal precioVentaConIva;
     private String proveedor;
     private LocalDate fechaUltimaCompra;
     private String numeroLote;
@@ -23,22 +23,23 @@ public class Almacen {
     private String codigoBarras;
     private String observaciones;
 
-    // Constructor
-    public Almacen(int idAlmacen, String nombreProducto, String descripcion, String categoria, int cantidadStock, String unidadMedida,
-                   int puntoReorden, double precioCompraSinIVA, double precioCompraConIVA, double precioVentaSinIVA, double precioVentaConIVA,
-                   String proveedor, LocalDate fechaUltimaCompra, String numeroLote, LocalDate fechaCaducidad, String ubicacion, 
-                   String codigoBarras, String observaciones) {
+    // Constructor sin parámetros
+    public Almacen() {
+    }
+
+    // Constructor con todos los parámetros
+    public Almacen(int idAlmacen, String nombreProducto, String descripcion, int categoriaId, int cantidadStock, String unidadMedida, int puntoReorden, BigDecimal precioCompraSinIva, BigDecimal precioCompraConIva, BigDecimal precioVentaSinIva, BigDecimal precioVentaConIva, String proveedor, LocalDate fechaUltimaCompra, String numeroLote, LocalDate fechaCaducidad, String ubicacion, String codigoBarras, String observaciones) {
         this.idAlmacen = idAlmacen;
         this.nombreProducto = nombreProducto;
         this.descripcion = descripcion;
-        this.categoria = categoria;
+        this.categoriaId = categoriaId;
         this.cantidadStock = cantidadStock;
         this.unidadMedida = unidadMedida;
         this.puntoReorden = puntoReorden;
-        this.precioCompraSinIVA = precioCompraSinIVA;
-        this.precioCompraConIVA = precioCompraConIVA;
-        this.precioVentaSinIVA = precioVentaSinIVA;
-        this.precioVentaConIVA = precioVentaConIVA;
+        this.precioCompraSinIva = precioCompraSinIva;
+        this.precioCompraConIva = precioCompraConIva;
+        this.precioVentaSinIva = precioVentaSinIva;
+        this.precioVentaConIva = precioVentaConIva;
         this.proveedor = proveedor;
         this.fechaUltimaCompra = fechaUltimaCompra;
         this.numeroLote = numeroLote;
@@ -48,7 +49,7 @@ public class Almacen {
         this.observaciones = observaciones;
     }
 
-    // Getters and Setters
+    // Getters y Setters
     public int getIdAlmacen() {
         return idAlmacen;
     }
@@ -73,12 +74,12 @@ public class Almacen {
         this.descripcion = descripcion;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public int getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setCategoriaId(int categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
     public int getCantidadStock() {
@@ -105,36 +106,36 @@ public class Almacen {
         this.puntoReorden = puntoReorden;
     }
 
-    public double getPrecioCompraSinIVA() {
-        return precioCompraSinIVA;
+    public BigDecimal getPrecioCompraSinIva() {
+        return precioCompraSinIva;
     }
 
-    public void setPrecioCompraSinIVA(double precioCompraSinIVA) {
-        this.precioCompraSinIVA = precioCompraSinIVA;
+    public void setPrecioCompraSinIva(BigDecimal precioCompraSinIva) {
+        this.precioCompraSinIva = precioCompraSinIva;
     }
 
-    public double getPrecioCompraConIVA() {
-        return precioCompraConIVA;
+    public BigDecimal getPrecioCompraConIva() {
+        return precioCompraConIva;
     }
 
-    public void setPrecioCompraConIVA(double precioCompraConIVA) {
-        this.precioCompraConIVA = precioCompraConIVA;
+    public void setPrecioCompraConIva(BigDecimal precioCompraConIva) {
+        this.precioCompraConIva = precioCompraConIva;
     }
 
-    public double getPrecioVentaSinIVA() {
-        return precioVentaSinIVA;
+    public BigDecimal getPrecioVentaSinIva() {
+        return precioVentaSinIva;
     }
 
-    public void setPrecioVentaSinIVA(double precioVentaSinIVA) {
-        this.precioVentaSinIVA = precioVentaSinIVA;
+    public void setPrecioVentaSinIva(BigDecimal precioVentaSinIva) {
+        this.precioVentaSinIva = precioVentaSinIva;
     }
 
-    public double getPrecioVentaConIVA() {
-        return precioVentaConIVA;
+    public BigDecimal getPrecioVentaConIva() {
+        return precioVentaConIva;
     }
 
-    public void setPrecioVentaConIVA(double precioVentaConIVA) {
-        this.precioVentaConIVA = precioVentaConIVA;
+    public void setPrecioVentaConIva(BigDecimal precioVentaConIva) {
+        this.precioVentaConIva = precioVentaConIva;
     }
 
     public String getProveedor() {
