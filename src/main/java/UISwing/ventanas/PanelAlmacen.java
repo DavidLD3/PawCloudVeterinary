@@ -36,14 +36,14 @@ public class PanelAlmacen extends JPanel {
 	    tabbedPane.setBounds(0, 0, 1112, 653); // Tamaño ampliado para incluir el área de contenido
 	    add(tabbedPane);
 	    
-	    JPanel gestionAlmacen = new JPanel();    // Crea el panel para la pestaña "Gestión de Almacén"
-	    tabbedPane.addTab("Gestion de Almacen", null, gestionAlmacen, null);     // Agrega la pestaña "Gestión de Almacén" y su contenido al JTabbedPane
-	    gestionAlmacen.setLayout(null);
+	    JPanel gestionProductos = new JPanel();    // Crea el panel para la pestaña "Gestión de Almacén"
+	    tabbedPane.addTab("Gestion de Productos", null, gestionProductos, null);     // Agrega la pestaña "Gestión de Almacén" y su contenido al JTabbedPane
+	    gestionProductos.setLayout(null);
 	    
 	    buscarProducto = new JTextField();
 	    buscarProducto.setText("Buscar Producto");
 	    buscarProducto.setBounds(0, 11, 130, 20);
-	    gestionAlmacen.add(buscarProducto);
+	    gestionProductos.add(buscarProducto);
 	    buscarProducto.setColumns(10);
 	    
 	 // Agregando el FocusListener a txtBuscarProducto
@@ -64,23 +64,23 @@ public class PanelAlmacen extends JPanel {
 	    
 	    JButton añadirProducto = new JButton("Añadir producto");
 	    añadirProducto.setBounds(183, 10, 130, 23);
-	    gestionAlmacen.add(añadirProducto);
+	    gestionProductos.add(añadirProducto);
 	    
 	    JScrollPane scrollPane = new JScrollPane();
 	    scrollPane.setBounds(0, 48, 1107, 577);
-	    gestionAlmacen.add(scrollPane);
+	    gestionProductos.add(scrollPane);
 	    
 	    tablaAlmacen = new JTable();
 	    scrollPane.setViewportView(tablaAlmacen);
 	    
-	    JPanel GestionServicios = new JPanel();  // Crea otro panel para la pestaña "Gestión de Servicios"
-	    tabbedPane.addTab("Gestion de Servicios", null, GestionServicios, null);  // Agrega la pestaña "Gestión de Servicios" y su contenido al JTabbedPane
-	    GestionServicios.setLayout(null);
+	    JPanel gestionServicios = new JPanel();  // Crea otro panel para la pestaña "Gestión de Servicios"
+	    tabbedPane.addTab("Gestion de Servicios", null, gestionServicios, null);  // Agrega la pestaña "Gestión de Servicios" y su contenido al JTabbedPane
+	    gestionServicios.setLayout(null);
 	    
 	    buscarServicio = new JTextField();
 	    buscarServicio.setText("Buscar Servicio");
 	    buscarServicio.setBounds(0, 11, 130, 20);
-	    GestionServicios.add(buscarServicio);
+	    gestionServicios.add(buscarServicio);
 	    buscarServicio.setColumns(10);
 	    
 	    // Agregando el FocusListener a txtBuscarServicio
@@ -101,23 +101,23 @@ public class PanelAlmacen extends JPanel {
 	    
 	    JButton añadirServicio = new JButton("Añadir Servicio");
 	    añadirServicio.setBounds(183, 10, 130, 23);
-	    GestionServicios.add(añadirServicio);
+	    gestionServicios.add(añadirServicio);
 	    
 	    JScrollPane scrollPane_1 = new JScrollPane();
 	    scrollPane_1.setBounds(0, 47, 1107, 578);
-	    GestionServicios.add(scrollPane_1);
+	    gestionServicios.add(scrollPane_1);
 	    
 	    tablaServicios = new JTable();
 	    scrollPane_1.setViewportView(tablaServicios);
 	    
-	    JPanel GestionFarmacos = new JPanel();
-	    GestionFarmacos.setToolTipText("");
-	    tabbedPane.addTab("Gestion de Farmacos", null, GestionFarmacos, null);
-	    GestionFarmacos.setLayout(null);
+	    JPanel gestionFarmacos = new JPanel();
+	    gestionFarmacos.setToolTipText("");
+	    tabbedPane.addTab("Gestion de Farmacos", null, gestionFarmacos, null);
+	    gestionFarmacos.setLayout(null);
 	    
 	    JScrollPane scrollPane_2 = new JScrollPane();
 	    scrollPane_2.setBounds(0, 50, 1107, 575);
-	    GestionFarmacos.add(scrollPane_2);
+	    gestionFarmacos.add(scrollPane_2);
 	    
 	    tablaFarmacos = new JTable();
 	    scrollPane_2.setViewportView(tablaFarmacos);
@@ -125,12 +125,12 @@ public class PanelAlmacen extends JPanel {
 	    buscarFarmaco = new JTextField();
 	    buscarFarmaco.setText("Buscar Farmaco");
 	    buscarFarmaco.setBounds(0, 11, 130, 20);
-	    GestionFarmacos.add(buscarFarmaco);
+	    gestionFarmacos.add(buscarFarmaco);
 	    buscarFarmaco.setColumns(10);
 	    
 	    JButton añadirFarmaco = new JButton("Añadir Farmaco");
 	    añadirFarmaco.setBounds(180, 10, 130, 23);
-	    GestionFarmacos.add(añadirFarmaco);
+	    gestionFarmacos.add(añadirFarmaco);
 	    
 	    JPanel Historial = new JPanel();
 	    tabbedPane.addTab("Historial", null, Historial, null);
