@@ -38,4 +38,27 @@ public class CategoriaDAO {
             return affectedRows > 0;
         }
     }
+    public List<Categoria> obtenerSoloProductos() throws SQLException {
+        List<Categoria> productos = new ArrayList<>();
+        String sql = "SELECT id, tipo, categoria_nombre FROM Categoria WHERE tipo = true";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                productos.add(new Categoria(rs.getInt("id"), rs.getBoolean("tipo"), rs.getString("categoria_nombre")));
+            }
+        }
+        return productos;
+    }
+
+    public List<Categoria> obtenerSoloServicios() throws SQLException {
+        List<Categoria> servicios = new ArrayList<>();
+        String sql = "SELECT id, tipo, categoria_nombre FROM Categoria WHERE tipo = false";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                servicios.add(new Categoria(rs.getInt("id"), rs.getBoolean("tipo"), rs.getString("categoria_nombre")));
+            }
+        }
+        return servicios;
+    }
 }
