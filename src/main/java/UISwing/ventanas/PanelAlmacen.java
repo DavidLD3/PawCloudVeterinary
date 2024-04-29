@@ -145,7 +145,33 @@ public class PanelAlmacen extends JPanel {
                 }
             }
         });
-	    
+        buscarServicio.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                buscarServicio();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                buscarServicio();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                buscarServicio();
+            }
+
+            private void buscarServicio() {
+                try {
+                    String nombreServicio = buscarServicio.getText().trim();
+                    if (!nombreServicio.isEmpty() && !nombreServicio.equals("Buscar Servicio")) {
+                        List<Almacen> servicios = almacenDao.buscarServiciosPorNombre(nombreServicio); // Usamos el mismo método para buscar servicios
+                        actualizarTablaServicios(servicios);
+                    } else {
+                        cargarDatosServicios();
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(PanelAlmacen.this, "Error al buscar servicios: " + ex.getMessage(), "Error de Búsqueda", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 	    JScrollPane scrollPaneServicios = new JScrollPane();
 	    scrollPaneServicios.setBounds(0, 47, 1107, 578);
 	    gestionServicios.add(scrollPaneServicios);
@@ -242,6 +268,19 @@ public class PanelAlmacen extends JPanel {
                 almacen.getFechaCaducidad(),
                 almacen.getCantidadStock()
             });
+        }
+    }
+    private void buscarServicio() {
+        try {
+            String nombreServicio = buscarServicio.getText().trim();
+            if (!nombreServicio.isEmpty() && !nombreServicio.equals("Buscar Servicio")) {
+                List<Almacen> servicios = almacenDao.buscarServiciosPorNombre(nombreServicio);
+                actualizarTablaServicios(servicios);
+            } else {
+                cargarDatosServicios();
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(PanelAlmacen.this, "Error al buscar servicios: " + ex.getMessage(), "Error de Búsqueda", JOptionPane.ERROR_MESSAGE);
         }
     }
     private void actualizarTablaProductos(List<Almacen> productos) {

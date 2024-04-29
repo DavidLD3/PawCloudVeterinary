@@ -212,4 +212,33 @@ public class AlmacenDAO {
         }
         return servicios;
     }
+    public List<Almacen> buscarServiciosPorNombre(String nombre) throws SQLException {
+        List<Almacen> servicios = new ArrayList<>();
+        String sql = "SELECT * FROM almacen WHERE nombre_producto LIKE ? AND categoria IN ('Servicio', 'Cargo', 'Estancia_Hospitalizacion', 'Estancia_Residencia', 'Peticion_Analitica', 'Intervencion', 'Vacuna', 'Prueba_Diagnostica', 'Servicio_Estetico', 'Plan_Salud')";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, "%" + nombre + "%");
+            ResultSet resultados = statement.executeQuery();
+            while (resultados.next()) {
+                servicios.add(new Almacen(
+                    resultados.getInt("id_almacen"),
+                    resultados.getString("nombre_producto"),
+                    resultados.getString("descripcion"),
+                    Almacen.Categoria.valueOf(resultados.getString("categoria")),
+                    resultados.getInt("cantidad_stock"),
+                    resultados.getBigDecimal("precio_compra_sin_iva"),
+                    resultados.getBigDecimal("precio_compra_con_iva"),
+                    resultados.getBigDecimal("precio_venta_sin_iva"),
+                    resultados.getBigDecimal("precio_venta_con_iva"),
+                    resultados.getString("proveedor"),
+                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    resultados.getString("numero_lote"),
+                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    resultados.getString("codigo_barras"),
+                    resultados.getString("observaciones")
+                ));
+            }
+        }
+        return servicios;
+    }
 }
