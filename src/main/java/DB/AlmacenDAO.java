@@ -8,6 +8,7 @@ import model.Almacen;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.sql.Connection;
 
 public class AlmacenDAO {
     private Connection connection;
@@ -120,5 +121,33 @@ public class AlmacenDAO {
             e.printStackTrace();
         }
         return almacen;
+    }
+    public List<Almacen> obtenerProductosFiltradosYOrdenados() throws SQLException {
+        List<Almacen> productos = new ArrayList<>();
+        String sql = "SELECT * FROM almacen WHERE categoria IN ('Normal', 'Cobertura', 'Alimento', 'Medicamento', 'Suplemento', 'Producto_Higienico', 'Accesorio', 'Alimento_Especializado', 'Equipamiento_Medico', 'Articulo_Educativo') ORDER BY nombre_producto, fecha_caducidad, cantidad_stock";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultados = statement.executeQuery();
+            while (resultados.next()) {
+                productos.add(new Almacen(
+                    resultados.getInt("id_almacen"),
+                    resultados.getString("nombre_producto"),
+                    resultados.getString("descripcion"),
+                    Almacen.Categoria.valueOf(resultados.getString("categoria")),
+                    resultados.getInt("cantidad_stock"),
+                    resultados.getBigDecimal("precio_compra_sin_iva"),
+                    resultados.getBigDecimal("precio_compra_con_iva"),
+                    resultados.getBigDecimal("precio_venta_sin_iva"),
+                    resultados.getBigDecimal("precio_venta_con_iva"),
+                    resultados.getString("proveedor"),
+                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    resultados.getString("numero_lote"),
+                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    resultados.getString("codigo_barras"),
+                    resultados.getString("observaciones")
+                ));
+            }
+        }
+        return productos;
     }
 }

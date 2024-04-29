@@ -296,7 +296,7 @@ public class PanelClienteMascota extends JPanel {
     private void inicializarComponentesMascotas(JPanel panel) {
     	 // Configuramos el modelo de la tabla para mascotas
     	modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Microchip", "Dueño"}, 0) {
-    	    @Override
+    
     	    public boolean isCellEditable(int row, int column) {
     	        return false;  // Hacer que la tabla no sea editable
     	    }
@@ -305,7 +305,7 @@ public class PanelClienteMascota extends JPanel {
         tablaMascotas = new JTable(modeloTablaMascotas);
         tablaMascotas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaMascotas.addMouseListener(new MouseAdapter() {
-            @Override
+  
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {  // Doble clic
                     int filaSeleccionada = tablaMascotas.getSelectedRow();
