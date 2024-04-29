@@ -38,7 +38,7 @@ public class PanelAlmacen extends JPanel {
 	private JScrollPane scrollPaneProductos;
     private DefaultTableModel modeloTablaProductos;
     private AlmacenDAO almacenDao;
-
+    private DefaultTableModel modeloTablaServicios; // Modelo para la tabla de servicios
 	/**
 	 * Create the panel.
 	 */
@@ -123,6 +123,7 @@ public class PanelAlmacen extends JPanel {
 	    tabbedPane.addTab("Gestion de Servicios", null, gestionServicios, null);  // Agrega la pestaña "Gestión de Servicios" y su contenido al JTabbedPane
 	    gestionServicios.setLayout(null);
 	    
+	    inicializarComponentesServicios(gestionServicios);
 	    buscarServicio = new JTextField();
 	    buscarServicio.setText("Buscar Servicio");
 	    buscarServicio.setBounds(0, 11, 130, 20);
@@ -176,6 +177,7 @@ public class PanelAlmacen extends JPanel {
 
 	    // Resto de la configuración del PanelAlmacen...
 	    inicializarComponentesProductos(gestionProductos);
+	    
 	}
 	
 	private void inicializarComponentesProductos(JPanel panel) {
@@ -193,6 +195,24 @@ public class PanelAlmacen extends JPanel {
         almacenDao = new AlmacenDAO();  // Suponiendo que AlmacenDAO gestiona su propia conexión
         cargarDatosProductos(); // Método para cargar los datos de los productos en la tabla
     }
+	private void inicializarComponentesServicios(JPanel panel) {
+	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Fecha Caducidad", "Cantidad Stock"}, 0) {
+	 
+	        public boolean isCellEditable(int row, int column) {
+	            return false; // Hacer que la tabla no sea editable
+	        }
+	    };
+
+	    tablaServicios = new JTable(modeloTablaServicios);
+	    tablaServicios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+	    JScrollPane scrollPaneServicios = new JScrollPane(tablaServicios);
+	    scrollPaneServicios.setBounds(0, 48, 1107, 578);
+	    panel.add(scrollPaneServicios);
+
+	    almacenDao = new AlmacenDAO(); // Asegúrate de que la instancia de AlmacenDAO se crea una sola vez si se usa en múltiples lugares
+	    cargarDatosServicios(); // Método para cargar los datos de los servicios en la tabla
+	}
 
 	private void cargarDatosProductos() {
 	    try {
@@ -200,8 +220,17 @@ public class PanelAlmacen extends JPanel {
 	        actualizarTablaProductos(productos); // Usamos el método de actualización aquí
 	    } catch (SQLException ex) {
 	        JOptionPane.showMessageDialog(this, "Error al cargar datos de productos: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
+	    }	   
+	}
+	private void cargarDatosServicios() {
+	    try {
+	        List<Almacen> servicios = almacenDao.obtenerServiciosFiltradosYOrdenados();
+	        actualizarTablaServicios(servicios);
+	    } catch (SQLException ex) {
+	        JOptionPane.showMessageDialog(this, "Error al cargar datos de servicios: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
+	
  // Método para buscar productos por nombre y cargarlos en la tabla
     private void buscarProductosPorNombre(String nombre) throws SQLException {
         List<Almacen> productos = almacenDao.buscarProductosPorNombre(nombre);
@@ -223,6 +252,17 @@ public class PanelAlmacen extends JPanel {
                 almacen.getNombreProducto(),
                 almacen.getFechaCaducidad(),
                 almacen.getCantidadStock()
+            });
+        }
+    }
+    private void actualizarTablaServicios(List<Almacen> servicios) {
+        modeloTablaServicios.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+
+        for (Almacen servicio : servicios) {
+            modeloTablaServicios.addRow(new Object[]{
+                servicio.getNombreProducto(),
+                servicio.getFechaCaducidad(),
+                servicio.getCantidadStock()
             });
         }
     }
