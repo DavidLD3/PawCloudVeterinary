@@ -152,4 +152,35 @@ public class AlmacenDAO {
         }
         return productos;
     }
+    public List<Almacen> buscarProductosPorNombre(String nombre) throws SQLException {
+        List<Almacen> productos = new ArrayList<>();
+        String sql = "SELECT * FROM almacen WHERE nombre_producto LIKE ?";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            // Utilizamos '%' para buscar coincidencias parciales del nombre del producto
+            statement.setString(1, "%" + nombre + "%");
+            ResultSet resultados = statement.executeQuery();
+            while (resultados.next()) {
+                Almacen almacen = new Almacen(
+                    resultados.getInt("id_almacen"),
+                    resultados.getString("nombre_producto"),
+                    resultados.getString("descripcion"),
+                    Almacen.Categoria.valueOf(resultados.getString("categoria")),
+                    resultados.getInt("cantidad_stock"),
+                    resultados.getBigDecimal("precio_compra_sin_iva"),
+                    resultados.getBigDecimal("precio_compra_con_iva"),
+                    resultados.getBigDecimal("precio_venta_sin_iva"),
+                    resultados.getBigDecimal("precio_venta_con_iva"),
+                    resultados.getString("proveedor"),
+                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    resultados.getString("numero_lote"),
+                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    resultados.getString("codigo_barras"),
+                    resultados.getString("observaciones")
+                );
+                productos.add(almacen);
+            }
+        }
+        return productos;
+    }
 }

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
@@ -18,9 +19,13 @@ import java.sql.SQLException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import DB.AlmacenDAO;
 import model.Almacen;
+import javax.swing.event.DocumentListener;
+
 public class PanelAlmacen extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -57,6 +62,34 @@ public class PanelAlmacen extends JPanel {
 	    buscarProducto.setBounds(0, 11, 130, 20);
 	    gestionProductos.add(buscarProducto);
 	    buscarProducto.setColumns(10);
+	    
+	    buscarProducto.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                buscar();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                buscar();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                buscar();
+            }
+
+            public void buscar() {
+                try {
+                    String nombreProducto = buscarProducto.getText().trim();
+                    if (!nombreProducto.isEmpty()) {
+                        buscarProductosPorNombre(nombreProducto);
+                    } else {
+                        cargarDatosProductos();
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(PanelAlmacen.this, "Error al buscar productos: " + ex.getMessage(), "Error de Búsqueda", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+	    
 	    
 	 // Agregando el FocusListener a txtBuscarProducto
         buscarProducto.addFocusListener(new FocusAdapter() {
@@ -163,7 +196,7 @@ public class PanelAlmacen extends JPanel {
     private void cargarDatosProductos() {
         try {
             List<Almacen> productos = almacenDao.obtenerProductosFiltradosYOrdenados();
-            modeloTablaProductos.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+            modeloTablaProductos.setRowCount(0);
 
             for (Almacen almacen : productos) {
                 modeloTablaProductos.addRow(new Object[]{
@@ -176,7 +209,21 @@ public class PanelAlmacen extends JPanel {
             JOptionPane.showMessageDialog(this, "Error al cargar datos de productos: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+ // Método para buscar productos por nombre y cargarlos en la tabla
+    private void buscarProductosPorNombre(String nombre) throws SQLException {
+        List<Almacen> productos = almacenDao.buscarProductosPorNombre(nombre);
+        modeloTablaProductos.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+
+        for (Almacen almacen : productos) {
+            modeloTablaProductos.addRow(new Object[]{
+                almacen.getNombreProducto(),
+                almacen.getFechaCaducidad(),
+                almacen.getCantidadStock()
+            });
+        }
+    }
+   
+
     // Agregamos el método main para ejecutar y probar la interfaz
     public static void main(String[] args) {
         // Creamos el marco de la ventana principal
