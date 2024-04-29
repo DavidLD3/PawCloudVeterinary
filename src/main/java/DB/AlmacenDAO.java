@@ -152,9 +152,10 @@ public class AlmacenDAO {
         }
         return productos;
     }
+    
     public List<Almacen> buscarProductosPorNombre(String nombre) throws SQLException {
         List<Almacen> productos = new ArrayList<>();
-        String sql = "SELECT * FROM almacen WHERE nombre_producto LIKE ?";
+        String sql = "SELECT * FROM almacen WHERE nombre_producto LIKE ? AND categoria IN ('Normal', 'Cobertura', 'Alimento', 'Medicamento', 'Suplemento', 'Producto_Higienico', 'Accesorio', 'Alimento_Especializado', 'Equipamiento_Medico', 'Articulo_Educativo')";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             // Utilizamos '%' para buscar coincidencias parciales del nombre del producto
