@@ -17,6 +17,7 @@ import java.awt.event.FocusEvent;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import java.time.LocalDate;
 
 import DB.AlmacenDAO;
 import model.Almacen;
