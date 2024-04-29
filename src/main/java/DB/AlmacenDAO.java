@@ -9,18 +9,20 @@ import model.Almacen;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class AlmacenDAO {
-    private Connection connection;
+	private Conexion conexion;
 
-    public AlmacenDAO(Connection connection) {
-        this.connection = connection;
+    public AlmacenDAO() {
+        this.conexion = new Conexion(); // Inicializar la clase Conexion
     }
-
     // Método para insertar un nuevo producto en la base de datos
     public void insertarAlmacen(Almacen almacen) throws SQLException {
         String sql = "INSERT INTO almacen (nombre_producto, descripcion, categoria, cantidad_stock, precio_compra_sin_iva, precio_compra_con_iva, precio_venta_sin_iva, precio_venta_con_iva, proveedor, fecha_ultima_compra, numero_lote, fecha_caducidad, codigo_barras, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, almacen.getNombreProducto());
             statement.setString(2, almacen.getDescripcion());
             statement.setString(3, almacen.getCategoria().name());
@@ -35,12 +37,10 @@ public class AlmacenDAO {
             statement.setDate(12, Date.valueOf(almacen.getFechaCaducidad()));
             statement.setString(13, almacen.getCodigoBarras());
             statement.setString(14, almacen.getObservaciones());
-
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating almacen failed, no rows affected.");
             }
-
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     almacen.setIdAlmacen(generatedKeys.getInt(1));
@@ -54,7 +54,8 @@ public class AlmacenDAO {
     // Método para actualizar un producto existente en la base de datos
     public void actualizarAlmacen(Almacen almacen) throws SQLException {
         String sql = "UPDATE almacen SET nombre_producto = ?, descripcion = ?, categoria = ?, cantidad_stock = ?, precio_compra_sin_iva = ?, precio_compra_con_iva = ?, precio_venta_sin_iva = ?, precio_venta_con_iva = ?, proveedor = ?, fecha_ultima_compra = ?, numero_lote = ?, fecha_caducidad = ?, codigo_barras = ?, observaciones = ? WHERE id_almacen = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, almacen.getNombreProducto());
             statement.setString(2, almacen.getDescripcion());
             statement.setString(3, almacen.getCategoria().name());
@@ -81,7 +82,8 @@ public class AlmacenDAO {
     // Método para eliminar un producto de la base de datos
     public void eliminarAlmacen(int idAlmacen) throws SQLException {
         String sql = "DELETE FROM almacen WHERE id_almacen = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, idAlmacen);
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -90,11 +92,13 @@ public class AlmacenDAO {
         }
     }
 
+
     // Método para buscar un producto por su ID
-    public Almacen obtenerAlmacenPorId(int idAlmacen) {
+    public Almacen obtenerAlmacenPorId(int idAlmacen) throws SQLException {
+        String sql = "SELECT * FROM almacen WHERE id_almacen = ?";
         Almacen almacen = null;
-        String consulta = "SELECT * FROM almacen WHERE id_almacen = ?";
-        try (PreparedStatement statement = this.connection.prepareStatement(consulta)) {
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, idAlmacen);
             ResultSet resultados = statement.executeQuery();
             if (resultados.next()) {
@@ -116,9 +120,6 @@ public class AlmacenDAO {
                     resultados.getString("observaciones")
                 );
             }
-        } catch (SQLException e) {
-            System.out.println("Error al obtener el almacen por ID: " + e.getMessage());
-            e.printStackTrace();
         }
         return almacen;
     }
@@ -126,7 +127,8 @@ public class AlmacenDAO {
         List<Almacen> productos = new ArrayList<>();
         String sql = "SELECT * FROM almacen WHERE categoria IN ('Normal', 'Cobertura', 'Alimento', 'Medicamento', 'Suplemento', 'Producto_Higienico', 'Accesorio', 'Alimento_Especializado', 'Equipamiento_Medico', 'Articulo_Educativo') ORDER BY nombre_producto, fecha_caducidad, cantidad_stock";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
             ResultSet resultados = statement.executeQuery();
             while (resultados.next()) {
                 productos.add(new Almacen(
