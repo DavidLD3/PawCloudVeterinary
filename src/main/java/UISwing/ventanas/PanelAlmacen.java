@@ -76,11 +76,12 @@ public class PanelAlmacen extends JPanel {
                 buscar();
             }
 
-            public void buscar() {
+            private void buscar() {
                 try {
                     String nombreProducto = buscarProducto.getText().trim();
-                    if (!nombreProducto.isEmpty()) {
-                        buscarProductosPorNombre(nombreProducto);
+                    if (!nombreProducto.isEmpty() && !nombreProducto.equals("Buscar Producto")) {
+                        List<Almacen> productos = almacenDao.buscarProductosPorNombre(nombreProducto);
+                        actualizarTablaProductos(productos);
                     } else {
                         cargarDatosProductos();
                     }
@@ -193,22 +194,14 @@ public class PanelAlmacen extends JPanel {
         cargarDatosProductos(); // Método para cargar los datos de los productos en la tabla
     }
 
-    private void cargarDatosProductos() {
-        try {
-            List<Almacen> productos = almacenDao.obtenerProductosFiltradosYOrdenados();
-            modeloTablaProductos.setRowCount(0);
-
-            for (Almacen almacen : productos) {
-                modeloTablaProductos.addRow(new Object[]{
-                    almacen.getNombreProducto(),
-                    almacen.getFechaCaducidad(),
-                    almacen.getCantidadStock()
-                });
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar datos de productos: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+	private void cargarDatosProductos() {
+	    try {
+	        List<Almacen> productos = almacenDao.obtenerProductosFiltradosYOrdenados();
+	        actualizarTablaProductos(productos); // Usamos el método de actualización aquí
+	    } catch (SQLException ex) {
+	        JOptionPane.showMessageDialog(this, "Error al cargar datos de productos: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
  // Método para buscar productos por nombre y cargarlos en la tabla
     private void buscarProductosPorNombre(String nombre) throws SQLException {
         List<Almacen> productos = almacenDao.buscarProductosPorNombre(nombre);
@@ -222,7 +215,17 @@ public class PanelAlmacen extends JPanel {
             });
         }
     }
-   
+    private void actualizarTablaProductos(List<Almacen> productos) {
+        modeloTablaProductos.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+
+        for (Almacen almacen : productos) {
+            modeloTablaProductos.addRow(new Object[]{
+                almacen.getNombreProducto(),
+                almacen.getFechaCaducidad(),
+                almacen.getCantidadStock()
+            });
+        }
+    }
 
     // Agregamos el método main para ejecutar y probar la interfaz
     public static void main(String[] args) {
