@@ -3,7 +3,10 @@ package UISwing.ventanas;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import DB.AlmacenDAO;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -13,6 +16,7 @@ public class DialogoInfoAlmacen extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
+    private Almacen almacen;  // Almacenar el objeto Almacen localmente
 
     /**
      * Create the dialog with Almacen data.
@@ -47,6 +51,22 @@ public class DialogoInfoAlmacen extends JDialog {
             JButton closeButton = new JButton("Cerrar");
             closeButton.addActionListener(e -> dispose());
             buttonPane.add(closeButton);
+            JButton deleteButton = new JButton("Eliminar");
+            deleteButton.addActionListener(this::eliminarRegistro);
+            buttonPane.add(deleteButton);
+        }
+    }
+    private void eliminarRegistro(ActionEvent e) {
+        int response = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que quieres eliminar este registro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (response == JOptionPane.YES_OPTION) {
+            try {
+                AlmacenDAO dao = new AlmacenDAO();
+                dao.eliminarAlmacen(almacen.getIdAlmacen());
+                JOptionPane.showMessageDialog(this, "Registro eliminado exitosamente.", "Eliminación completada", JOptionPane.INFORMATION_MESSAGE);
+                dispose();  // Cierra el diálogo
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el registro: " + ex.getMessage(), "Error de Eliminación", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
