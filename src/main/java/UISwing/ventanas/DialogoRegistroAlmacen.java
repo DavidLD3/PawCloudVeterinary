@@ -170,7 +170,7 @@ public class DialogoRegistroAlmacen extends JDialog {
 
     private void limpiarCampos() {
         tfRnombre.setText("");
-        tfRcategoria.setText("");
+        cbCategoria.setSelectedIndex(0); // Establece la selección al primer ítem del combo box
         tfRN_Lote.setText("");
         tfRcantidad.setText("");
         tfRproveedor.setText("");
@@ -178,7 +178,7 @@ public class DialogoRegistroAlmacen extends JDialog {
         tfRprecio_Bruto.setText("");
         tfRobservaciones.setText("");
         tfRdescripcion.setText("");
-        tfRfechaUltCompra.setDate(null);
+        tfRfechaUltCompra.setDate(null);  // Asegúrate de que estos campos de fecha estén limpios
         tfrfecha_Caducidad.setDate(null);
     }
 
