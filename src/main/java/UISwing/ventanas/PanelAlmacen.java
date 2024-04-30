@@ -25,6 +25,8 @@ import javax.swing.JOptionPane;
 import DB.AlmacenDAO;
 import model.Almacen;
 import javax.swing.event.DocumentListener;
+import UISwing.ventanas.DialogoRegistroAlmacen;
+
 
 public class PanelAlmacen extends JPanel {
 
@@ -108,9 +110,15 @@ public class PanelAlmacen extends JPanel {
             }
         });
 	    
-	    JButton añadirProductoServicio = new JButton("Añadir al almacen");
-	    añadirProductoServicio.setBounds(183, 10, 153, 23);
-	    gestionProductos.add(añadirProductoServicio);
+        JButton añadirProductoServicio = new JButton("Añadir al almacen");
+        añadirProductoServicio.setBounds(183, 10, 153, 23);
+        añadirProductoServicio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirDialogoRegistroAlmacen();
+            }
+        });
+        gestionProductos.add(añadirProductoServicio);
 	    
 	    scrollPaneProductos = new JScrollPane();  // Usar la versión de clase aquí
         scrollPaneProductos.setBounds(0, 48, 1107, 577);
@@ -301,6 +309,11 @@ public class PanelAlmacen extends JPanel {
                 servicio.getCantidadStock()
             });
         }
+    }
+    private void abrirDialogoRegistroAlmacen() {
+        DialogoRegistroAlmacen dialogo = new DialogoRegistroAlmacen();
+        dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialogo.setVisible(true);
     }
 
     // Agregamos el método main para ejecutar y probar la interfaz
