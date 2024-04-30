@@ -1,169 +1,158 @@
 package UISwing.ventanas;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import com.toedter.calendar.JDateChooser;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import com.toedter.calendar.JDateChooser;
+import DB.AlmacenDAO;
+import model.Almacen;
+import model.Almacen.Categoria;
 
 public class DialogoRegistroAlmacen extends JDialog {
+    private JTextField tfRnombre, tfRcategoria, tfRN_Lote, tfRcantidad, tfRproveedor, tfRCodigo_Barras, tfRprecio_Bruto, tfRobservaciones, tfRdescripcion;
+    private JDateChooser tfRfechaUltCompra, tfrfecha_Caducidad;
+    private JComboBox<Categoria> cbCategoria;
+    
+    public DialogoRegistroAlmacen() {
+        setTitle("Registro en Almacén");
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 600, 400);
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(crearPanelCentral(), BorderLayout.CENTER);
+        getContentPane().add(crearPanelBotones(), BorderLayout.SOUTH);
+        setLocationRelativeTo(null);
+    }
 
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private JTextField tfRnombre;
-	private JTextField tfRcategoria;
-	private JTextField tfRN_Lote;
-	private JTextField tfRcantidad;
-	private JTextField tfRproveedor;
-	private JTextField tfRCodigo_Barras;
-	private JTextField tfRprecio_Bruto;
-	private JTextField tfRobservaciones;
-	private JTextField tfRdescripcion;
-	private JDateChooser tfRfechaUltCompra;
-	private JDateChooser tfrfecha_Caducidad;
+    private JPanel crearPanelCentral() {
+        JPanel panel = new JPanel(new GridLayout(0, 2, 10, 10));
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogoRegistroAlmacen dialog = new DialogoRegistroAlmacen();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        tfRnombre = new JTextField();
+        cbCategoria = new JComboBox<>(Categoria.values());  // Llenar el JComboBox con los valores del enum Categoria
+        tfRN_Lote = new JTextField();
+        tfRcantidad = new JTextField();
+        tfRproveedor = new JTextField();
+        tfRCodigo_Barras = new JTextField();
+        tfRprecio_Bruto = new JTextField();
+        tfRobservaciones = new JTextField();
+        tfRdescripcion = new JTextField();
+        tfRfechaUltCompra = new JDateChooser();
+        tfrfecha_Caducidad = new JDateChooser();
 
-	/**
-	 * Create the dialog.
-	 */
-	public DialogoRegistroAlmacen() {
-		setBounds(100, 100, 1112, 653);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
-		
-		JLabel lblNombre = new JLabel("Nombre");
-		lblNombre.setBounds(44, 35, 49, 14);
-		contentPanel.add(lblNombre);
-		
-		tfRnombre = new JTextField();
-		tfRnombre.setBounds(44, 60, 96, 20);
-		contentPanel.add(tfRnombre);
-		tfRnombre.setColumns(10);
-		
-		JLabel lblCategoria = new JLabel("Categoria");
-		lblCategoria.setBounds(248, 35, 73, 14);
-		contentPanel.add(lblCategoria);
-		
-		tfRcategoria = new JTextField();
-		tfRcategoria.setBounds(248, 60, 96, 20);
-		contentPanel.add(tfRcategoria);
-		tfRcategoria.setColumns(10);
-		
-		JLabel lblDescripcion = new JLabel("Descripcion");
-		lblDescripcion.setBounds(433, 35, 73, 14);
-		contentPanel.add(lblDescripcion);
-		
-		JLabel lblFecha_Ultima_Compra = new JLabel("Fecha de Compra");
-		lblFecha_Ultima_Compra.setBounds(44, 115, 119, 14);
-		contentPanel.add(lblFecha_Ultima_Compra);
-		
-		 // Inicialización de tfRfechaUltCompra
-	    tfRfechaUltCompra = new JDateChooser();
-	    tfRfechaUltCompra.setBounds(44, 140, 96, 20);
-	    contentPanel.add(tfRfechaUltCompra);
-		
-		JLabel lblN_Lote = new JLabel("Numero Lote");
-		lblN_Lote.setBounds(248, 115, 96, 14);
-		contentPanel.add(lblN_Lote);
-		
-		tfRN_Lote = new JTextField();
-		tfRN_Lote.setBounds(248, 140, 96, 20);
-		contentPanel.add(tfRN_Lote);
-		tfRN_Lote.setColumns(10);
-		
-		JLabel lblCantidad = new JLabel("Cantidad");
-		lblCantidad.setBounds(433, 115, 73, 14);
-		contentPanel.add(lblCantidad);
-		
-		tfRcantidad = new JTextField();
-		tfRcantidad.setBounds(433, 140, 96, 20);
-		contentPanel.add(tfRcantidad);
-		tfRcantidad.setColumns(10);
-		
-		
-		JLabel lblFecha_Caducidad = new JLabel("Fecha Caducidad");
-		lblFecha_Caducidad.setBounds(44, 196, 101, 14);
-		contentPanel.add(lblFecha_Caducidad);
-		
-		// Inicialización de tfrfecha_Caducidad
-	    tfrfecha_Caducidad = new JDateChooser();
-	    tfrfecha_Caducidad.setBounds(44, 221, 96, 20);
-	    contentPanel.add(tfrfecha_Caducidad);
-		
-		JLabel lblProveedor = new JLabel("Proveedor");
-		lblProveedor.setBounds(248, 196, 96, 14);
-		contentPanel.add(lblProveedor);
-		
-		tfRproveedor = new JTextField();
-		tfRproveedor.setBounds(248, 221, 96, 20);
-		contentPanel.add(tfRproveedor);
-		tfRproveedor.setColumns(10);
-		
-		JLabel lblCodigo_Barras = new JLabel("Codigo de barras");
-		lblCodigo_Barras.setBounds(433, 196, 109, 14);
-		contentPanel.add(lblCodigo_Barras);
-		
-		tfRCodigo_Barras = new JTextField();
-		tfRCodigo_Barras.setBounds(433, 221, 96, 20);
-		contentPanel.add(tfRCodigo_Barras);
-		tfRCodigo_Barras.setColumns(10);
-		
-		JLabel lblPrecio_Bruto = new JLabel("Precio bruto");
-		lblPrecio_Bruto.setBounds(44, 293, 83, 14);
-		contentPanel.add(lblPrecio_Bruto);
-		
-		tfRprecio_Bruto = new JTextField();
-		tfRprecio_Bruto.setBounds(44, 327, 96, 20);
-		contentPanel.add(tfRprecio_Bruto);
-		tfRprecio_Bruto.setColumns(10);
-		
-		JLabel lblObservaciones = new JLabel("Observaciones");
-		lblObservaciones.setBounds(248, 293, 73, 14);
-		contentPanel.add(lblObservaciones);
-		
-		tfRobservaciones = new JTextField();
-		tfRobservaciones.setBounds(248, 327, 168, 44);
-		contentPanel.add(tfRobservaciones);
-		tfRobservaciones.setColumns(10);
-		
-		tfRdescripcion = new JTextField();
-		tfRdescripcion.setBounds(433, 60, 133, 44);
-		contentPanel.add(tfRdescripcion);
-		tfRdescripcion.setColumns(10);
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
-		}
-	}
+        panel.add(new JLabel("Nombre:"));
+        panel.add(tfRnombre);
+        panel.add(new JLabel("Categoría:"));
+        panel.add(cbCategoria);
+        panel.add(new JLabel("Descripción:"));
+        panel.add(tfRdescripcion);
+        panel.add(new JLabel("Fecha de Compra:"));
+        panel.add(tfRfechaUltCompra);
+        panel.add(new JLabel("Número Lote:"));
+        panel.add(tfRN_Lote);
+        panel.add(new JLabel("Cantidad:"));
+        panel.add(tfRcantidad);
+        panel.add(new JLabel("Fecha Caducidad:"));
+        panel.add(tfrfecha_Caducidad);
+        panel.add(new JLabel("Proveedor:"));
+        panel.add(tfRproveedor);
+        panel.add(new JLabel("Código de Barras:"));
+        panel.add(tfRCodigo_Barras);
+        panel.add(new JLabel("Precio Bruto:"));
+        panel.add(tfRprecio_Bruto);
+        panel.add(new JLabel("Observaciones:"));
+        panel.add(tfRobservaciones);
+
+        return panel;
+    }
+
+    private JPanel crearPanelBotones() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        JButton btnGuardar = new JButton("Guardar");
+        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnCerrar = new JButton("Cerrar");
+
+        btnGuardar.addActionListener(this::guardarDatos);
+        btnEliminar.addActionListener(e -> limpiarCampos());
+        btnCerrar.addActionListener(e -> dispose());
+
+        panel.add(btnGuardar);
+        panel.add(btnEliminar);
+        panel.add(btnCerrar);
+
+        return panel;
+    }
+
+    private void guardarDatos(ActionEvent e) {
+        if (validarDatos()) {
+            Almacen nuevoAlmacen = recolectarDatos();
+            AlmacenDAO dao = new AlmacenDAO();
+            try {
+                dao.insertarAlmacen(nuevoAlmacen);
+                JOptionPane.showMessageDialog(this, "Datos guardados correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al guardar los datos: " + ex.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor revise la información proporcionada.");
+        }
+    }
+
+    private boolean validarDatos() {
+        // Aqui habria que implementar validaciones para asegurar que los datos ingresados cumplen los requisitos, como campos no vacios, numeros validos, fecha de compra no sea futura etc.
+        return true;
+    }
+
+    private Almacen recolectarDatos() {
+        LocalDate fechaCompra = (tfRfechaUltCompra.getDate() != null) ? tfRfechaUltCompra.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+        LocalDate fechaCaducidad = (tfrfecha_Caducidad.getDate() != null) ? tfrfecha_Caducidad.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+        Categoria categoria = (Categoria) cbCategoria.getSelectedItem();  // Obtener el valor seleccionado en el JComboBox
+
+        return new Almacen(
+            0, // ID es autoincremental en la base de datos
+            tfRnombre.getText().trim(),
+            tfRdescripcion.getText().trim(),
+            categoria, // Usar el valor obtenido del JComboBox
+            Integer.parseInt(tfRcantidad.getText().trim()),
+            new BigDecimal(tfRprecio_Bruto.getText().trim()),
+            tfRproveedor.getText().trim(),
+            fechaCompra,
+            tfRN_Lote.getText().trim(),
+            fechaCaducidad,
+            tfRCodigo_Barras.getText().trim(),
+            tfRobservaciones.getText().trim()
+        );
+    }
+
+
+    private void limpiarCampos() {
+        tfRnombre.setText("");
+        tfRcategoria.setText("");
+        tfRN_Lote.setText("");
+        tfRcantidad.setText("");
+        tfRproveedor.setText("");
+        tfRCodigo_Barras.setText("");
+        tfRprecio_Bruto.setText("");
+        tfRobservaciones.setText("");
+        tfRdescripcion.setText("");
+        tfRfechaUltCompra.setDate(null);
+        tfrfecha_Caducidad.setDate(null);
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                DialogoRegistroAlmacen dialog = new DialogoRegistroAlmacen();
+                dialog.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }
