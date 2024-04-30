@@ -105,6 +105,28 @@ public class FarmacoDAO {
     }
 
 
+    public List<Farmaco> obtenerFarmacosOrdenados() throws SQLException {
+        List<Farmaco> farmacos = new ArrayList<>();
+        String sql = "SELECT * FROM farmacos ORDER BY nombre, fecha_caducidad, cantidad DESC";
+        try (Connection connection = Conexion.getConexion();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Farmaco farmaco = new Farmaco();
+                farmaco.setId(resultSet.getInt("id"));
+                farmaco.setCodigo(resultSet.getString("codigo"));
+                farmaco.setNombre(resultSet.getString("nombre"));
+                farmaco.setDescripcion(resultSet.getString("descripcion"));
+                farmaco.setCantidad(resultSet.getInt("cantidad"));
+                farmaco.setDosisRecomendada(resultSet.getString("dosis_recomendada"));
+                farmaco.setUnidadMedida(resultSet.getString("unidad_medida"));
+                farmaco.setFechaCaducidad(resultSet.getDate("fecha_caducidad"));
+                farmaco.setPrecio(resultSet.getBigDecimal("precio"));
+                farmacos.add(farmaco);
+            }
+        }
+        return farmacos;
+    }
 
 
     
