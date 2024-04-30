@@ -26,7 +26,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import DB.AlmacenDAO;
+import DB.FarmacoDAO;
 import model.Almacen;
+import model.Farmaco;
+
 import javax.swing.event.DocumentListener;
 import UISwing.ventanas.DialogoRegistroAlmacen;
 import javax.swing.table.TableModel;
@@ -46,6 +49,8 @@ public class PanelAlmacen extends JPanel {
     private DefaultTableModel modeloTablaProductos;
     private AlmacenDAO almacenDao;
     private DefaultTableModel modeloTablaServicios; // Modelo para la tabla de servicios
+    private DefaultTableModel modeloTablaFarmacos;
+    private FarmacoDAO farmacoDao;
 	/**
 	 * Create the panel.
 	 */
@@ -54,7 +59,7 @@ public class PanelAlmacen extends JPanel {
 		setPreferredSize(new Dimension(1112, 653));  
         setLayout(null);
         setOpaque(false);
-
+        farmacoDao = new FarmacoDAO();
 	    // Crea el JTabbedPane y le asigna un tamaño y posición
 	    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 	    tabbedPane.setBounds(0, 0, 1112, 653); // Tamaño ampliado para incluir el área de contenido
@@ -118,7 +123,7 @@ public class PanelAlmacen extends JPanel {
         JButton añadirProductoServicio = new JButton("Añadir al almacen");
         añadirProductoServicio.setBounds(183, 10, 153, 23);
         añadirProductoServicio.addActionListener(new ActionListener() {
-            @Override
+          
             public void actionPerformed(ActionEvent e) {
                 abrirDialogoRegistroAlmacen();
             }
@@ -196,6 +201,8 @@ public class PanelAlmacen extends JPanel {
 	    gestionFarmacos.setToolTipText("");
 	    tabbedPane.addTab("Gestion de Farmacos", null, gestionFarmacos, null);
 	    gestionFarmacos.setLayout(null);
+	    
+	    inicializarComponentesFarmacos(gestionFarmacos);
 	    
 	    JScrollPane scrollPaneFarmacos = new JScrollPane();
 	    scrollPaneFarmacos.setBounds(0, 50, 1107, 575);
@@ -287,6 +294,42 @@ public class PanelAlmacen extends JPanel {
 	    
 	    almacenDao = new AlmacenDAO();
 	    cargarDatosServicios();
+	}
+	private void inicializarComponentesFarmacos(JPanel panel) {
+	    modeloTablaFarmacos = new DefaultTableModel(new Object[]{"Nombre", "Cantidad", "Fecha Caducidad", "Precio"}, 0) {
+	        public boolean isCellEditable(int row, int column) {
+	            return false; // Hacer que la tabla no sea editable
+	        }
+	    };
+
+	    tablaFarmacos = new JTable(modeloTablaFarmacos);
+	    tablaFarmacos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    JScrollPane scrollPaneFarmacos = new JScrollPane(tablaFarmacos);
+	    scrollPaneFarmacos.setBounds(0, 48, 1107, 578);
+	    panel.add(scrollPaneFarmacos);
+	    
+	    cargarDatosFarmacos();
+	}
+	private void cargarDatosFarmacos() {
+	    try {
+	        // Usar farmacoDao para obtener los farmacos ordenados
+	        List<Farmaco> farmacos = farmacoDao.obtenerFarmacosOrdenados(); // Asegúrate de que este método existe en FarmacoDAO
+	        actualizarTablaFarmacos(farmacos);
+	    } catch (SQLException ex) {
+	        JOptionPane.showMessageDialog(this, "Error al cargar datos de fármacos: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+
+	private void actualizarTablaFarmacos(List<Farmaco> farmacos) {
+	    modeloTablaFarmacos.setRowCount(0);
+	    for (Farmaco farmaco : farmacos) {
+	        modeloTablaFarmacos.addRow(new Object[]{
+	            farmaco.getNombre(),
+	            farmaco.getCantidad(),
+	            farmaco.getFechaCaducidad().toString(),
+	            farmaco.getPrecio().toPlainString()
+	        });
+	    }
 	}
 
 	private void cargarDatosProductos() {
