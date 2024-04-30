@@ -74,7 +74,7 @@ public class DialogoRegistroAlmacen extends JDialog {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         JButton btnGuardar = new JButton("Guardar");
-        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnEliminar = new JButton("Limpiar");
         JButton btnCerrar = new JButton("Cerrar");
 
         btnGuardar.addActionListener(this::guardarDatos);
