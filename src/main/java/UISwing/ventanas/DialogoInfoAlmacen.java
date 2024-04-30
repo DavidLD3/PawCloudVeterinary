@@ -20,13 +20,13 @@ public class DialogoInfoAlmacen extends JDialog {
     /**
      * Create the dialog with Almacen data.
      */
-    public DialogoInfoAlmacen(Almacen almacen) {
-        setTitle("Detalles del Almacén");
-        setBounds(100, 100, 650, 400);
-        getContentPane().setLayout(new BorderLayout());
-        contentPanel.setLayout(new GridLayout(0, 2));  // Usar GridLayout para un formato ordenado
-        contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        getContentPane().add(contentPanel, BorderLayout.CENTER);
+    public DialogoInfoAlmacen(Frame owner, Almacen almacen) {
+    	  super(owner, "Detalles del Almacén", true); // true para modal
+          setBounds(100, 100, 650, 400);
+          getContentPane().setLayout(new BorderLayout());
+          contentPanel.setLayout(new GridLayout(0, 2));  // Usar GridLayout para un formato ordenado
+          contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+          getContentPane().add(contentPanel, BorderLayout.CENTER);
 
         // Agregar etiquetas y valores como componentes al panel
         if (almacen != null) {
@@ -51,6 +51,7 @@ public class DialogoInfoAlmacen extends JDialog {
             closeButton.addActionListener(e -> dispose());
             buttonPane.add(closeButton);        
         }
+        setLocationRelativeTo(owner);  // Asegura que el diálogo se centre respecto al frame pasado como 'owner'
     }
    
     /**

@@ -30,6 +30,7 @@ import model.Almacen;
 import javax.swing.event.DocumentListener;
 import UISwing.ventanas.DialogoRegistroAlmacen;
 import javax.swing.table.TableModel;
+import javax.swing.SwingUtilities;
 
 
 public class PanelAlmacen extends JPanel {
@@ -248,7 +249,8 @@ public class PanelAlmacen extends JPanel {
 	    try {
 	        Almacen producto = almacenDao.obtenerProductoPorNombre(nombreProducto); // Obtener el producto por su nombre
 	        if (producto != null) {
-	            DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(producto);
+	            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // Buscar el JFrame ancestro
+	            DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(frame, producto); // Pasar el frame al constructor
 	            dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	            dialogo.setVisible(true);
 	        }
