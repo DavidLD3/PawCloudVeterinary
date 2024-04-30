@@ -105,9 +105,46 @@ public class DialogoRegistroAlmacen extends JDialog {
     }
 
     private boolean validarDatos() {
-        // Aqui habria que implementar validaciones para asegurar que los datos ingresados cumplen los requisitos, como campos no vacios, numeros validos, fecha de compra no sea futura etc.
+        // Validar que el nombre del producto no esté vacío
+        if (tfRnombre.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo 'Nombre' no puede estar vacío.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar que la cantidad sea un número entero válido y positivo
+        try {
+            int cantidad = Integer.parseInt(tfRcantidad.getText().trim());
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(this, "La cantidad debe ser un número positivo.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "La cantidad debe ser un número entero.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar que el precio bruto sea un número decimal válido y no negativo
+        try {
+            BigDecimal precio = new BigDecimal(tfRprecio_Bruto.getText().trim());
+            if (precio.compareTo(BigDecimal.ZERO) < 0) {
+                JOptionPane.showMessageDialog(this, "El precio bruto no puede ser negativo.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El precio bruto debe ser un número válido.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar que la fecha de última compra no sea futura
+        if (tfRfechaUltCompra.getDate() != null && tfRfechaUltCompra.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isAfter(LocalDate.now())) {
+            JOptionPane.showMessageDialog(this, "La fecha de última compra no puede ser futura.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validación exitosa de todos los campos
         return true;
     }
+
 
     private Almacen recolectarDatos() {
         LocalDate fechaCompra = (tfRfechaUltCompra.getDate() != null) ? tfRfechaUltCompra.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
