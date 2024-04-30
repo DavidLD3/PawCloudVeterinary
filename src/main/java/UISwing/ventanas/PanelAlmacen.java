@@ -256,7 +256,7 @@ public class PanelAlmacen extends JPanel {
 	    }
 	}
 	private void inicializarComponentesServicios(JPanel panel) {
-	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Fecha Última Compra", "Fecha Caducidad", "Cantidad Stock"}, 0) {
+	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Cantidad Stock", "Precio Bruto"}, 0) {
 	        public boolean isCellEditable(int row, int column) {
 	            return false; // Hacer que la tabla no sea editable
 	        }
@@ -332,9 +332,8 @@ public class PanelAlmacen extends JPanel {
             modeloTablaServicios.addRow(new Object[]{
                 servicio.getNombreProducto(),
                 servicio.getCategoria().name(),
-                servicio.getFechaUltimaCompra(),
-                servicio.getFechaCaducidad(),
-                servicio.getCantidadStock()
+                servicio.getCantidadStock(),
+                servicio.getPrecioBruto().toPlainString() // Agrega el precio bruto como cadena
             });
         }
     }
