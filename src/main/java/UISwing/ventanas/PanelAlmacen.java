@@ -243,6 +243,7 @@ public class PanelAlmacen extends JPanel {
 	    cargarDatosProductos();
 	}
 	// Método para abrir el DialogoInfoAlmacen con la información del producto seleccionado
+	// Reutilizamos el método abrirDialogoInfoAlmacen para mostrar la información tanto de productos como de servicios
 	private void abrirDialogoInfoAlmacen(String nombreProducto) {
 	    try {
 	        Almacen producto = almacenDao.obtenerProductoPorNombre(nombreProducto); // Obtener el producto por su nombre
@@ -267,6 +268,21 @@ public class PanelAlmacen extends JPanel {
 	    JScrollPane scrollPaneServicios = new JScrollPane(tablaServicios);
 	    scrollPaneServicios.setBounds(0, 48, 1107, 578);
 	    panel.add(scrollPaneServicios);
+	    
+	    // Añadir MouseListener para doble clic
+	    tablaServicios.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	            if (e.getClickCount() == 2) { // Verificar si fue un doble clic
+	                JTable target = (JTable)e.getSource();
+	                int row = target.getSelectedRow();
+	                if (row != -1) {  // Asegurar que una fila está seleccionada
+	                    String nombreServicio = (String)target.getModel().getValueAt(row, 0); // Obtener el nombre del servicio
+	                    abrirDialogoInfoAlmacen(nombreServicio); // Usar el mismo método que para los productos
+	                }
+	            }
+	        }
+	    });
+	    
 	    almacenDao = new AlmacenDAO();
 	    cargarDatosServicios();
 	}
