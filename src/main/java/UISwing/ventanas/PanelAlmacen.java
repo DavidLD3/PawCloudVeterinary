@@ -217,6 +217,42 @@ public class PanelAlmacen extends JPanel {
 	    gestionFarmacos.add(buscarFarmaco);
 	    buscarFarmaco.setColumns(10);
 	    
+	    buscarFarmaco.getDocument().addDocumentListener(new DocumentListener() {
+	        public void insertUpdate(DocumentEvent e) {
+	            buscarFarmaco();
+	        }
+
+	        public void removeUpdate(DocumentEvent e) {
+	            buscarFarmaco();
+	        }
+
+	        public void changedUpdate(DocumentEvent e) {
+	            buscarFarmaco();
+	        }
+
+	        private void buscarFarmaco() {
+	            String texto = buscarFarmaco.getText().trim();
+	            if (!texto.isEmpty() && !texto.equals("Buscar Farmaco")) {
+	                List<Farmaco> farmacos = farmacoDao.buscarFarmacos(texto); // Asume que este método existe en FarmacoDAO
+					actualizarTablaFarmacos(farmacos);
+	            } else {
+	                cargarDatosFarmacos(); // Recargar todos los datos si el campo de búsqueda está vacío
+	            }
+	        }
+	    });
+	    buscarFarmaco.addFocusListener(new FocusAdapter() {
+	        public void focusGained(FocusEvent e) {
+	            if (buscarFarmaco.getText().equals("Buscar Farmaco")) {
+	                buscarFarmaco.setText("");
+	            }
+	        }
+
+	        public void focusLost(FocusEvent e) {
+	            if (buscarFarmaco.getText().isEmpty()) {
+	                buscarFarmaco.setText("Buscar Farmaco");
+	            }
+	        }
+	    });
 	    JButton añadirFarmaco = new JButton("Añadir Farmaco");
 	    añadirFarmaco.setBounds(180, 10, 130, 23);
 	    gestionFarmacos.add(añadirFarmaco);
