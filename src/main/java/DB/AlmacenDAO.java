@@ -219,4 +219,31 @@ public class AlmacenDAO {
         }
         return servicios;
     }
+    public Almacen obtenerProductoPorNombre(String nombre) throws SQLException {
+        String sql = "SELECT * FROM almacen WHERE nombre_producto = ?";
+        Almacen producto = null;
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, nombre);
+            ResultSet resultados = statement.executeQuery();
+            if (resultados.next()) {
+                producto = new Almacen(
+                    resultados.getInt("id_almacen"),
+                    resultados.getString("nombre_producto"),
+                    resultados.getString("descripcion"),
+                    Almacen.Categoria.valueOf(resultados.getString("categoria")),
+                    resultados.getInt("cantidad_stock"),
+                    resultados.getBigDecimal("precio_bruto"),
+                    resultados.getString("proveedor"),
+                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    resultados.getString("numero_lote"),
+                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    resultados.getString("codigo_barras"),
+                    resultados.getString("observaciones")
+                );
+            }
+        }
+        return producto;
+    }
+
 }

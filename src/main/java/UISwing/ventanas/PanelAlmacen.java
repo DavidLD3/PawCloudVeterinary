@@ -11,6 +11,9 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.event.FocusAdapter;
@@ -26,6 +29,7 @@ import DB.AlmacenDAO;
 import model.Almacen;
 import javax.swing.event.DocumentListener;
 import UISwing.ventanas.DialogoRegistroAlmacen;
+import javax.swing.table.TableModel;
 
 
 public class PanelAlmacen extends JPanel {
@@ -223,9 +227,33 @@ public class PanelAlmacen extends JPanel {
 
 	    tablaProductos = new JTable(modeloTablaProductos);
 	    tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    tablaProductos.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	            if (e.getClickCount() == 2) { // Verificar si fue un doble clic
+	                JTable target = (JTable)e.getSource();
+	                int row = target.getSelectedRow();
+	                TableModel model = target.getModel();
+	                String nombreProducto = (String) model.getValueAt(row, 0); // Obtener el nombre del producto seleccionado
+	                abrirDialogoInfoAlmacen(nombreProducto);
+	            }
+	        }
+	    });
 	    scrollPaneProductos.setViewportView(tablaProductos);
 	    almacenDao = new AlmacenDAO();
 	    cargarDatosProductos();
+	}
+	// Método para abrir el DialogoInfoAlmacen con la información del producto seleccionado
+	private void abrirDialogoInfoAlmacen(String nombreProducto) {
+	    try {
+	        Almacen producto = almacenDao.obtenerProductoPorNombre(nombreProducto); // Obtener el producto por su nombre
+	        if (producto != null) {
+	            DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(producto);
+	            dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	            dialogo.setVisible(true);
+	        }
+	    } catch (SQLException ex) {
+	        JOptionPane.showMessageDialog(this, "Error al obtener el producto: " + ex.getMessage(), "Error de Obtención", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 	private void inicializarComponentesServicios(JPanel panel) {
 	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Fecha Última Compra", "Fecha Caducidad", "Cantidad Stock"}, 0) {
