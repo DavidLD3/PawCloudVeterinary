@@ -207,23 +207,20 @@ public class PanelAlmacen extends JPanel {
 	}
 	
 	private void inicializarComponentesProductos(JPanel panel) {
-        modeloTablaProductos = new DefaultTableModel(new Object[]{"Nombre Producto", "Fecha Caducidad", "Cantidad Stock"}, 0) {
-            public boolean isCellEditable(int row, int column) {
-                return false; // Hacer que la tabla no sea editable
-            }
-        };
+	    modeloTablaProductos = new DefaultTableModel(new Object[]{"Nombre Producto", "Categoría", "Fecha Última Compra", "Fecha Caducidad", "Cantidad Stock"}, 0) {
+	        public boolean isCellEditable(int row, int column) {
+	            return false; // Hacer que la tabla no sea editable
+	        }
+	    };
 
-        tablaProductos = new JTable(modeloTablaProductos);
-        tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        scrollPaneProductos.setViewportView(tablaProductos);
-
-        almacenDao = new AlmacenDAO();  // Suponiendo que AlmacenDAO gestiona su propia conexión
-        cargarDatosProductos(); // Método para cargar los datos de los productos en la tabla
-    }
+	    tablaProductos = new JTable(modeloTablaProductos);
+	    tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    scrollPaneProductos.setViewportView(tablaProductos);
+	    almacenDao = new AlmacenDAO();
+	    cargarDatosProductos();
+	}
 	private void inicializarComponentesServicios(JPanel panel) {
-	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Fecha Caducidad", "Cantidad Stock"}, 0) {
-	 
+	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Fecha Última Compra", "Fecha Caducidad", "Cantidad Stock"}, 0) {
 	        public boolean isCellEditable(int row, int column) {
 	            return false; // Hacer que la tabla no sea editable
 	        }
@@ -231,22 +228,20 @@ public class PanelAlmacen extends JPanel {
 
 	    tablaServicios = new JTable(modeloTablaServicios);
 	    tablaServicios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
 	    JScrollPane scrollPaneServicios = new JScrollPane(tablaServicios);
 	    scrollPaneServicios.setBounds(0, 48, 1107, 578);
 	    panel.add(scrollPaneServicios);
-
-	    almacenDao = new AlmacenDAO(); // Asegúrate de que la instancia de AlmacenDAO se crea una sola vez si se usa en múltiples lugares
-	    cargarDatosServicios(); // Método para cargar los datos de los servicios en la tabla
+	    almacenDao = new AlmacenDAO();
+	    cargarDatosServicios();
 	}
 
 	private void cargarDatosProductos() {
 	    try {
 	        List<Almacen> productos = almacenDao.obtenerProductosFiltradosYOrdenados();
-	        actualizarTablaProductos(productos); // Usamos el método de actualización aquí
+	        actualizarTablaProductos(productos);
 	    } catch (SQLException ex) {
 	        JOptionPane.showMessageDialog(this, "Error al cargar datos de productos: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
-	    }	   
+	    }
 	}
 	private void cargarDatosServicios() {
 	    try {
@@ -284,22 +279,24 @@ public class PanelAlmacen extends JPanel {
         }
     }
     private void actualizarTablaProductos(List<Almacen> productos) {
-        modeloTablaProductos.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
-
+        modeloTablaProductos.setRowCount(0);
         for (Almacen almacen : productos) {
             modeloTablaProductos.addRow(new Object[]{
                 almacen.getNombreProducto(),
+                almacen.getCategoria().name(),
+                almacen.getFechaUltimaCompra(),
                 almacen.getFechaCaducidad(),
                 almacen.getCantidadStock()
             });
         }
     }
     private void actualizarTablaServicios(List<Almacen> servicios) {
-        modeloTablaServicios.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
-
+        modeloTablaServicios.setRowCount(0);
         for (Almacen servicio : servicios) {
             modeloTablaServicios.addRow(new Object[]{
                 servicio.getNombreProducto(),
+                servicio.getCategoria().name(),
+                servicio.getFechaUltimaCompra(),
                 servicio.getFechaCaducidad(),
                 servicio.getCantidadStock()
             });
