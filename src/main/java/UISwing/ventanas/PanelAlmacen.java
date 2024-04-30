@@ -2,6 +2,7 @@ package UISwing.ventanas;
 
 import java.awt.Dimension;
 
+import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -13,11 +14,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.*;
-import java.awt.Dimension;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -29,7 +26,6 @@ import DB.AlmacenDAO;
 import DB.FarmacoDAO;
 import model.Almacen;
 import model.Farmaco;
-
 import javax.swing.event.DocumentListener;
 import UISwing.ventanas.DialogoRegistroAlmacen;
 import javax.swing.table.TableModel;
