@@ -250,7 +250,7 @@ public class PanelAlmacen extends JPanel {
 	        Almacen producto = almacenDao.obtenerProductoPorNombre(nombreProducto); // Obtener el producto por su nombre
 	        if (producto != null) {
 	            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // Buscar el JFrame ancestro
-	            DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(frame, producto); // Pasar el frame al constructor
+	            DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(frame, producto); // Corrección aquí
 	            dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	            dialogo.setVisible(true);
 	        }

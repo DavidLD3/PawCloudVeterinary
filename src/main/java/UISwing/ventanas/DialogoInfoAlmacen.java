@@ -69,13 +69,27 @@ public class DialogoInfoAlmacen extends JDialog {
      * Launch the dialog for testing.
      */
     public static void main(String[] args) {
-        try {
-            Almacen testAlmacen = new Almacen(1, "Producto XYZ", "Descripción del producto", Almacen.Categoria.Normal, 100, new BigDecimal("19.99"), "Proveedor XYZ", LocalDate.now(), "Lote123", LocalDate.now().plusYears(1), "1234567890", "Sin observaciones");
-            DialogoInfoAlmacen dialog = new DialogoInfoAlmacen(testAlmacen);
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        EventQueue.invokeLater(() -> {
+            try {
+                // Crear un objeto Almacen para prueba
+                Almacen testAlmacen = new Almacen(1, "Producto XYZ", "Descripción del producto", Almacen.Categoria.Normal, 100, new BigDecimal("19.99"), "Proveedor XYZ", LocalDate.now(), "Lote123", LocalDate.now().plusYears(1), "1234567890", "Sin observaciones");
+                
+                // Crear un JFrame temporal para usar como owner
+                JFrame frame = new JFrame("Test Frame");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.setSize(200, 200); // Dimensiones mínimas para que sea visible
+                frame.setLocationRelativeTo(null); // Centrar en la pantalla
+
+                // Crear y mostrar el diálogo
+                DialogoInfoAlmacen dialog = new DialogoInfoAlmacen(frame, testAlmacen);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setVisible(true);
+                
+                // Asegurarse de que el JFrame se cierra cuando cerramos el diálogo
+                frame.dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
