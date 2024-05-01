@@ -344,8 +344,21 @@ public class PanelAlmacen extends JPanel {
 	    JScrollPane scrollPaneFarmacos = new JScrollPane(tablaFarmacos);
 	    scrollPaneFarmacos.setBounds(0, 48, 1107, 578);
 	    panel.add(scrollPaneFarmacos);
-	    
-	    cargarDatosFarmacos();
+
+	    // Añadir MouseListener para doble clic
+	    tablaFarmacos.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	            if (e.getClickCount() == 2) { // Verificar si fue un doble clic
+	                JTable target = (JTable) e.getSource();
+	                int row = target.getSelectedRow();
+	                if (row != -1) {  // Asegurar que una fila está seleccionada
+	                    abrirDialogoInfoFarmaco(row); // Pasar el índice de la fila seleccionada
+	                }
+	            }
+	        }
+	    });
+
+	    cargarDatosFarmacos(); // Cargar datos en la tabla
 	}
 	private void cargarDatosFarmacos() {
 	    try {
@@ -366,6 +379,24 @@ public class PanelAlmacen extends JPanel {
 	            farmaco.getFechaCaducidad().toString(),
 	            farmaco.getPrecio().toPlainString()
 	        });
+	    }
+	}
+	private void abrirDialogoInfoFarmaco(int rowIndex) {
+	    // Obtener los datos de la fila seleccionada
+	    String nombre = (String) modeloTablaFarmacos.getValueAt(rowIndex, 0);
+	    
+	    try {
+	        // Buscar el objeto Farmaco por nombre (o por otro criterio si es más adecuado)
+	        Farmaco farmaco = farmacoDao.buscarFarmacoPorNombre(nombre); // Debes implementar este método en FarmacoDAO
+	        
+	        if (farmaco != null) {
+	            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // Obtener el JFrame padre
+	            DialogoInfoFarmaco dialogo = new DialogoInfoFarmaco(frame, farmaco); // Crear el diálogo con el Farmaco
+	            dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	            dialogo.setVisible(true);
+	        }
+	    } catch (SQLException ex) {
+	        JOptionPane.showMessageDialog(this, "Error al obtener los detalles del fármaco: " + ex.getMessage(), "Error de Obtención", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
 
