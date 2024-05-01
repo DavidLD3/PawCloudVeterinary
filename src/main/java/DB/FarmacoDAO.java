@@ -64,6 +64,38 @@ public class FarmacoDAO {
         }
     }
     
+ // Método para eliminar un fármaco por su ID
+    public boolean eliminarFarmaco(int id) throws SQLException {
+        String sql = "DELETE FROM farmacos WHERE id = ?";
+        try (Connection connection = Conexion.getConexion();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+        }
+    }
+
+    // Método para actualizar los detalles de un fármaco existente
+    public boolean actualizarFarmaco(Farmaco farmaco) throws SQLException {
+        String sql = "UPDATE farmacos SET codigo = ?, nombre = ?, descripcion = ?, cantidad = ?, dosis_recomendada = ?, unidad_medida = ?, fecha_caducidad = ?, precio = ? WHERE id = ?";
+        try (Connection connection = Conexion.getConexion();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            
+            statement.setString(1, farmaco.getCodigo());
+            statement.setString(2, farmaco.getNombre());
+            statement.setString(3, farmaco.getDescripcion());
+            statement.setInt(4, farmaco.getCantidad());
+            statement.setString(5, farmaco.getDosisRecomendada());
+            statement.setString(6, farmaco.getUnidadMedida());
+            statement.setDate(7, farmaco.getFechaCaducidad());
+            statement.setBigDecimal(8, farmaco.getPrecio());
+            statement.setInt(9, farmaco.getId());
+
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+        }
+    }
+    
     public Farmaco buscarFarmacoPorNombre(String nombre) throws SQLException {
         String sql = "SELECT * FROM farmacos WHERE nombre = ?";
         try (Connection connection = Conexion.getConexion();

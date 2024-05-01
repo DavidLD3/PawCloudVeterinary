@@ -59,31 +59,37 @@ public class DialogoInfoAlmacen extends JDialog {
 
 
         // Configuración de los botones
-        JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        getContentPane().add(buttonPane, BorderLayout.SOUTH);
-        {
-        	  // Botón para habilitar la edición
-            JButton editButton = new JButton("Editar");
-            editButton.addActionListener(e -> habilitarEdicion(true));
-            buttonPane.add(editButton);
+       // Panel con dos FlowLayout para alinear correctamente los botones
+          JPanel buttonPane = new JPanel(new BorderLayout());
+          JPanel leftPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
+          JPanel rightPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-            // Botón para guardar los cambios
-            saveButton = new JButton("Guardar");
-            saveButton.setEnabled(false); // Desactivado hasta que se presione "Editar"
-            saveButton.addActionListener(e -> guardarCambios());
-            buttonPane.add(saveButton);       	
-            
-            JButton closeButton = new JButton("Cerrar");
-            closeButton.addActionListener(e -> dispose());
-            buttonPane.add(closeButton);        
-            
-         // Botón Eliminar
-            JButton deleteButton = new JButton("Eliminar");
-            deleteButton.addActionListener(e -> eliminarAlmacen());
-            buttonPane.add(deleteButton);
-        }
-        setLocationRelativeTo(owner);  // Asegura que el diálogo se centre respecto al frame pasado como 'owner'
-    }
+          // Botón para eliminar
+          JButton deleteButton = new JButton("Eliminar");
+          deleteButton.addActionListener(e -> eliminarAlmacen());
+          leftPane.add(deleteButton);
+
+          // Botón para habilitar la edición
+          JButton editButton = new JButton("Editar");
+          editButton.addActionListener(e -> habilitarEdicion(true));
+          rightPane.add(editButton);
+
+          // Botón para guardar los cambios
+          saveButton = new JButton("Guardar");
+          saveButton.setEnabled(false); // Desactivado hasta que se presione "Editar"
+          saveButton.addActionListener(e -> guardarCambios());
+          rightPane.add(saveButton);
+
+          JButton closeButton = new JButton("Cerrar");
+          closeButton.addActionListener(e -> dispose());
+          rightPane.add(closeButton);
+
+          buttonPane.add(leftPane, BorderLayout.WEST);
+          buttonPane.add(rightPane, BorderLayout.EAST);
+          getContentPane().add(buttonPane, BorderLayout.SOUTH);
+
+          setLocationRelativeTo(owner);
+      }
    
     /**
      * Helper method to add labels and text fields to the panel.
@@ -100,14 +106,19 @@ public class DialogoInfoAlmacen extends JDialog {
     
     private void eliminarAlmacen() {
         if (almacen != null) {
-            int idAlmacen = almacen.getIdAlmacen();
-            AlmacenDAO almacenDAO = new AlmacenDAO();
-            try {
-                almacenDAO.eliminarAlmacen(idAlmacen);
-                JOptionPane.showMessageDialog(this, "Almacén eliminado con éxito.", "Eliminar", JOptionPane.INFORMATION_MESSAGE);
-                dispose(); // Cierra el diálogo después de eliminar
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "Error al eliminar el almacén: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            // Mostrar el cuadro de diálogo de confirmación
+            int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este almacén?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+            // Proceder con la eliminación si el usuario confirma
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                AlmacenDAO almacenDAO = new AlmacenDAO();
+                try {
+                    almacenDAO.eliminarAlmacen(almacen.getIdAlmacen());
+                    JOptionPane.showMessageDialog(this, "Almacén eliminado con éxito.", "Eliminar", JOptionPane.INFORMATION_MESSAGE);
+                    dispose(); // Cierra el diálogo después de eliminar
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(this, "Error al eliminar el almacén: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         } else {
             JOptionPane.showMessageDialog(this, "No se encontró el almacén para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
