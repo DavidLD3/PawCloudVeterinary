@@ -1,7 +1,8 @@
 package UISwing.ventanas;
 
+import java.awt.Color;
 import java.awt.Dimension;
-
+import java.awt.Font;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -18,6 +19,8 @@ import javax.swing.*;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
 import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,6 +65,8 @@ public class PanelAlmacen extends JPanel {
 	    add(tabbedPane);
 	    
 	    JPanel gestionProductos = new JPanel();    // Crea el panel para la pestaña "Gestión de Almacén"
+	    gestionProductos.setBackground(new Color(204, 229, 255)); // Un azul claro, cambia este valor por el color que prefieras
+	    gestionProductos.setOpaque(true);
 	    tabbedPane.addTab("Gestion de Productos", null, gestionProductos, null);     // Agrega la pestaña "Gestión de Almacén" y su contenido al JTabbedPane
 	    gestionProductos.setLayout(null);
 	    
@@ -128,6 +133,8 @@ public class PanelAlmacen extends JPanel {
 	    
 	    scrollPaneProductos = new JScrollPane();  // Usar la versión de clase aquí
         scrollPaneProductos.setBounds(0, 48, 1107, 577);
+        scrollPaneProductos.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
+        scrollPaneProductos.setBackground(new Color(200, 220, 255));
         gestionProductos.add(scrollPaneProductos);
 	    
 	    tablaProductos = new JTable();
@@ -283,6 +290,10 @@ public class PanelAlmacen extends JPanel {
 	            }
 	        }
 	    });
+	    JTableHeader header = tablaProductos.getTableHeader();
+	    header.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
+	    header.setForeground(Color.WHITE); // Color del texto blanco
+	    header.setFont(new Font("Segoe UI", Font.BOLD, 14));
 	    scrollPaneProductos.setViewportView(tablaProductos);
 	    almacenDao = new AlmacenDAO();
 	    cargarDatosProductos();
@@ -303,6 +314,8 @@ public class PanelAlmacen extends JPanel {
 	    }
 	}
 	private void inicializarComponentesServicios(JPanel panel) {
+		panel.setBackground(new Color(204, 229, 255)); // Un color azul claro para el fondo del panel
+	    panel.setOpaque(true);
 	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Cantidad Stock", "Precio Bruto"}, 0) {
 	        public boolean isCellEditable(int row, int column) {
 	            return false; // Hacer que la tabla no sea editable
@@ -311,8 +324,14 @@ public class PanelAlmacen extends JPanel {
 
 	    tablaServicios = new JTable(modeloTablaServicios);
 	    tablaServicios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    JTableHeader headerServicios = tablaServicios.getTableHeader();
+	    headerServicios.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
+	    headerServicios.setForeground(Color.WHITE); // Color de texto blanco
+	    headerServicios.setFont(new Font("Segoe UI", Font.BOLD, 14));
 	    JScrollPane scrollPaneServicios = new JScrollPane(tablaServicios);
 	    scrollPaneServicios.setBounds(0, 48, 1107, 578);
+	    scrollPaneServicios.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
+	    scrollPaneServicios.setBackground(new Color(200, 220, 255)); 
 	    panel.add(scrollPaneServicios);
 	    
 	    // Añadir MouseListener para doble clic
@@ -333,6 +352,8 @@ public class PanelAlmacen extends JPanel {
 	    cargarDatosServicios();
 	}
 	private void inicializarComponentesFarmacos(JPanel panel) {
+		 panel.setBackground(new Color(204, 229, 255)); // Un color azul claro para el fondo del panel
+		 panel.setOpaque(true);
 	    modeloTablaFarmacos = new DefaultTableModel(new Object[]{"Nombre", "Cantidad", "Fecha Caducidad", "Precio"}, 0) {
 	        public boolean isCellEditable(int row, int column) {
 	            return false; // Hacer que la tabla no sea editable
@@ -341,8 +362,14 @@ public class PanelAlmacen extends JPanel {
 
 	    tablaFarmacos = new JTable(modeloTablaFarmacos);
 	    tablaFarmacos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    JTableHeader headerFarmacos = tablaFarmacos.getTableHeader();
+	    headerFarmacos.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
+	    headerFarmacos.setForeground(Color.WHITE); // Color de texto blanco
+	    headerFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 14));
 	    JScrollPane scrollPaneFarmacos = new JScrollPane(tablaFarmacos);
 	    scrollPaneFarmacos.setBounds(0, 48, 1107, 578);
+	    scrollPaneFarmacos.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
+	    scrollPaneFarmacos.setBackground(new Color(200, 220, 255));
 	    panel.add(scrollPaneFarmacos);
 
 	    // Añadir MouseListener para doble clic
