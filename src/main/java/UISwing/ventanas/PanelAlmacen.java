@@ -30,7 +30,7 @@ import javax.swing.event.DocumentListener;
 import UISwing.ventanas.DialogoRegistroAlmacen;
 import javax.swing.table.TableModel;
 import javax.swing.SwingUtilities;
-
+import UISwing.ventanas.DialogoRegistroFarmaco;
 
 public class PanelAlmacen extends JPanel {
 
@@ -252,6 +252,11 @@ public class PanelAlmacen extends JPanel {
 	    JButton añadirFarmaco = new JButton("Añadir Farmaco");
 	    añadirFarmaco.setBounds(180, 10, 130, 23);
 	    gestionFarmacos.add(añadirFarmaco);
+	    añadirFarmaco.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            abrirDialogoRegistroFarmaco();
+	        }
+	    });
 
 	    // Resto de la configuración del PanelAlmacen...
 	    inicializarComponentesProductos(gestionProductos);
@@ -435,7 +440,11 @@ public class PanelAlmacen extends JPanel {
         dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialogo.setVisible(true);
     }
-
+    private void abrirDialogoRegistroFarmaco() {
+        DialogoRegistroFarmaco dialogo = new DialogoRegistroFarmaco();
+        dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialogo.setVisible(true);
+    }
     // Agregamos el método main para ejecutar y probar la interfaz
     public static void main(String[] args) {
         // Creamos el marco de la ventana principal
