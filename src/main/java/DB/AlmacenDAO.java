@@ -40,7 +40,7 @@ public class AlmacenDAO {
             }
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    almacen.setIdAlmacen(generatedKeys.getInt(1));
+                    almacen.setIdAlmacen(generatedKeys.getInt(1)); // Captura y asigna el ID generado
                 } else {
                     throw new SQLException("Creating almacen failed, no ID obtained.");
                 }
