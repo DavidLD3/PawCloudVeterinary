@@ -40,6 +40,55 @@ public class FarmacoDAO {
         return farmacos;
     }
     
+    public boolean insertarFarmaco(Farmaco farmaco) {
+        String sql = "INSERT INTO farmacos (codigo, nombre, descripcion, cantidad, dosis_recomendada, unidad_medida, fecha_caducidad, precio) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = Conexion.getConexion();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, farmaco.getCodigo());
+            statement.setString(2, farmaco.getNombre());
+            statement.setString(3, farmaco.getDescripcion());
+            statement.setInt(4, farmaco.getCantidad());
+            statement.setString(5, farmaco.getDosisRecomendada());
+            statement.setString(6, farmaco.getUnidadMedida());
+            statement.setDate(7, farmaco.getFechaCaducidad());
+            statement.setBigDecimal(8, farmaco.getPrecio());
+
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public Farmaco buscarFarmacoPorNombre(String nombre) throws SQLException {
+        String sql = "SELECT * FROM farmacos WHERE nombre = ?";
+        try (Connection connection = Conexion.getConexion();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nombre); // Setear el parámetro de la consulta SQL
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) { // Si se encuentra un registro
+                return new Farmaco(
+                    resultSet.getInt("id"),
+                    resultSet.getString("codigo"),
+                    resultSet.getString("nombre"),
+                    resultSet.getString("descripcion"),
+                    resultSet.getInt("cantidad"),
+                    resultSet.getString("dosis_recomendada"),
+                    resultSet.getString("unidad_medida"),
+                    resultSet.getDate("fecha_caducidad"),
+                    resultSet.getBigDecimal("precio")
+                );
+            }
+            return null; // Retorna null si no hay coincidencia
+        }
+    }
+    
     public boolean actualizarStockFarmaco(int idFarmaco, int cantidadUsada) {
         String sql = "UPDATE farmacos SET cantidad = cantidad - ? WHERE id = ?";
         try (Connection connection = Conexion.getConexion();
