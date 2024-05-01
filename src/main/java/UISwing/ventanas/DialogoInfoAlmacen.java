@@ -35,61 +35,52 @@ public class DialogoInfoAlmacen extends JDialog {
     /**
      * Create the dialog with Almacen data.
      */
+    /**
+     * Create the dialog with Almacen data.
+     */
     public DialogoInfoAlmacen(Frame owner, Almacen almacen) {
-    	  super(owner, "Detalles del Almacén", true); // true para modal	
-    	  this.almacen = almacen;
-          setBounds(100, 100, 650, 400);
-          getContentPane().setLayout(new BorderLayout());
-          contentPanel.setLayout(new GridLayout(0, 2));  // Usar GridLayout para un formato ordenado
-          contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-          getContentPane().add(contentPanel, BorderLayout.CENTER);
+        super(owner, "Detalles del Almacén", true);
+        this.almacen = almacen;
+        setBounds(100, 100, 650, 400);
+        getContentPane().setLayout(new BorderLayout());
+        contentPanel.setLayout(new GridLayout(0, 2));  // Usar GridLayout para un formato ordenado
+        contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
 
-          // Inicializar campos de texto y añadirlos al panel
-          txtNombreProducto = addLabelAndTextField("Nombre del Producto:", almacen.getNombreProducto());
-          txtCategoria = addLabelAndTextField("Categoría:", almacen.getCategoria().toString());
-          txtDescripcion = addLabelAndTextField("Descripción:", almacen.getDescripcion());
-          txtCantidadStock = addLabelAndTextField("Cantidad en Stock:", String.valueOf(almacen.getCantidadStock()));
-          txtPrecioBruto = addLabelAndTextField("Precio Bruto:", almacen.getPrecioBruto().toString());
-          txtProveedor = addLabelAndTextField("Proveedor:", almacen.getProveedor());
-          txtFechaUltimaCompra = addLabelAndTextField("Fecha Última Compra:", almacen.getFechaUltimaCompra().toString());
-          txtNumeroLote = addLabelAndTextField("Número de Lote:", almacen.getNumeroLote());
-          txtFechaCaducidad = addLabelAndTextField("Fecha de Caducidad:", almacen.getFechaCaducidad().toString());
-          txtCodigoBarras = addLabelAndTextField("Código de Barras:", almacen.getCodigoBarras());
-          txtObservaciones = addLabelAndTextField("Observaciones:", almacen.getObservaciones());
-
+        // Inicializar campos de texto y añadirlos al panel
+        txtNombreProducto = addLabelAndTextField("Nombre del Producto:", almacen.getNombreProducto());
+        txtCategoria = addLabelAndTextField("Categoría:", almacen.getCategoria().toString());
+        txtDescripcion = addLabelAndTextField("Descripción:", almacen.getDescripcion());
+        txtCantidadStock = addLabelAndTextField("Cantidad en Stock:", String.valueOf(almacen.getCantidadStock()));
+        txtPrecioBruto = addLabelAndTextField("Precio Bruto:", almacen.getPrecioBruto().toString());
+        txtProveedor = addLabelAndTextField("Proveedor:", almacen.getProveedor());
+        txtFechaUltimaCompra = addLabelAndTextField("Fecha Última Compra:", almacen.getFechaUltimaCompra().toString());
+        txtNumeroLote = addLabelAndTextField("Número de Lote:", almacen.getNumeroLote());
+        txtFechaCaducidad = addLabelAndTextField("Fecha de Caducidad:", almacen.getFechaCaducidad().toString());
+        txtCodigoBarras = addLabelAndTextField("Código de Barras:", almacen.getCodigoBarras());
+        txtObservaciones = addLabelAndTextField("Observaciones:", almacen.getObservaciones());
 
         // Configuración de los botones
-       // Panel con dos FlowLayout para alinear correctamente los botones
-          JPanel buttonPane = new JPanel(new BorderLayout());
-          JPanel leftPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
-          JPanel rightPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel buttonPane = new JPanel(new BorderLayout());
+        JPanel leftPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel rightPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-          // Botón para eliminar
-          JButton deleteButton = new JButton("Eliminar");
-          deleteButton.addActionListener(e -> eliminarAlmacen());
-          leftPane.add(deleteButton);
+        // Botón para eliminar
+        JButton deleteButton = new JButton("Eliminar");
+        deleteButton.addActionListener(e -> eliminarAlmacen());
+        leftPane.add(deleteButton);
 
-          // Botón para habilitar la edición
-          JButton editButton = new JButton("Editar");
-          editButton.addActionListener(e -> habilitarEdicion(true));
-          rightPane.add(editButton);
+        // Botón para cerrar
+        JButton closeButton = new JButton("Cerrar");
+        closeButton.addActionListener(e -> dispose());
+        rightPane.add(closeButton);
 
-          // Botón para guardar los cambios
-          saveButton = new JButton("Guardar");
-          saveButton.setEnabled(false); // Desactivado hasta que se presione "Editar"
-          saveButton.addActionListener(e -> guardarCambios());
-          rightPane.add(saveButton);
+        buttonPane.add(leftPane, BorderLayout.WEST);
+        buttonPane.add(rightPane, BorderLayout.EAST);
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-          JButton closeButton = new JButton("Cerrar");
-          closeButton.addActionListener(e -> dispose());
-          rightPane.add(closeButton);
-
-          buttonPane.add(leftPane, BorderLayout.WEST);
-          buttonPane.add(rightPane, BorderLayout.EAST);
-          getContentPane().add(buttonPane, BorderLayout.SOUTH);
-
-          setLocationRelativeTo(owner);
-      }
+        setLocationRelativeTo(owner);
+    }
    
     /**
      * Helper method to add labels and text fields to the panel.
@@ -104,18 +95,17 @@ public class DialogoInfoAlmacen extends JDialog {
         return textField;
     }
     
+    
     private void eliminarAlmacen() {
         if (almacen != null) {
-            // Mostrar el cuadro de diálogo de confirmación
             int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este almacén?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
 
-            // Proceder con la eliminación si el usuario confirma
             if (confirmacion == JOptionPane.YES_OPTION) {
                 AlmacenDAO almacenDAO = new AlmacenDAO();
                 try {
                     almacenDAO.eliminarAlmacen(almacen.getIdAlmacen());
                     JOptionPane.showMessageDialog(this, "Almacén eliminado con éxito.", "Eliminar", JOptionPane.INFORMATION_MESSAGE);
-                    dispose(); // Cierra el diálogo después de eliminar
+                    dispose();
                 } catch (SQLException e) {
                     JOptionPane.showMessageDialog(this, "Error al eliminar el almacén: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -124,45 +114,7 @@ public class DialogoInfoAlmacen extends JDialog {
             JOptionPane.showMessageDialog(this, "No se encontró el almacén para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    private void habilitarEdicion(boolean editable) {
-        txtNombreProducto.setEditable(editable);
-        txtCategoria.setEditable(editable);
-        txtDescripcion.setEditable(editable);
-        txtCantidadStock.setEditable(editable);
-        txtPrecioBruto.setEditable(editable);
-        txtProveedor.setEditable(editable);
-        txtFechaUltimaCompra.setEditable(editable);
-        txtNumeroLote.setEditable(editable);
-        txtFechaCaducidad.setEditable(editable);
-        txtCodigoBarras.setEditable(editable);
-        txtObservaciones.setEditable(editable);
-        saveButton.setEnabled(editable); // Habilitar el botón de guardar
-    }
-    private void guardarCambios() {
-        try {
-            // Actualizar los datos del almacen desde los campos de texto
-            almacen.setNombreProducto(txtNombreProducto.getText());
-            almacen.setCategoria(Almacen.Categoria.valueOf(txtCategoria.getText()));
-            almacen.setDescripcion(txtDescripcion.getText());
-            almacen.setCantidadStock(Integer.parseInt(txtCantidadStock.getText()));
-            almacen.setPrecioBruto(new BigDecimal(txtPrecioBruto.getText()));
-            almacen.setProveedor(txtProveedor.getText());
-            almacen.setFechaUltimaCompra(LocalDate.parse(txtFechaUltimaCompra.getText()));
-            almacen.setNumeroLote(txtNumeroLote.getText());
-            almacen.setFechaCaducidad(LocalDate.parse(txtFechaCaducidad.getText()));
-            almacen.setCodigoBarras(txtCodigoBarras.getText());
-            almacen.setObservaciones(txtObservaciones.getText());
-
-            // Guardar cambios en la base de datos
-            AlmacenDAO almacenDAO = new AlmacenDAO();
-            almacenDAO.actualizarAlmacen(almacen);
-
-            JOptionPane.showMessageDialog(this, "Almacén actualizado con éxito.", "Guardar", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Cierra el diálogo después de guardar
-        } catch (SQLException | IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, "Error al actualizar el almacén: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    
     /**
      * Launch the dialog for testing.
      */
