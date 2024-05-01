@@ -40,6 +40,30 @@ public class FarmacoDAO {
         return farmacos;
     }
     
+    public boolean insertarFarmaco(Farmaco farmaco) {
+        String sql = "INSERT INTO farmacos (codigo, nombre, descripcion, cantidad, dosis_recomendada, unidad_medida, fecha_caducidad, precio) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = Conexion.getConexion();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, farmaco.getCodigo());
+            statement.setString(2, farmaco.getNombre());
+            statement.setString(3, farmaco.getDescripcion());
+            statement.setInt(4, farmaco.getCantidad());
+            statement.setString(5, farmaco.getDosisRecomendada());
+            statement.setString(6, farmaco.getUnidadMedida());
+            statement.setDate(7, farmaco.getFechaCaducidad());
+            statement.setBigDecimal(8, farmaco.getPrecio());
+
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     public boolean actualizarStockFarmaco(int idFarmaco, int cantidadUsada) {
         String sql = "UPDATE farmacos SET cantidad = cantidad - ? WHERE id = ?";
         try (Connection connection = Conexion.getConexion();
