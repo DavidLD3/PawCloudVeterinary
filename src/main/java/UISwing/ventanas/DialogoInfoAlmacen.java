@@ -3,10 +3,11 @@ package UISwing.ventanas;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-
+import DB.AlmacenDAO;
 
 import java.awt.*;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import model.Almacen;  // Asegúrate de importar tu clase Almacen
@@ -15,13 +16,14 @@ public class DialogoInfoAlmacen extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
-
+    private Almacen almacen;
 
     /**
      * Create the dialog with Almacen data.
      */
     public DialogoInfoAlmacen(Frame owner, Almacen almacen) {
-    	  super(owner, "Detalles del Almacén", true); // true para modal
+    	  super(owner, "Detalles del Almacén", true); // true para modal	
+    	  this.almacen = almacen;
           setBounds(100, 100, 650, 400);
           getContentPane().setLayout(new BorderLayout());
           contentPanel.setLayout(new GridLayout(0, 2));  // Usar GridLayout para un formato ordenado
@@ -50,6 +52,11 @@ public class DialogoInfoAlmacen extends JDialog {
             JButton closeButton = new JButton("Cerrar");
             closeButton.addActionListener(e -> dispose());
             buttonPane.add(closeButton);        
+            
+         // Botón Eliminar
+            JButton deleteButton = new JButton("Eliminar");
+            deleteButton.addActionListener(e -> eliminarAlmacen());
+            buttonPane.add(deleteButton);
         }
         setLocationRelativeTo(owner);  // Asegura que el diálogo se centre respecto al frame pasado como 'owner'
     }
@@ -63,6 +70,21 @@ public class DialogoInfoAlmacen extends JDialog {
         textField.setEditable(false);
         contentPanel.add(jLabel);
         contentPanel.add(textField);
+    }
+    private void eliminarAlmacen() {
+        if (almacen != null) {
+            int idAlmacen = almacen.getIdAlmacen();
+            AlmacenDAO almacenDAO = new AlmacenDAO();
+            try {
+                almacenDAO.eliminarAlmacen(idAlmacen);
+                JOptionPane.showMessageDialog(this, "Almacén eliminado con éxito.", "Eliminar", JOptionPane.INFORMATION_MESSAGE);
+                dispose(); // Cierra el diálogo después de eliminar
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el almacén: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontró el almacén para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
