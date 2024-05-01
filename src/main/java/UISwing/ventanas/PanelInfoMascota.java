@@ -261,6 +261,10 @@ public class PanelInfoMascota extends JPanel {
         }
         // Pasa el ID de la mascota al constructor del diálogo
         DialogoHistorialMedico dialogo = new DialogoHistorialMedico((Frame) SwingUtilities.getWindowAncestor(this), true, mascota.getId(), registro);
+
+        // Centrando el diálogo
+        dialogo.setLocationRelativeTo((Frame) SwingUtilities.getWindowAncestor(this));
+
         dialogo.setVisible(true);
         if (dialogo.isConfirmado()) {
             cargarDatosHistorialMedico((DefaultTableModel) tablaHistorial.getModel(), tablaHistorial);
