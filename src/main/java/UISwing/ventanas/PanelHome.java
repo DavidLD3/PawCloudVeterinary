@@ -26,7 +26,7 @@ import model.UsoFarmaco;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PanelHome extends JPanel implements CitaActualizadaListener {
+public class PanelHome extends JPanel implements CitaActualizadaListener, HospitalizacionActualizadaListener  {
 	
 	private JPanel panelDatos;
 	private JLabel lblHoraCita;
@@ -403,6 +403,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         btnAñadirHospita.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 VentanaHospitalizadosDialog dialog = new VentanaHospitalizadosDialog(null, true);
+                dialog.addHospitalizacionActualizadaListener(PanelHome.this);
                 dialog.setTitle("Añadir Cita");
                 dialog.setLocationRelativeTo(null);
                 dialog.setVisible(true);
@@ -733,7 +734,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
                 lblMascotaHospitalizacion_2.setText(mascotaSegunda.getNombre());
                 lblClienteHospitalizacion_2.setText(clienteSegunda.getNombre() + " " + clienteSegunda.getApellidos());
             }
-        }
+        }	
     }
     public void actualizarCitasPendientes() {
         mostrarCitasProximas();
@@ -744,6 +745,11 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         mostrarCitasProximas();
         // Cualquier otra actualización de UI necesaria
     }
+    @Override
+    public void onHospitalizacionActualizada() {
+        mostrarHospitalizacionesRecientes(); // Actualiza la UI con los nuevos datos
+    }
+    
   
 
 }

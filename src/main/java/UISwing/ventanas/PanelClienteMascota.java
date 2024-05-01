@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -17,6 +19,8 @@ import DB.MascotaDAO;
 import model.Mascota;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import UISwing.recursos.RoundedPanel;
+import UISwing.recursos.CustomPanelOpaco;
 
 public class PanelClienteMascota extends JPanel {
 
@@ -34,33 +38,26 @@ public class PanelClienteMascota extends JPanel {
      * Create the panel.
      */
     public PanelClienteMascota() {
-        setLayout(null);
+    	  setLayout(new BorderLayout());  // Cambio aquí para usar BorderLayout
+          setBackground(new Color(255, 255, 255, 0));  // Transparente
 
-        clienteDao = new ClienteDAO(); // clase para la gestión de la base de datos
-        mascotaDAO = new MascotaDAO(); 
-        
-        JPanel panel = new JPanel();
-        panel.setBounds(0, -11, 1112, 664);
-        add(panel);
-        panel.setLayout(null);
+          clienteDao = new ClienteDAO();
+          mascotaDAO = new MascotaDAO();
 
-        JButton btnExportar = new JButton("Exportar");
-        btnExportar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnExportar.setBounds(875, 42, 89, 23);
-        btnExportar.setBackground(Color.WHITE); // Establece el color de fondo del botón a blanco
-        btnExportar.setForeground(Color.BLUE);  // Establece el color de la letra del botón a azul
-        panel.add(btnExportar);
+          RoundedPanel roundedBackground = new RoundedPanel(20);
+          roundedBackground.setLayout(new BorderLayout());  // Usando BorderLayout en el panel redondeado
+          roundedBackground.setBackground(Color.decode("#577BD1"));
+          roundedBackground.setOpaque(false);
+          add(roundedBackground, BorderLayout.CENTER);  // Asegurándose de que ocupe todo el espacio disponible
 
-        JButton btnImportar = new JButton("Importar");
-        btnImportar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnImportar.setBounds(764, 42, 89, 23);
-        btnImportar.setBackground(Color.WHITE); // Establece el color de fondo del botón a blanco
-        btnImportar.setForeground(Color.BLUE);  // Establece el color de la letra del botón a azul
-        panel.add(btnImportar);
+          JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+          panel.setLayout(null);  // Layout null para un posicionamiento absoluto de los componentes
+          panel.setOpaque(false);
+          roundedBackground.add(panel, BorderLayout.CENTER);
 
-        JButton btnAnadir = new JButton("Añadir");
+        JButton btnAnadir = new JButton("Registrar Cliente");
         btnAnadir.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAnadir.setBounds(186, 42, 89, 23);
+        btnAnadir.setBounds(336, 44, 144, 30);
         btnAnadir.setBackground(Color.WHITE);
         btnAnadir.setForeground(Color.decode("#0057FF"));
         btnAnadir.setFocusPainted(false);
@@ -102,7 +99,7 @@ public class PanelClienteMascota extends JPanel {
 
         txtBuscarClientemascota = new JTextField("Buscar mascota"); // Crea un JTextField con texto predeterminado
         txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establece la fuente del texto
-        txtBuscarClientemascota.setBounds(569, 43, 161, 20); // Establece la posición y el tamaño del campo de texto
+        txtBuscarClientemascota.setBounds(579, 43, 235, 30); // Establece la posición y el tamaño del campo de texto
 
         // Agrega un MouseListener para detectar clics en el campo de texto
         txtBuscarClientemascota.addMouseListener(new MouseAdapter() {
@@ -153,7 +150,7 @@ public class PanelClienteMascota extends JPanel {
 
         txtBuscarCliente = new JTextField("Buscar cliente"); 			// Creamos un JTextField con texto predeterminado
         txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establecemos la fuente del texto
-        txtBuscarCliente.setBounds(10, 43, 166, 20);					// Establecemos la posición y el tamaño del campo de texto
+        txtBuscarCliente.setBounds(10, 43, 235, 30);					// Establecemos la posición y el tamaño del campo de texto
      // Agregamos un MouseListener para detectar clics en el campo de texto
         txtBuscarCliente.addMouseListener(new MouseAdapter() {
             @Override
@@ -258,8 +255,9 @@ public class PanelClienteMascota extends JPanel {
         panel.add(scrollPaneClientes); // Asegúrate de agregarlo al panel adecuado
 
         JScrollPane scrollPaneMascotas = new JScrollPane(); // Nuevo JScrollPane para mascotas
-        scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajusta las dimensiones según necesites
+        scrollPaneMascotas.setBounds(579, 105, 518, 537); // Ajusta las dimensiones según necesites
         panel.add(scrollPaneMascotas);
+        setPreferredSize(new Dimension(1112, 674)); 
     }
 
     private void inicializarComponentesClientes(JPanel panel) {
@@ -272,6 +270,7 @@ public class PanelClienteMascota extends JPanel {
         };
 
         tablaClientes = new JTable(modeloTablaClientes);
+        personalizarTabla(tablaClientes);
         tablaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaClientes.addMouseListener(new MouseAdapter() {
             @Override
@@ -303,6 +302,7 @@ public class PanelClienteMascota extends JPanel {
     	};
 
         tablaMascotas = new JTable(modeloTablaMascotas);
+        personalizarTabla(tablaMascotas); 
         tablaMascotas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaMascotas.addMouseListener(new MouseAdapter() {
             @Override
@@ -318,7 +318,7 @@ public class PanelClienteMascota extends JPanel {
         });
 
         JScrollPane scrollPaneMascotas = new JScrollPane(tablaMascotas);
-        scrollPaneMascotas.setBounds(569, 105, 518, 537); // Ajustamos las dimensiones según necesitamos
+        scrollPaneMascotas.setBounds(579, 105, 518, 537); // Ajustamos las dimensiones según necesitamos
         panel.add(scrollPaneMascotas);
         panel.add(scrollPaneMascotas);
 
@@ -399,9 +399,38 @@ public class PanelClienteMascota extends JPanel {
 
             PanelClienteMascota panel = new PanelClienteMascota();
             frame.getContentPane().add(panel);
-            frame.setSize(800, 600); // Ajustamos el tamaño según necesitamos
+            frame.pack();  // Usar pack para respetar las dimensiones preferidas
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
     }
+    private void configurarEstiloTablas() {
+        // Configura el estilo del encabezado de la tabla
+        UIManager.put("TableHeader.background", new Color(75, 110, 175));  // Color de fondo
+        UIManager.put("TableHeader.foreground", Color.WHITE);  // Color de texto
+        UIManager.put("TableHeader.font", new Font("Segoe UI", Font.BOLD, 14));  // Fuente
+
+        // Configura el estilo de las celdas de la tabla
+        UIManager.put("Table.background", new Color(245, 245, 245));  // Color de fondo de las celdas
+        UIManager.put("Table.foreground", Color.BLACK);  // Color del texto
+        UIManager.put("Table.font", new Font("Segoe UI", Font.PLAIN, 14));  // Fuente
+        UIManager.put("Table.selectionBackground", new Color(183, 207, 237));  // Fondo al seleccionar
+        UIManager.put("Table.selectionForeground", Color.DARK_GRAY);  // Texto al seleccionar
+        UIManager.put("Table.gridColor", new Color(200, 200, 200));  // Color de la rejilla
+    }
+    private void personalizarTabla(JTable table) {
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));  // Establece la fuente de las celdas
+        table.setRowHeight(22);  // Establece la altura de las filas
+        table.setBackground(new Color(245, 245, 245));  // Color de fondo de las celdas
+        table.setForeground(Color.BLACK);  // Color del texto de las celdas
+        table.setSelectionBackground(new Color(183, 207, 237));  // Fondo al seleccionar
+        table.setSelectionForeground(Color.DARK_GRAY);  // Texto al seleccionar
+        table.setGridColor(new Color(200, 200, 200));  // Color de la rejilla
+
+        JTableHeader header = table.getTableHeader();
+        header.setBackground(new Color(75, 110, 175));  // Color de fondo del encabezado
+        header.setForeground(Color.WHITE);  // Color de texto del encabezado
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));  // Fuente del encabezado
+    }
+    
 }

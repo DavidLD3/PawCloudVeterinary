@@ -47,7 +47,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	private HospitalizacionDAO hospitalizacionDAO;
 	private FarmacoDAO farmacoDAO;
 	private JComboBox<Veterinario> comboBoxVeterinarios;
-
+	private List<HospitalizacionActualizadaListener> listeners = new ArrayList<>();
     
 	 public VentanaHospitalizadosDialog(Frame owner, boolean modal ) {
 	        super(owner, modal);
@@ -359,6 +359,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 
 		        boolean resultadoInsertar = hospitalizacionDAO.insertarHospitalizacion(hospitalizacion, idVeterinarioSeleccionado);
 		        if (resultadoInsertar) {
+		        	notifyHospitalizacionActualizada(); 
 		            JOptionPane.showMessageDialog(this, "Hospitalización guardada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		            dispose();
 		        } else {
@@ -431,6 +432,14 @@ public class VentanaHospitalizadosDialog extends JDialog {
 		        }
 		    }.execute();
 		}
+	  public void addHospitalizacionActualizadaListener(HospitalizacionActualizadaListener listener) {
+	        listeners.add(listener);
+	    }
+	  private void notifyHospitalizacionActualizada() {
+	        for (HospitalizacionActualizadaListener listener : listeners) {
+	            listener.onHospitalizacionActualizada();
+	        }
+	    }
 
 
 

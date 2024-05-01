@@ -18,7 +18,7 @@ public class PanelVentas extends JPanel {
 
         RoundedPanel panelVentas = new RoundedPanel(20);
         panelVentas.setBackground(Color.decode("#577BD1"));
-        panelVentas.setBounds(20, 20, 1081, 610); // Ajusta la posición y tamaño según necesites
+        panelVentas.setBounds(0, 0, 1112, 653); // Ajusta la posición y tamaño según necesites
         panelVentas.setLayout(null);
         add(panelVentas);
 
