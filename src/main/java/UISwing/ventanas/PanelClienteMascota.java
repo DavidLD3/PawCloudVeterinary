@@ -98,7 +98,7 @@ public class PanelClienteMascota extends JPanel {
             }
         });
 
-        txtBuscarClientemascota = new JTextField("Buscar mascota"); // Crea un JTextField con texto predeterminado
+        txtBuscarClientemascota = new JTextField("Escribe el nombre de la mascota"); // Crea un JTextField con texto predeterminado
         txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establece la fuente del texto
         txtBuscarClientemascota.setBounds(579, 43, 235, 30); // Establece la posición y el tamaño del campo de texto
 
@@ -107,7 +107,7 @@ public class PanelClienteMascota extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Verificar si el texto actual es igual al mensaje predeterminado
-                if (txtBuscarClientemascota.getText().equals("Buscar mascota")) {
+                if (txtBuscarClientemascota.getText().equals("Escribe el nombre de la mascota")) {
                     txtBuscarClientemascota.setText(""); // Borra el texto solo si es el mensaje predeterminado
                 }
             }
@@ -118,7 +118,7 @@ public class PanelClienteMascota extends JPanel {
             @Override
             public void focusLost(FocusEvent e) {
                 if (txtBuscarClientemascota.getText().isEmpty()) {
-                    txtBuscarClientemascota.setText("Buscar mascota");
+                    txtBuscarClientemascota.setText("Escribe el nombre de la mascota");
                     cargarDatosMascotas();  // Método para cargar todos los datos de las mascotas
                 }
             }
@@ -149,7 +149,7 @@ public class PanelClienteMascota extends JPanel {
         });
         panel.add(txtBuscarClientemascota); // Agrega el campo de texto al panel
 
-        txtBuscarCliente = new JTextField("Buscar cliente"); 			// Creamos un JTextField con texto predeterminado
+        txtBuscarCliente = new JTextField("Escribe el nombre del cliente"); 			// Creamos un JTextField con texto predeterminado
         txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establecemos la fuente del texto
         txtBuscarCliente.setBounds(10, 43, 235, 30);					// Establecemos la posición y el tamaño del campo de texto
      // Agregamos un MouseListener para detectar clics en el campo de texto
@@ -157,7 +157,7 @@ public class PanelClienteMascota extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Verificar si el texto actual es igual al mensaje predeterminado
-                if (txtBuscarCliente.getText().equals("Buscar cliente")) {
+                if (txtBuscarCliente.getText().equals("Escribe el nombre del cliente")) {
                     txtBuscarCliente.setText(""); // Borra el texto solo si es el mensaje predeterminado
                 }
             }
@@ -167,7 +167,7 @@ public class PanelClienteMascota extends JPanel {
             @Override
             public void focusLost(FocusEvent e) {
                 if (txtBuscarCliente.getText().isEmpty()) { 	 // Comprueba si el campo de texto está vacío
-                    txtBuscarCliente.setText("Buscar cliente");	 // Restablece el texto predeterminado si está vacío
+                    txtBuscarCliente.setText("Escribe el nombre del cliente");	 // Restablece el texto predeterminado si está vacío
                     cargarDatosClientes(); //Metodo para cargar los datos de los cientes
                 }
             }
