@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.sql.Date;
+import UISwing.recursos.RoundedPanel;
 
 import com.toedter.calendar.JDateChooser;
 import DB.FarmacoDAO;
@@ -16,18 +17,34 @@ public class DialogoRegistroFarmaco extends JDialog {
     private JDateChooser tfFechaCaducidad;
 
     public DialogoRegistroFarmaco() {
+    	setUndecorated(true);
         setTitle("Registro de Fármacos");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 600, 400);
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(crearPanelCentral(), BorderLayout.CENTER);
-        getContentPane().add(crearPanelBotones(), BorderLayout.SOUTH);
+        setBackground(new Color(0, 0, 0, 0));
+
+        RoundedPanel roundedBackground = new RoundedPanel(20);
+        roundedBackground.setLayout(new BorderLayout());
+        roundedBackground.setBackground(Color.decode("#577BD1"));
+        roundedBackground.setOpaque(false);
+
+        setContentPane(roundedBackground);
+
+        JPanel centralPanel = crearPanelCentral();
+        centralPanel.setOpaque(false);
+        getContentPane().add(centralPanel, BorderLayout.CENTER);
+
+        JPanel buttonPanel = crearPanelBotones();
+        buttonPanel.setOpaque(false);
+        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+
         setLocationRelativeTo(null);
     }
 
     private JPanel crearPanelCentral() {
         JPanel panel = new JPanel(new GridLayout(0, 2, 10, 10));
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.setOpaque(false); 
 
         tfCodigo = new JTextField();
         tfNombre = new JTextField();
@@ -38,28 +55,68 @@ public class DialogoRegistroFarmaco extends JDialog {
         tfPrecio = new JTextField();
         tfFechaCaducidad = new JDateChooser();
 
-        panel.add(new JLabel("Código:"));
+        JLabel lblCodigo = new JLabel("Código:");
+        lblCodigo.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblCodigo.setForeground(Color.WHITE);
+
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblNombre.setForeground(Color.WHITE);
+
+        JLabel lblDescripcion = new JLabel("Descripción:");
+        lblDescripcion.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblDescripcion.setForeground(Color.WHITE);
+
+        JLabel lblCantidad = new JLabel("Cantidad:");
+        lblCantidad.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblCantidad.setForeground(Color.WHITE);
+
+        JLabel lblDosisRecomendada = new JLabel("Dosis Recomendada:");
+        lblDosisRecomendada.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblDosisRecomendada.setForeground(Color.WHITE);
+
+        JLabel lblUnidadMedida = new JLabel("Unidad de Medida:");
+        lblUnidadMedida.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblUnidadMedida.setForeground(Color.WHITE);
+
+        JLabel lblPrecio = new JLabel("Precio:");
+        lblPrecio.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblPrecio.setForeground(Color.WHITE);
+
+        JLabel lblFechaCaducidad = new JLabel("Fecha de Caducidad:");
+        lblFechaCaducidad.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblFechaCaducidad.setForeground(Color.WHITE);
+
+        panel.add(lblCodigo);
         panel.add(tfCodigo);
-        panel.add(new JLabel("Nombre:"));
+        panel.add(lblNombre);
         panel.add(tfNombre);
-        panel.add(new JLabel("Descripción:"));
+        panel.add(lblDescripcion);
         panel.add(tfDescripcion);
-        panel.add(new JLabel("Cantidad:"));
+        panel.add(lblCantidad);
         panel.add(tfCantidad);
-        panel.add(new JLabel("Dosis Recomendada:"));
+        panel.add(lblDosisRecomendada);
         panel.add(tfDosisRecomendada);
-        panel.add(new JLabel("Unidad de Medida:"));
+        panel.add(lblUnidadMedida);
         panel.add(tfUnidadMedida);
-        panel.add(new JLabel("Precio:"));
+        panel.add(lblPrecio);
         panel.add(tfPrecio);
-        panel.add(new JLabel("Fecha de Caducidad:"));
+        panel.add(lblFechaCaducidad);
         panel.add(tfFechaCaducidad);
 
         return panel;
     }
 
     private JPanel crearPanelBotones() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.decode("#577BD1"));  // Fondo azul para el panel completo
+        panel.setOpaque(true);
+
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 40, 15));
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 15));
+
+        rightPanel.setOpaque(false);  // Asegurar transparencia para ver el fondo azul
+        leftPanel.setOpaque(false);
 
         JButton btnGuardar = new JButton("Guardar");
         JButton btnLimpiar = new JButton("Limpiar");
@@ -69,11 +126,44 @@ public class DialogoRegistroFarmaco extends JDialog {
         btnLimpiar.addActionListener(e -> limpiarCampos());
         btnCerrar.addActionListener(e -> dispose());
 
-        panel.add(btnGuardar);
-        panel.add(btnLimpiar);
-        panel.add(btnCerrar);
+        personalizarBoton(btnGuardar);
+        personalizarBoton(btnLimpiar);
+        personalizarBoton(btnCerrar);
+
+        rightPanel.add(btnGuardar);  // Cambio de orden: Guardar junto a Limpiar
+        rightPanel.add(btnLimpiar);
+        leftPanel.add(btnCerrar);
+
+        panel.add(leftPanel, BorderLayout.WEST);
+        panel.add(rightPanel, BorderLayout.EAST);
 
         return panel;
+    }
+    
+
+
+    private void personalizarBoton(JButton button) {
+        button.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        button.setBackground(Color.WHITE);
+        button.setForeground(Color.decode("#0057FF"));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);  // Necesario para ver el color de fondo
+        button.setRolloverEnabled(true);
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(Color.decode("#003366"));  // Cambio a azul oscuro cuando el ratón está encima
+                button.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(Color.WHITE);  // Restaurar a blanco cuando el ratón se aleja
+                button.setForeground(Color.decode("#0057FF"));
+            }
+        });
     }
 
     private void guardarDatos(ActionEvent e) {

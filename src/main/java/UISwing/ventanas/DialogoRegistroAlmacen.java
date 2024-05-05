@@ -12,81 +12,124 @@ import com.toedter.calendar.JDateChooser;
 import DB.AlmacenDAO;
 import model.Almacen;
 import model.Almacen.Categoria;
+import UISwing.recursos.RoundedPanel; // Asegúrate de que esta ruta sea correcta
 
 public class DialogoRegistroAlmacen extends JDialog {
-    private JTextField tfRnombre, tfRcategoria, tfRN_Lote, tfRcantidad, tfRproveedor, tfRCodigo_Barras, tfRprecio_Bruto, tfRobservaciones, tfRdescripcion;
+    private JTextField tfRnombre, tfRN_Lote, tfRcantidad, tfRproveedor, tfRCodigo_Barras, tfRprecio_Bruto, tfRobservaciones, tfRdescripcion;
     private JDateChooser tfRfechaUltCompra, tfrfecha_Caducidad;
     private JComboBox<Categoria> cbCategoria;
-    
+
     public DialogoRegistroAlmacen() {
+        setUndecorated(true); // Quitar decoración estándar, incluyendo marcos y botones de título
         setTitle("Registro en Almacén");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 600, 400);
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(crearPanelCentral(), BorderLayout.CENTER);
-        getContentPane().add(crearPanelBotones(), BorderLayout.SOUTH);
+        setBackground(new Color(0, 0, 0, 0)); // Hacer el fondo del diálogo transparente
+
+        RoundedPanel roundedBackground = new RoundedPanel(20);
+        roundedBackground.setLayout(new BorderLayout());
+        roundedBackground.setBackground(Color.decode("#577BD1"));
+        roundedBackground.setOpaque(false);
+
+        setContentPane(roundedBackground); // Usar RoundedPanel como el panel de contenido
+
+        JPanel centralPanel = crearPanelCentral();
+        centralPanel.setOpaque(false);
+        getContentPane().add(centralPanel, BorderLayout.CENTER);
+
+        JPanel buttonPanel = crearPanelBotones();
+        buttonPanel.setOpaque(false);
+        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+
         setLocationRelativeTo(null);
     }
 
     private JPanel crearPanelCentral() {
         JPanel panel = new JPanel(new GridLayout(0, 2, 10, 10));
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.setOpaque(false);
 
-        tfRnombre = new JTextField();
-        cbCategoria = new JComboBox<>(Categoria.values());  // Llenar el JComboBox con los valores del enum Categoria
-        tfRN_Lote = new JTextField();
-        tfRcantidad = new JTextField();
-        tfRproveedor = new JTextField();
-        tfRCodigo_Barras = new JTextField();
-        tfRprecio_Bruto = new JTextField();
-        tfRobservaciones = new JTextField();
-        tfRdescripcion = new JTextField();
-        tfRfechaUltCompra = new JDateChooser();
-        tfrfecha_Caducidad = new JDateChooser();
-
-        panel.add(new JLabel("Nombre:"));
-        panel.add(tfRnombre);
-        panel.add(new JLabel("Categoría:"));
-        panel.add(cbCategoria);
-        panel.add(new JLabel("Descripción:"));
-        panel.add(tfRdescripcion);
-        panel.add(new JLabel("Fecha de Compra:"));
-        panel.add(tfRfechaUltCompra);
-        panel.add(new JLabel("Número Lote:"));
-        panel.add(tfRN_Lote);
-        panel.add(new JLabel("Cantidad:"));
-        panel.add(tfRcantidad);
-        panel.add(new JLabel("Fecha Caducidad:"));
-        panel.add(tfrfecha_Caducidad);
-        panel.add(new JLabel("Proveedor:"));
-        panel.add(tfRproveedor);
-        panel.add(new JLabel("Código de Barras:"));
-        panel.add(tfRCodigo_Barras);
-        panel.add(new JLabel("Precio Bruto:"));
-        panel.add(tfRprecio_Bruto);
-        panel.add(new JLabel("Observaciones:"));
-        panel.add(tfRobservaciones);
+        // Añadir campos y configurar estilos
+        añadirCampoConEtiqueta(panel, "Nombre:", tfRnombre = new JTextField());
+        añadirCampoConEtiqueta(panel, "Categoría:", cbCategoria = new JComboBox<>(Categoria.values()));
+        añadirCampoConEtiqueta(panel, "Descripción:", tfRdescripcion = new JTextField());
+        añadirCampoConEtiqueta(panel, "Fecha de Compra:", tfRfechaUltCompra = new JDateChooser());
+        añadirCampoConEtiqueta(panel, "Número Lote:", tfRN_Lote = new JTextField());
+        añadirCampoConEtiqueta(panel, "Cantidad:", tfRcantidad = new JTextField());
+        añadirCampoConEtiqueta(panel, "Fecha Caducidad:", tfrfecha_Caducidad = new JDateChooser());
+        añadirCampoConEtiqueta(panel, "Proveedor:", tfRproveedor = new JTextField());
+        añadirCampoConEtiqueta(panel, "Código de Barras:", tfRCodigo_Barras = new JTextField());
+        añadirCampoConEtiqueta(panel, "Precio Bruto:", tfRprecio_Bruto = new JTextField());
+        añadirCampoConEtiqueta(panel, "Observaciones:", tfRobservaciones = new JTextField());
 
         return panel;
+    }
+
+    private void añadirCampoConEtiqueta(JPanel panel, String labelText, Component field) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        label.setForeground(Color.WHITE);
+        panel.add(label);
+        panel.add(field);
     }
 
     private JPanel crearPanelBotones() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.decode("#577BD1"));  // Fondo azul para el panel completo
+        panel.setOpaque(true);
+
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 40, 15));
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 15));
+
+        rightPanel.setOpaque(false);  // Asegurar transparencia para ver el fondo azul
+        leftPanel.setOpaque(false);
 
         JButton btnGuardar = new JButton("Guardar");
-        JButton btnEliminar = new JButton("Limpiar");
+        JButton btnLimpiar = new JButton("Limpiar");
         JButton btnCerrar = new JButton("Cerrar");
 
         btnGuardar.addActionListener(this::guardarDatos);
-        btnEliminar.addActionListener(e -> limpiarCampos());
+        btnLimpiar.addActionListener(e -> limpiarCampos());
         btnCerrar.addActionListener(e -> dispose());
 
-        panel.add(btnGuardar);
-        panel.add(btnEliminar);
-        panel.add(btnCerrar);
+        personalizarBoton(btnGuardar);
+        personalizarBoton(btnLimpiar);
+        personalizarBoton(btnCerrar);
+
+        rightPanel.add(btnLimpiar);
+        rightPanel.add(btnGuardar);
+        leftPanel.add(btnCerrar);
+
+        panel.add(leftPanel, BorderLayout.WEST);
+        panel.add(rightPanel, BorderLayout.EAST);
 
         return panel;
     }
+    private void personalizarBoton(JButton button) {
+        button.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        button.setBackground(Color.WHITE);
+        button.setForeground(Color.decode("#0057FF"));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);  // Necesario para ver el color de fondo
+        button.setRolloverEnabled(true);
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(Color.decode("#003366"));  // Cambio a azul oscuro cuando el ratón está encima
+                button.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(Color.WHITE);  // Restaurar a blanco cuando el ratón se aleja
+                button.setForeground(Color.decode("#0057FF"));
+            }
+        });
+    }
+
+
 
     private void guardarDatos(ActionEvent e) {
         if (validarDatos()) {

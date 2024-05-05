@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -93,20 +94,16 @@ public class RestablecimientoContraseñaUI extends JFrame {
         texttoken.setOpaque(false);
         texttoken.setForeground(Color.WHITE);
         
-        JTextField textcontraseña = new JTextField();
+        JPasswordField textcontraseña = new JPasswordField();
         textcontraseña.setOpaque(false);
-        textcontraseña.setColumns(10);
         textcontraseña.setBounds(148, 298, 204, 30);
         gradientPanel.add(textcontraseña);
         textcontraseña.setBorder(roundedBorder);
-        textcontraseña.setOpaque(false);
         textcontraseña.setForeground(Color.WHITE);
-        
 
-        JTextField textrepeatcontraseña = new JTextField();
+        JPasswordField textrepeatcontraseña = new JPasswordField();
         textrepeatcontraseña.setBounds(148, 358, 204, 30);
         gradientPanel.add(textrepeatcontraseña);
-        textrepeatcontraseña.setColumns(10);
         textrepeatcontraseña.setBorder(roundedBorder);
         textrepeatcontraseña.setOpaque(false);
         textrepeatcontraseña.setForeground(Color.WHITE);
@@ -140,10 +137,12 @@ public class RestablecimientoContraseñaUI extends JFrame {
      // En RestablecimientoContraseñaUI, dentro de tu constructor o método de inicialización
         btnRestablecer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String email = textcorreo.getText().trim(); // Asegúrate de tener acceso a textcorreo o que el usuario ingrese su correo nuevamente
+                String email = textcorreo.getText().trim();
                 String token = texttoken.getText().trim();
-                String nuevaContraseña = textcontraseña.getText().trim();
-                String confirmarContraseña = textrepeatcontraseña.getText().trim();
+                char[] nuevaContraseñaArray = textcontraseña.getPassword();  // Usar getPassword() que devuelve un array de char
+                String nuevaContraseña = new String(nuevaContraseñaArray);  // Convertir char[] a String
+                char[] confirmarContraseñaArray = textrepeatcontraseña.getPassword();
+                String confirmarContraseña = new String(confirmarContraseñaArray);
 
                 if (!nuevaContraseña.equals(confirmarContraseña)) {
                     JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden.");

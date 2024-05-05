@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.util.List;
 import model.Farmaco;
 import DB.FarmacoDAO;
+import UISwing.recursos.RoundedPanel;
 
 public class DialogoSeleccionFarmaco extends JDialog {
     private JComboBox<Farmaco> comboBoxFarmacos;
@@ -23,6 +24,13 @@ public class DialogoSeleccionFarmaco extends JDialog {
         setUndecorated(true);
         setSize(new Dimension(320, 270));
         setLocationRelativeTo(null);
+        setBackground(new Color(0, 0, 0, 0));
+        
+        RoundedPanel roundedBackground = new RoundedPanel(20);
+        roundedBackground.setLayout(null);  // Usar layout null para control manual
+        roundedBackground.setBackground(new Color(91, 123, 213));  // Color de fondo
+        roundedBackground.setOpaque(false);
+        setContentPane(roundedBackground);
 
         comboBoxFarmacos = new JComboBox<>();
         comboBoxFarmacos.setForeground(Color.decode("#0057FF"));
