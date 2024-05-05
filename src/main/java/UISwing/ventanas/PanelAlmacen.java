@@ -123,12 +123,33 @@ public class PanelAlmacen extends JPanel {
 	    
         JButton añadirProductoServicio = new JButton("Añadir al almacen");
         añadirProductoServicio.setBounds(183, 10, 153, 23);
+        añadirProductoServicio.setFont(new Font("Tahoma", Font.BOLD, 12));
+        añadirProductoServicio.setBackground(Color.WHITE);
+        añadirProductoServicio.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        añadirProductoServicio.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        añadirProductoServicio.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        añadirProductoServicio.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        añadirProductoServicio.setOpaque(true);
+        añadirProductoServicio.setRolloverEnabled(true);
+        añadirProductoServicio.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                añadirProductoServicio.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                añadirProductoServicio.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                añadirProductoServicio.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                añadirProductoServicio.setForeground(Color.decode("#0057FF"));
+            }
+        });
         añadirProductoServicio.addActionListener(new ActionListener() {
-          
             public void actionPerformed(ActionEvent e) {
                 abrirDialogoRegistroAlmacen();
             }
         });
+
         gestionProductos.add(añadirProductoServicio);
 	    
 	    scrollPaneProductos = new JScrollPane();  // Usar la versión de clase aquí
@@ -258,12 +279,34 @@ public class PanelAlmacen extends JPanel {
 	    });
 	    JButton añadirFarmaco = new JButton("Añadir Farmaco");
 	    añadirFarmaco.setBounds(180, 10, 130, 23);
-	    gestionFarmacos.add(añadirFarmaco);
+	    añadirFarmaco.setFont(new Font("Tahoma", Font.BOLD, 12));
+	    añadirFarmaco.setBackground(Color.WHITE);
+	    añadirFarmaco.setForeground(Color.decode("#0057FF")); // Letras en color azul
+	    añadirFarmaco.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+	    añadirFarmaco.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+	    añadirFarmaco.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+	    añadirFarmaco.setOpaque(true);
+	    añadirFarmaco.setRolloverEnabled(true);
+	    añadirFarmaco.addMouseListener(new java.awt.event.MouseAdapter() {
+	        @Override
+	        public void mouseEntered(java.awt.event.MouseEvent evt) {
+	            añadirFarmaco.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+	            añadirFarmaco.setForeground(Color.WHITE);
+	        }
+
+	        @Override
+	        public void mouseExited(java.awt.event.MouseEvent evt) {
+	            añadirFarmaco.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+	            añadirFarmaco.setForeground(Color.decode("#0057FF"));
+	        }
+	    });
 	    añadirFarmaco.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	            abrirDialogoRegistroFarmaco();
 	        }
 	    });
+
+	    gestionFarmacos.add(añadirFarmaco);
 
 	    // Resto de la configuración del PanelAlmacen...
 	    inicializarComponentesProductos(gestionProductos);

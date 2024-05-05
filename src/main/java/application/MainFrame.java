@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+
 import java.awt.geom.RoundRectangle2D;
 import java.time.format.DateTimeFormatter;
 
@@ -25,17 +25,14 @@ import UISwing.recursos.RoundedPanel;
 import UISwing.ventanas.PanelAdministracion;
 import UISwing.ventanas.PanelAlmacen;
 import UISwing.ventanas.PanelCalendario;
-import UISwing.ventanas.PanelCitas;
 import UISwing.ventanas.PanelClienteMascota;
 import UISwing.ventanas.PanelHome;
 import UISwing.ventanas.PanelVentas;
-
 import javax.swing.JLabel;
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javax.swing.JButton;
 
 

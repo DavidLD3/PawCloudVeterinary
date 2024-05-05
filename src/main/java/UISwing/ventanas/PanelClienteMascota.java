@@ -50,7 +50,7 @@ public class PanelClienteMascota extends JPanel {
           roundedBackground.setOpaque(false);
           add(roundedBackground, BorderLayout.CENTER);  // Asegurándose de que ocupe todo el espacio disponible
 
-          JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+          JPanel panel = new JPanel();
           panel.setLayout(null);  // Layout null para un posicionamiento absoluto de los componentes
           panel.setOpaque(false);
           roundedBackground.add(panel, BorderLayout.CENTER);
@@ -80,6 +80,7 @@ public class PanelClienteMascota extends JPanel {
                 btnAnadir.setForeground(Color.decode("#0057FF"));
             }
         });
+        panel.setLayout(null);
 
         // Añadir a tu panel
         panel.add(btnAnadir);
@@ -257,6 +258,18 @@ public class PanelClienteMascota extends JPanel {
         JScrollPane scrollPaneMascotas = new JScrollPane(); // Nuevo JScrollPane para mascotas
         scrollPaneMascotas.setBounds(579, 105, 518, 537); // Ajusta las dimensiones según necesites
         panel.add(scrollPaneMascotas);
+        
+        JLabel lblBuscarCliente = new JLabel("Buscar Cliente:");
+        lblBuscarCliente.setForeground(new Color(255, 255, 255));
+        lblBuscarCliente.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblBuscarCliente.setBounds(10, 25, 100, 14);
+        panel.add(lblBuscarCliente);
+        
+        JLabel lblBuscasMascota = new JLabel("Buscar Mascota:");
+        lblBuscasMascota.setForeground(new Color(255, 255, 255));
+        lblBuscasMascota.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblBuscasMascota.setBounds(579, 25, 135, 14);
+        panel.add(lblBuscasMascota);
         setPreferredSize(new Dimension(1112, 674)); 
     }
 
@@ -432,5 +445,4 @@ public class PanelClienteMascota extends JPanel {
         header.setForeground(Color.WHITE);  // Color de texto del encabezado
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));  // Fuente del encabezado
     }
-    
 }
