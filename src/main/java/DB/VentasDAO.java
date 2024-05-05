@@ -2,16 +2,16 @@ package DB;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.sql.Timestamp;
 import model.Almacen;
 import model.Farmaco;
+import model.VentaDetalle;
 
 public class VentasDAO {
     private Conexion conexion;
@@ -81,7 +81,7 @@ public class VentasDAO {
         return farmacos;
     }
     
-    public int insertarVenta(Integer idCliente, Integer idMascota, Date fechaVenta, String metodoPago, BigDecimal total) throws SQLException {
+    public int insertarVenta(Integer idCliente, Integer idMascota, java.util.Date fechaVenta, String metodoPago, BigDecimal total) throws SQLException {
         String sql = "INSERT INTO ventas (id_cliente, id_mascota, fecha_venta, metodo_pago, total) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = this.conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -95,17 +95,19 @@ public class VentasDAO {
             } else {
                 ps.setInt(2, idMascota);
             }
-            ps.setDate(3, fechaVenta);
+            // Cambio aquí: usar Timestamp en lugar de Date para incluir la hora
+            ps.setTimestamp(3, new java.sql.Timestamp(fechaVenta.getTime()));
             ps.setString(4, metodoPago);
             ps.setBigDecimal(5, total);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1); // Return the auto-generated ID of the sale
+                return rs.getInt(1); // Devuelve el ID auto-generado de la venta
             }
             throw new SQLException("Creating sale failed, no ID obtained.");
         }
     }
+
 
 
     public void insertarDetalleVenta(int idVenta, Integer idAlmacen, Integer idFarmaco, int cantidad, BigDecimal precioUnitario) throws SQLException {
@@ -133,6 +135,35 @@ public class VentasDAO {
             ps.setBigDecimal(5, precioUnitario); // Establece el precio unitario del producto
             ps.executeUpdate(); // Ejecuta la inserción
         }
+    }
+    
+    
+    public List<VentaDetalle> obtenerUltimasVentas() throws SQLException {
+        List<VentaDetalle> ventas = new ArrayList<>();
+        String sql = "SELECT v.id_venta, v.fecha_venta, v.metodo_pago, v.total, " +
+                     "COALESCE(a.nombre_producto, f.nombre) AS producto, dv.cantidad, dv.precio_unitario " +
+                     "FROM ventas v " +
+                     "JOIN detalles_ventas dv ON v.id_venta = dv.id_venta " +
+                     "LEFT JOIN almacen a ON dv.id_almacen = a.id_almacen " +
+                     "LEFT JOIN farmacos f ON dv.id_farmaco = f.id " +
+                     "ORDER BY v.fecha_venta DESC " +
+                     "LIMIT 10";
+        try (Connection conn = this.conexion.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ventas.add(new VentaDetalle(
+                    rs.getInt("id_venta"),
+                    rs.getTimestamp("fecha_venta"),  // Usar getTimestamp para incluir la hora
+                    rs.getString("metodo_pago"),
+                    rs.getBigDecimal("total"),
+                    rs.getString("producto"),
+                    rs.getInt("cantidad"),
+                    rs.getBigDecimal("precio_unitario")
+                ));
+            }
+        }
+        return ventas;
     }
 
 

@@ -103,7 +103,28 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         JScrollPane scrollPane = new JScrollPane(tablaMascotas);
         panelMascotas.add(scrollPane, BorderLayout.CENTER);
 
-        RoundedButton botonAgregarMascota = new RoundedButton("Añadir Mascota"); // Usa RoundedButton
+        JButton botonAgregarMascota = new JButton("Añadir Mascota"); // Usa RoundedButton
+        botonAgregarMascota.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        botonAgregarMascota.setBackground(Color.WHITE);
+        botonAgregarMascota.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        botonAgregarMascota.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        botonAgregarMascota.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        botonAgregarMascota.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        botonAgregarMascota.setOpaque(true);
+        botonAgregarMascota.setRolloverEnabled(true);
+        botonAgregarMascota.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                botonAgregarMascota.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                botonAgregarMascota.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                botonAgregarMascota.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                botonAgregarMascota.setForeground(Color.decode("#0057FF"));
+            }
+        });
         botonAgregarMascota.addActionListener(e -> abrirPanelRegistroMascota());
         JPanel panelBoton = new JPanel();
         panelBoton.setOpaque(false); 
@@ -149,6 +170,27 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
 
         // Botón para añadir citas, posicionado en el sur del panel.
         JButton btnAñadirCita = new JButton("Añadir Cita");
+        btnAñadirCita.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnAñadirCita.setBackground(Color.WHITE);
+        btnAñadirCita.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        btnAñadirCita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        btnAñadirCita.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        btnAñadirCita.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnAñadirCita.setOpaque(true);
+        btnAñadirCita.setRolloverEnabled(true);
+        btnAñadirCita.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAñadirCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnAñadirCita.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAñadirCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnAñadirCita.setForeground(Color.decode("#0057FF"));
+            }
+        });
         personalizarBotonAñadirCita(btnAñadirCita); // Aplicar la personalización al botón.
         JPanel panelBoton = new JPanel();
         panelBoton.setOpaque(false);

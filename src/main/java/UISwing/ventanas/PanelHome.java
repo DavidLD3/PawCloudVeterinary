@@ -7,6 +7,7 @@ import DB.ClienteDAO;
 import DB.FarmacoDAO;
 import DB.HospitalizacionDAO;
 import DB.MascotaDAO;
+import DB.VentasDAO;
 import UISwing.recursos.CustomPanelOpaco;
 import UISwing.recursos.RoundedPanel;
 
@@ -23,6 +24,8 @@ import model.Cliente;
 import model.Hospitalizacion;
 import model.Mascota;
 import model.UsoFarmaco;
+import model.VentaDetalle;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -515,13 +518,11 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         panelDatosVentas.setOpaque(false);
         panelOpacoVentas.add(panelDatosVentas);
 
-        // Agrega algunos datos de ventas de ejemplo
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:00", "Alimento para perros", "2", "$20.00"});
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$15.00"});
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$15.00"});
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$150.00"});
+        mostrarUltimasVentas(panelDatosVentas);
        
     }
+    
+    
 
     private void inicializarPanelFarmacos() {
         // Panel principal de fármacos que contendrá todo
@@ -685,19 +686,36 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         
         return panelEncabezadosVentas;
     }
+    
+    
+    private void mostrarUltimasVentas(JPanel panelDatosVentas) {
+        VentasDAO ventasDAO = new VentasDAO();
+        try {
+            List<VentaDetalle> ultimasVentas = ventasDAO.obtenerUltimasVentas();
+            for (VentaDetalle venta : ultimasVentas) {
+                String[] datosVenta = new String[]{
+                    new SimpleDateFormat("HH:mm").format(venta.getFechaVenta()),
+                    venta.getProducto(),
+                    String.valueOf(venta.getCantidad()),
+                    String.format("%.2f €", venta.getPrecioUnitario()) 
+                };
+                agregarFilaDatosVentas(panelDatosVentas, datosVenta);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al recuperar las últimas ventas: " + e.getMessage());
+            // Considera agregar una notificación al usuario de que no se pudieron cargar los datos
+        }
+    }
+
     private void agregarFilaDatosVentas(JPanel panelDatosVentas, String[] datosVentas) {
         JPanel panelFilaVentas = new JPanel();
         panelFilaVentas.setLayout(new GridLayout(1, 4, 0, 0)); // 4 columnas para las ventas
         panelFilaVentas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Ajusta la altura de la fila
         panelFilaVentas.setOpaque(false);
 
-        for (int i = 0; i < datosVentas.length; i++) {
-            JLabel labelDato = new JLabel(datosVentas[i], SwingConstants.CENTER);
-            labelDato.setForeground(Color.WHITE); // Color de texto
-            // Configurar el tooltip para la columna del producto
-            if (i == 1) { // Asumiendo que el producto está en la segunda posición del array
-                labelDato.setToolTipText(datosVentas[i]);
-            }
+        for (String dato : datosVentas) {
+            JLabel labelDato = new JLabel(dato, SwingConstants.CENTER);
+            labelDato.setForeground(Color.WHITE);
             panelFilaVentas.add(labelDato);
         }
 
@@ -705,6 +723,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         panelDatosVentas.revalidate();
         panelDatosVentas.repaint();
     }
+
     private void mostrarHospitalizacionesRecientes() {
         HospitalizacionDAO hospitalizacionDAO = new HospitalizacionDAO();
         MascotaDAO mascotaDAO = new MascotaDAO();

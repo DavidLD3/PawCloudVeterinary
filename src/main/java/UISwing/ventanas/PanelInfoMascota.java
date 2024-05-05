@@ -123,6 +123,27 @@ public class PanelInfoMascota extends JPanel {
         panelHospitalizaciones.add(scrollPane, BorderLayout.CENTER);
 
         JButton btnAgregarHospitalizacion = new JButton("Añadir Hospitalización");
+        btnAgregarHospitalizacion.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnAgregarHospitalizacion.setBackground(Color.WHITE);
+        btnAgregarHospitalizacion.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        btnAgregarHospitalizacion.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        btnAgregarHospitalizacion.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        btnAgregarHospitalizacion.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnAgregarHospitalizacion.setOpaque(true);
+        btnAgregarHospitalizacion.setRolloverEnabled(true);
+        btnAgregarHospitalizacion.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAgregarHospitalizacion.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnAgregarHospitalizacion.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAgregarHospitalizacion.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnAgregarHospitalizacion.setForeground(Color.decode("#0057FF"));
+            }
+        });
         btnAgregarHospitalizacion.addActionListener(e -> abrirDialogoDetalleHospitalizacion());
         tablaHospitalizaciones.addMouseListener(new MouseAdapter() {
             @Override
@@ -205,7 +226,49 @@ public class PanelInfoMascota extends JPanel {
         // Panel de botones
         JPanel panelBotones = new JPanel();
         JButton btnAgregar = new JButton("Añadir Registro");
+        btnAgregar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnAgregar.setBackground(Color.WHITE);
+        btnAgregar.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        btnAgregar.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        btnAgregar.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        btnAgregar.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnAgregar.setOpaque(true);
+        btnAgregar.setRolloverEnabled(true);
+        btnAgregar.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAgregar.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnAgregar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAgregar.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnAgregar.setForeground(Color.decode("#0057FF"));
+            }
+        });
         JButton btnEliminar = new JButton("Eliminar Registro");
+        btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnEliminar.setBackground(Color.WHITE);
+        btnEliminar.setForeground(Color.decode("#0057FF")); // Letras en color azul
+        btnEliminar.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+        btnEliminar.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+        btnEliminar.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnEliminar.setOpaque(true);
+        btnEliminar.setRolloverEnabled(true);
+        btnEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnEliminar.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnEliminar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnEliminar.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnEliminar.setForeground(Color.decode("#0057FF"));
+            }
+        });
         btnAgregar.addActionListener(e -> abrirDialogoAgregarEditarRegistro(null)); // null para un nuevo registro
         btnEliminar.addActionListener(this::accionEliminarRegistro);
         panelBotones.add(btnAgregar);
