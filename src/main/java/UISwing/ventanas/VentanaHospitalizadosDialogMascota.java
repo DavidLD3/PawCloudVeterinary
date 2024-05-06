@@ -95,7 +95,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	 private void initDialogComponents() {
 	     	
 			 // Configura el JTextField utilizado para la entrada de búsqueda
-		  JLabel labelNombreMascota = new JLabel("Mascota: " + nombreMascota);
+		  JLabel labelNombreMascota = new JLabel(nombreMascota);
 		  labelNombreMascota.setForeground(new Color(255, 255, 255));
 		  labelNombreMascota.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
 		    labelNombreMascota.setBounds(50, 53, 300, 25);
@@ -280,6 +280,12 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        btnAddFarmaco.setBounds(369, 396, 150, 25); // Ajusta la posición como necesites
 	        btnAddFarmaco.addActionListener(e -> abrirDialogoSeleccionFarmaco());
 	        roundedPanel.add(btnAddFarmaco);
+	        
+	        JLabel lblMascota = new JLabel("Mascota:");
+	        lblMascota.setForeground(Color.WHITE);
+	        lblMascota.setFont(new Font("Segoe UI", Font.BOLD, 13));
+	        lblMascota.setBounds(50, 26, 79, 30);
+	        roundedPanel.add(lblMascota);
 	      
 	    }
 	 public VentanaHospitalizadosDialogMascota(Frame owner, boolean modal, int idMascota, String nombreMascota, int idHospitalizacion) {
@@ -474,12 +480,4 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 		        JOptionPane.showMessageDialog(this, "No se pudo actualizar la fecha de salida.", "Error", JOptionPane.ERROR_MESSAGE);
 		    }
 		}
-
-
-
-
-	 
-	 
-
-
 }
