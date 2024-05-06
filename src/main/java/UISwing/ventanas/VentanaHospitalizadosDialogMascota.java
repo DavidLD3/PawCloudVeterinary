@@ -56,6 +56,9 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	private int idMascota;
 	private HospitalizacionDAO hospitalizacionDao;
 	private int idHospitalizacion = -1;
+	/**
+	 * @wbp.parser.constructor
+	 */
 
     
 	public VentanaHospitalizadosDialogMascota(Frame owner, boolean modal, int idMascota, String nombreMascota) {
@@ -93,7 +96,9 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	     	
 			 // Configura el JTextField utilizado para la entrada de búsqueda
 		  JLabel labelNombreMascota = new JLabel("Mascota: " + nombreMascota);
-		    labelNombreMascota.setBounds(40, 10, 300, 25);
+		  labelNombreMascota.setForeground(new Color(255, 255, 255));
+		  labelNombreMascota.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
+		    labelNombreMascota.setBounds(50, 53, 300, 25);
 		    roundedPanel.add(labelNombreMascota);
 
 
