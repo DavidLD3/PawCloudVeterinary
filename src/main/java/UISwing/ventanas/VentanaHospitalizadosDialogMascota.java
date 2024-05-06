@@ -233,13 +233,6 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        roundedPanel.add(scrollPaneNotas);
 	        roundedPanel.add(saveButton);
 	        roundedPanel.add(cancelButton);
-	        //roundedPanel.add(centerPanel);
-	        
-	        JLabel lblMascota = new JLabel("Mascota:");
-	        lblMascota.setForeground(new Color(255, 255, 255));
-	        lblMascota.setFont(new Font("Segoe UI", Font.BOLD, 13));
-	        lblMascota.setBounds(40, 26, 79, 30);
-	        roundedPanel.add(lblMascota);
 	        
 	        JLabel lblEstado = new JLabel("Estado:");
 	        lblEstado.setForeground(new Color(255, 255, 255));
