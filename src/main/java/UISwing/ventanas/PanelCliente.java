@@ -3,6 +3,7 @@ package UISwing.ventanas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -28,10 +29,8 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
     private JTable tablaMascotas;
     private JTable tablaCitas;
     private DefaultTableModel modeloTablaCitas;
-
+    
     public PanelCliente(int idCliente) {
-        // Inicializa el panel del cliente buscándolo por ID y prepara la UI.
-
         super(new BorderLayout());
         clienteDao = new ClienteDAO();
         this.cliente = clienteDao.obtenerClientePorId(idCliente);
@@ -40,26 +39,25 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
     }
 
     private void initializeUI() {
-     // Configura las pestañas de la interfaz para detalles del cliente y sus mascotas.
+        RoundedPanel mainPanel = new RoundedPanel(20);
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBackground(Color.decode("#7E88E2"));
+
         tabbedPane = new JTabbedPane();
-        // Crea e inicializa los paneles que se añadirán como pestañas
-        JPanel panelInfoCliente = crearPanelInfoCliente();
-        JPanel panelMascotas = crearPanelMascotasTotales();  
-        JPanel panelCitas = crearPanelCitas();
-        // Añade los paneles al JTabbedPane
-        tabbedPane.addTab("Cliente", panelInfoCliente);
-        tabbedPane.addTab("Mascotas", panelMascotas);
-        tabbedPane.addTab("Citas", panelCitas);
-        
-        add(tabbedPane, BorderLayout.CENTER);
+        tabbedPane.addTab("Cliente", crearPanelInfoCliente());
+        tabbedPane.addTab("Mascotas", crearPanelMascotasTotales());
+        tabbedPane.addTab("Citas", crearPanelCitas());
+
+        mainPanel.add(tabbedPane, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);
     }
 
     private JPanel crearPanelInfoCliente() {
-    // Crea y retorna un panel con los datos del cliente en un fondo con degradado.
-    	 JPanel panel = new GradientPanel2(); 
-         panel.setLayout(new GridLayout(0, 2)); 
+        RoundedPanel panel = new RoundedPanel(20);
+        panel.setLayout(new GridLayout(0, 2));
+        panel.setBackground(Color.decode("#7E88E2"));
+
         if (this.cliente != null) {
-            // Añadir los campos de texto y etiquetas al panel
             agregarCampo(panel, "Nombre:", cliente.getNombre());
             agregarCampo(panel, "Apellidos:", cliente.getApellidos());
             agregarCampo(panel, "DNI:", cliente.getDni());
@@ -79,7 +77,6 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
     }
 
     private void agregarCampo(JPanel panel, String etiqueta, String valor) {
-     // Añade un campo de texto no editable para mostrar un dato del cliente.
         panel.add(new JLabel(etiqueta));
         JTextField textField = new JTextField(valor, 20);
         textField.setEditable(false);
@@ -87,9 +84,9 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
     }
 
     private JPanel crearPanelMascotasTotales() {
-    // Prepara y retorna un panel que lista las mascotas del cliente con opción a añadir más.
-        JPanel panelMascotas = new GradientPanel2(); // Usa GradientPanel2 para el fondo
+        RoundedPanel panelMascotas = new RoundedPanel(20);
         panelMascotas.setLayout(new BorderLayout());
+        panelMascotas.setBackground(Color.decode("#7E88E2"));
         panelMascotas.add(new JLabel("Lista de mascotas"), BorderLayout.NORTH);
 
         String[] columnas = {"ID Mascota", "Nombre", "Especie", "Raza"};
@@ -101,44 +98,23 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         };
         tablaMascotas = new JTable(modeloTabla);
         JScrollPane scrollPane = new JScrollPane(tablaMascotas);
+        scrollPane.setPreferredSize(new Dimension(500, 400));
         panelMascotas.add(scrollPane, BorderLayout.CENTER);
 
-        JButton botonAgregarMascota = new JButton("Añadir Mascota"); // Usa RoundedButton
-        botonAgregarMascota.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        botonAgregarMascota.setBackground(Color.WHITE);
-        botonAgregarMascota.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        botonAgregarMascota.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        botonAgregarMascota.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        botonAgregarMascota.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        botonAgregarMascota.setOpaque(true);
-        botonAgregarMascota.setRolloverEnabled(true);
-        botonAgregarMascota.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                botonAgregarMascota.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-                botonAgregarMascota.setForeground(Color.WHITE);
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                botonAgregarMascota.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
-                botonAgregarMascota.setForeground(Color.decode("#0057FF"));
-            }
-        });
-        botonAgregarMascota.addActionListener(e -> abrirPanelRegistroMascota());
+        JButton botonAgregarMascota = crearBotonPersonalizado("Añadir Mascota", e -> abrirPanelRegistroMascota());
         JPanel panelBoton = new JPanel();
-        panelBoton.setOpaque(false); 
+        panelBoton.setOpaque(false);
         panelBoton.add(botonAgregarMascota);
         panelMascotas.add(panelBoton, BorderLayout.SOUTH);
 
         tablaMascotas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Verifica si el evento es un doble clic
+                if (e.getClickCount() == 2) {
                     int filaSeleccionada = tablaMascotas.getSelectedRow();
-                    if (filaSeleccionada != -1) { // Verifica si hay una fila seleccionada
-                        int idMascota = (Integer) modeloTabla.getValueAt(filaSeleccionada, 0); // Obtiene el ID de la mascota seleccionada
-                        abrirPanelInfoMascota(idMascota); // Abre el panel de información de la mascota usando el ID obtenido
+                    if (filaSeleccionada != -1) {
+                        int idMascota = (Integer) modeloTabla.getValueAt(filaSeleccionada, 0);
+                        abrirPanelInfoMascota(idMascota);
                     }
                 }
             }
@@ -146,77 +122,77 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
 
         return panelMascotas;
     }
-    
+
     private JPanel crearPanelCitas() {
-        // Ajustar las columnas de la tabla de citas según lo solicitado.
         String[] columnas = {"Mascota", "Fecha", "Título"};
         modeloTablaCitas = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Las celdas no deben ser editables.
+                return false;
             }
         };
         tablaCitas = new JTable(modeloTablaCitas);
         JScrollPane scrollPane = new JScrollPane(tablaCitas);
-        scrollPane.setPreferredSize(new Dimension(500, 400)); // Establecer el tamaño preferido del scrollPane.
+        scrollPane.setPreferredSize(new Dimension(500, 400));
 
-        // Crear el panel principal con bordes redondeados.
         RoundedPanel panelCitas = new RoundedPanel(20);
         panelCitas.setBackground(Color.decode("#7E88E2"));
-        panelCitas.setLayout(new BorderLayout()); // Usar BorderLayout para una mejor disposición de los componentes.
+        panelCitas.setLayout(new BorderLayout());
 
-        // Añadir el scrollPane al centro del panel.
         panelCitas.add(scrollPane, BorderLayout.CENTER);
 
-        // Botón para añadir citas, posicionado en el sur del panel.
-        JButton btnAñadirCita = new JButton("Añadir Cita");
-        btnAñadirCita.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAñadirCita.setBackground(Color.WHITE);
-        btnAñadirCita.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnAñadirCita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnAñadirCita.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnAñadirCita.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnAñadirCita.setOpaque(true);
-        btnAñadirCita.setRolloverEnabled(true);
-        btnAñadirCita.addMouseListener(new java.awt.event.MouseAdapter() {
+        JButton btnAñadirCita = crearBotonPersonalizado("Añadir Cita", e -> abrirDialogoAñadirCita());
+        JPanel panelBoton = new JPanel();
+        panelBoton.setOpaque(false);
+        panelBoton.add(btnAñadirCita);
+        panelCitas.add(panelBoton, BorderLayout.SOUTH);
+
+        actualizarTablaCitas();
+
+        return panelCitas;
+    }
+
+    private JButton crearBotonPersonalizado(String texto, ActionListener listener) {
+        JButton btn = new JButton(texto);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btn.setBackground(Color.WHITE);
+        btn.setForeground(Color.decode("#0057FF"));
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(true);
+        btn.setRolloverEnabled(true);
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAñadirCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-                btnAñadirCita.setForeground(Color.WHITE);
+                btn.setBackground(Color.decode("#003366"));
+                btn.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAñadirCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
-                btnAñadirCita.setForeground(Color.decode("#0057FF"));
+                btn.setBackground(Color.WHITE);
+                btn.setForeground(Color.decode("#0057FF"));
             }
         });
-        personalizarBotonAñadirCita(btnAñadirCita); // Aplicar la personalización al botón.
-        JPanel panelBoton = new JPanel();
-        panelBoton.setOpaque(false);
-        panelBoton.add(btnAñadirCita);
-        panelCitas.add(panelBoton, BorderLayout.SOUTH); // Añadir el panel del botón en el sur.
-
-        actualizarTablaCitas(); // Asegurarse de que la tabla se actualice con los datos actuales.
-
-        return panelCitas;
+        btn.addActionListener(listener);
+        return btn;
     }
-    
+
     @Override
     public void onCitaActualizada() {
-        actualizarTablaCitas(); // Llama aquí al método para actualizar tu panel/tabla de citas
+        actualizarTablaCitas();
     }
-    
+
     private void actualizarTablaCitas() {
         CitaDAO citaDao = new CitaDAO();
-        // Asegúrate de que `cliente` no sea null y tenga un id válido.
-        if(cliente != null && cliente.getId() > 0) {
+        if (cliente != null && cliente.getId() > 0) {
             List<Cita> listaCitas = citaDao.recuperarCitasPorCliente(cliente.getId());
-            modeloTablaCitas.setRowCount(0); // Limpiar la tabla antes de rellenarla.
-        
+            modeloTablaCitas.setRowCount(0);
+
             for (Cita cita : listaCitas) {
                 Object[] fila = {
-                    cita.getNombreMascota(), // Asume que Cita tiene un método para obtener el nombre de la mascota.
+                    cita.getNombreMascota(),
                     cita.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     cita.getTitulo(),
                 };
@@ -224,47 +200,21 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
             }
         }
     }
-    private void personalizarBotonAñadirCita(JButton btn) {
-        // Personalización del efecto rollover del botón.
-        btn.setRolloverEnabled(true);
-        btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn.setBackground(Color.decode("#003366")); // Color más oscuro cuando el ratón está encima.
-                btn.setForeground(Color.WHITE);
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn.setBackground(Color.WHITE); // Volver al color original cuando el ratón se aleja.
-                btn.setForeground(Color.decode("#0057FF"));
-            }
-        });
-
-        btn.addActionListener(e -> abrirDialogoAñadirCita());
-    }
 
     private void abrirDialogoAñadirCita() {
-        // Suponiendo que VentanaCitasDialog es el diálogo para añadir/modificar citas.
         VentanaCitasDialog dialog = new VentanaCitasDialog(null, true);
         dialog.setTitle("Añadir Cita");
         dialog.setLocationRelativeTo(null);
-        
-        // Ajuste para actualizar la lista de citas cuando el diálogo se cierra.
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                actualizarTablaCitas(); // Llama al método para actualizar la lista de citas.
+                actualizarTablaCitas();
             }
         });
-        
         dialog.setVisible(true);
     }
-    
-    
+
     private void abrirPanelInfoMascota(int idMascota) {
-    // Muestra una ventana con información detallada de la mascota seleccionada.
-       
         PanelInfoMascota panelInfoMascota = new PanelInfoMascota(idMascota);
         JFrame frameInfoMascota = new JFrame("Información de la Mascota");
         frameInfoMascota.getContentPane().add(panelInfoMascota);
@@ -273,45 +223,41 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         frameInfoMascota.setVisible(true);
         frameInfoMascota.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
-    private void abrirPanelRegistroMascota() {
-     // Abre una ventana para registrar una nueva mascota y actualiza la lista tras cerrarla
 
+    private void abrirPanelRegistroMascota() {
         PanelRegistroMascota panelRegistroMascota = new PanelRegistroMascota(this.cliente.getId());
         JFrame frameRegistroMascota = new JFrame("Registro de Mascota");
         frameRegistroMascota.getContentPane().add(panelRegistroMascota);
         frameRegistroMascota.pack();
         frameRegistroMascota.setLocationRelativeTo(null);
         frameRegistroMascota.setVisible(true);
-
         frameRegistroMascota.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 actualizarTablaMascotas();
             }
         });
-
         frameRegistroMascota.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
     }
 
     public void actualizarTablaMascotas() {
-    // Refresca la tabla de mascotas con los datos actuales del cliente.
         if (tablaMascotas == null) {
-            return; // Si tablaMascotas no se ha inicializado, sale del método.
+            return;
         }
         MascotaDAO mascotaDao = new MascotaDAO();
         List<Mascota> listaMascotas = mascotaDao.obtenerMascotasPorClienteId(this.cliente.getId());
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaMascotas.getModel();
-        modeloTabla.setRowCount(0); // Limpia la tabla antes de rellenar
+        modeloTabla.setRowCount(0);
 
         for (Mascota mascota : listaMascotas) {
             modeloTabla.addRow(new Object[]{mascota.getId(), mascota.getNombre(), mascota.getEspecie(), mascota.getRaza()});
         }
     }
-    
+
     public PanelCliente(String dni) {
         super(new BorderLayout());
         clienteDao = new ClienteDAO();
-        this.cliente = clienteDao.obtenerClientePorDni(dni); // Asegúrate de implementar obtenerClientePorDni en ClienteDAO
+        this.cliente = clienteDao.obtenerClientePorDni(dni);
         if (this.cliente != null) {
             initializeUI();
             actualizarTablaMascotas();
@@ -319,7 +265,4 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
             add(new JLabel("Cliente no encontrado."), BorderLayout.CENTER);
         }
     }
-    
- 
-    
 }

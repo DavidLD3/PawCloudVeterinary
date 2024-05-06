@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import DB.MascotaDAO;
+import UISwing.recursos.RoundedPanel;
 import DB.HistorialMedicoDAO;
 import DB.HospitalizacionDAO;
 import model.HistorialMedico;
@@ -29,49 +30,37 @@ public class PanelInfoMascota extends JPanel {
     public PanelInfoMascota(int idMascota) {
         super(new BorderLayout());
         mascotaDao = new MascotaDAO();
-        hospitalizacionDao = new HospitalizacionDAO(); 
+        hospitalizacionDao = new HospitalizacionDAO();
         this.historialMedicoDAO = new HistorialMedicoDAO();
-        
         this.mascota = mascotaDao.obtenerMascotaPorId(idMascota);
+
         if (mascota != null) {
             tabbedPane = new JTabbedPane();
-
-            JPanel panelInfoGeneral = crearPanelInfoMascota();           
-            JPanel panelHistorialMedico = crearPanelHistorialMedico();
-            JPanel panelVacunas = crearPanelVacunas();
-            JPanel panelHospitalizaciones = crearPanelHospitalizaciones();
-            
-
-            tabbedPane.addTab("General", null, panelInfoGeneral, "Información General");
-            tabbedPane.addTab("Hospitalizaciones", null, panelHospitalizaciones, "Historial de hospitalizaciones");
-            tabbedPane.addTab("Historial Médico", null, panelHistorialMedico, "Historial médico de la mascota");
-            tabbedPane.addTab("Vacunas", null, panelVacunas, "Registro de vacunas");
-            
-
-            add(tabbedPane, BorderLayout.CENTER);
-        }   else {
+            tabbedPane.addTab("General", null, crearPanelInfoMascota(), "Información General");
+            tabbedPane.addTab("Hospitalizaciones", null, crearPanelHospitalizaciones(), "Historial de hospitalizaciones");
+            tabbedPane.addTab("Historial Médico", null, crearPanelHistorialMedico(), "Historial médico de la mascota");
+            tabbedPane.addTab("Vacunas", null, crearPanelVacunas(), "Registro de vacunas");
+            RoundedPanel mainPanel = new RoundedPanel(20);
+            mainPanel.setLayout(new BorderLayout());
+            mainPanel.setBackground(Color.decode("#7E88E2"));
+            mainPanel.add(tabbedPane, BorderLayout.CENTER);
+            add(mainPanel, BorderLayout.CENTER);
+        } else {
             add(new JLabel("Mascota no encontrada."), BorderLayout.CENTER);
         }
     }
 
     private JPanel crearPanelInfoMascota() {
-        JPanel panel = new JPanel(new GridLayout(0, 2)); // GridLayout para organizar los campos y etiquetas
-
-        // Añadir los campos de texto y etiquetas al panel
+        RoundedPanel panel = new RoundedPanel(20);
+        panel.setLayout(new GridLayout(0, 2));
+        panel.setBackground(Color.decode("#7E88E2"));
         agregarCampo(panel, "Nombre:", mascota.getNombre());
         agregarCampo(panel, "Especie:", mascota.getEspecie());
         agregarCampo(panel, "Raza:", mascota.getRaza());
         agregarCampo(panel, "Pasaporte:", String.valueOf(mascota.getPasaporte()));
         agregarCampo(panel, "Microchip:", mascota.getMicrochip());
-        
-        // Formatear y mostrar la fecha de nacimiento
-        String fechaNacimiento = mascota.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        agregarCampo(panel, "Fecha de Nacimiento:", fechaNacimiento);
-
-        // Calcular y mostrar la edad
-        String edad = calcularEdad(mascota.getFechaNacimiento());
-        agregarCampo(panel, "Edad:", edad);
-
+        agregarCampo(panel, "Fecha de Nacimiento:", mascota.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        agregarCampo(panel, "Edad:", calcularEdad(mascota.getFechaNacimiento()));
         agregarCampo(panel, "Carácter:", mascota.getCaracter());
         agregarCampo(panel, "Color:", mascota.getColor());
         agregarCampo(panel, "Tipo de pelo:", mascota.getTipoPelo());
@@ -80,92 +69,95 @@ public class PanelInfoMascota extends JPanel {
 
         return panel;
     }
+
     private String calcularEdad(LocalDate fechaNacimiento) {
         LocalDate hoy = LocalDate.now();
         Period periodo = Period.between(fechaNacimiento, hoy);
         return String.format("%d años, %d meses, %d días", periodo.getYears(), periodo.getMonths(), periodo.getDays());
     }
-    
+
     private void agregarCampo(JPanel panel, String etiqueta, String valor) {
         panel.add(new JLabel(etiqueta));
         JTextField textField = new JTextField(valor, 20);
         textField.setEditable(false);
         panel.add(textField);
     }
-
+    
     private JPanel crearPanelHospitalizaciones() {
-        JPanel panelHospitalizaciones = new JPanel(new BorderLayout());
-        
+        RoundedPanel panelHospitalizaciones = new RoundedPanel(20);
+        panelHospitalizaciones.setLayout(new BorderLayout());
+        panelHospitalizaciones.setBackground(Color.decode("#7E88E2"));
+
         DefaultTableModel modeloTabla = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Desactiva la edición en todas las celdas
                 return false;
             }
         };
-        
-        modeloTabla.addColumn("ID"); // ID de la hospitalización, oculto si lo prefieres
+        modeloTabla.addColumn("ID");
         modeloTabla.addColumn("Fecha");
         modeloTabla.addColumn("Motivo");
 
         List<Hospitalizacion> hospitalizaciones = hospitalizacionDao.obtenerHospitalizacionesPorIdMascota(mascota.getId());
         for (Hospitalizacion hospitalizacion : hospitalizaciones) {
             modeloTabla.addRow(new Object[]{
-                hospitalizacion.getId(), // Asumiendo que tienes un getter para el ID
+                hospitalizacion.getId(),
                 hospitalizacion.getFechaIngreso().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                 hospitalizacion.getMotivo()
             });
         }
 
         JTable tablaHospitalizaciones = new JTable(modeloTabla);
-        tablaHospitalizaciones.removeColumn(tablaHospitalizaciones.getColumnModel().getColumn(0)); // Oculta la columna de ID si no deseas mostrarla
+        tablaHospitalizaciones.removeColumn(tablaHospitalizaciones.getColumnModel().getColumn(0));
         JScrollPane scrollPane = new JScrollPane(tablaHospitalizaciones);
         panelHospitalizaciones.add(scrollPane, BorderLayout.CENTER);
 
-        JButton btnAgregarHospitalizacion = new JButton("Añadir Hospitalización");
-        btnAgregarHospitalizacion.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAgregarHospitalizacion.setBackground(Color.WHITE);
-        btnAgregarHospitalizacion.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnAgregarHospitalizacion.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnAgregarHospitalizacion.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnAgregarHospitalizacion.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnAgregarHospitalizacion.setOpaque(true);
-        btnAgregarHospitalizacion.setRolloverEnabled(true);
-        btnAgregarHospitalizacion.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAgregarHospitalizacion.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-                btnAgregarHospitalizacion.setForeground(Color.WHITE);
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAgregarHospitalizacion.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
-                btnAgregarHospitalizacion.setForeground(Color.decode("#0057FF"));
-            }
-        });
-        btnAgregarHospitalizacion.addActionListener(e -> abrirDialogoDetalleHospitalizacion());
+        JButton btnAgregarHospitalizacion = crearBotonPersonalizado("Añadir Hospitalización", e -> abrirDialogoDetalleHospitalizacion());
         tablaHospitalizaciones.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     int filaSeleccionada = tablaHospitalizaciones.getSelectedRow();
                     if (filaSeleccionada != -1) {
-                        int idHospitalizacion = (int) modeloTabla.getValueAt(filaSeleccionada, 0); // Asegúrate de obtener el ID correctamente
-                        // Aquí podrías buscar la información de la hospitalización usando idHospitalizacion
-                        // Y luego pasar esa información al diálogo si es necesario
+                        int idHospitalizacion = (int) modeloTabla.getValueAt(filaSeleccionada, 0);
                         abrirDialogoDetalleHospitalizacionConId(idHospitalizacion);
                     }
                 }
             }
         });
-        
+
         JPanel panelBoton = new JPanel();
+        panelBoton.setOpaque(false);
         panelBoton.add(btnAgregarHospitalizacion);
-        
         panelHospitalizaciones.add(panelBoton, BorderLayout.SOUTH);
 
         return panelHospitalizaciones;
+    }
+    private JButton crearBotonPersonalizado(String texto, ActionListener listener) {
+        JButton btn = new JButton(texto);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btn.setBackground(Color.WHITE);
+        btn.setForeground(Color.decode("#0057FF"));
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(true);
+        btn.setRolloverEnabled(true);
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(Color.decode("#003366"));
+                btn.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(Color.WHITE);
+                btn.setForeground(Color.decode("#0057FF"));
+            }
+        });
+        btn.addActionListener(listener);
+        return btn;
     }
         
     public interface ActualizacionListener {
@@ -193,93 +185,47 @@ public class PanelInfoMascota extends JPanel {
     }
 
     private JPanel crearPanelHistorialMedico() {
-        JPanel panelHistorialMedico = new JPanel(new BorderLayout());
+        RoundedPanel panelHistorialMedico = new RoundedPanel(20);
+        panelHistorialMedico.setLayout(new BorderLayout());
+        panelHistorialMedico.setBackground(Color.decode("#7E88E2"));
 
-        String[] columnas = {"ID", "Fecha", "Tipo de Intervención", "Diagnóstico"};  // Asegúrate de que el orden de los nombres de las columnas sea correcto
+        String[] columnas = {"ID", "Fecha", "Tipo de Intervención", "Diagnóstico"};
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Para evitar edición directa en la tabla
+                return false;
             }
         };
-        
         tablaHistorial = new JTable(modeloTabla);
-        tablaHistorial.removeColumn(tablaHistorial.getColumnModel().getColumn(0));  // Eliminamos la columna ID que no queremos mostrar
+        tablaHistorial.removeColumn(tablaHistorial.getColumnModel().getColumn(0));
         JScrollPane scrollPane = new JScrollPane(tablaHistorial);
         panelHistorialMedico.add(scrollPane, BorderLayout.CENTER);
 
-        // Evento de doble clic para editar registros
         tablaHistorial.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     int filaSeleccionada = tablaHistorial.getSelectedRow();
                     if (filaSeleccionada != -1) {
-                        // Obtener el ID del registro seleccionado a partir del modelo (nota: ajusta el índice si es necesario)
-                        int idHistorial = (int) modeloTabla.getValueAt(filaSeleccionada, 0); // Aquí asumimos que el ID está en la columna 0 del modelo
+                        int idHistorial = (int) modeloTabla.getValueAt(filaSeleccionada, 0);
                         abrirDialogoAgregarEditarRegistro(idHistorial);
                     }
                 }
             }
         });
 
-        // Panel de botones
         JPanel panelBotones = new JPanel();
-        JButton btnAgregar = new JButton("Añadir Registro");
-        btnAgregar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAgregar.setBackground(Color.WHITE);
-        btnAgregar.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnAgregar.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnAgregar.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnAgregar.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnAgregar.setOpaque(true);
-        btnAgregar.setRolloverEnabled(true);
-        btnAgregar.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAgregar.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-                btnAgregar.setForeground(Color.WHITE);
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAgregar.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
-                btnAgregar.setForeground(Color.decode("#0057FF"));
-            }
-        });
-        JButton btnEliminar = new JButton("Eliminar Registro");
-        btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnEliminar.setBackground(Color.WHITE);
-        btnEliminar.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnEliminar.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnEliminar.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnEliminar.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnEliminar.setOpaque(true);
-        btnEliminar.setRolloverEnabled(true);
-        btnEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnEliminar.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-                btnEliminar.setForeground(Color.WHITE);
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnEliminar.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
-                btnEliminar.setForeground(Color.decode("#0057FF"));
-            }
-        });
-        btnAgregar.addActionListener(e -> abrirDialogoAgregarEditarRegistro(null)); // null para un nuevo registro
-        btnEliminar.addActionListener(this::accionEliminarRegistro);
+        panelBotones.setOpaque(false);
+        JButton btnAgregar = crearBotonPersonalizado("Añadir Registro", e -> abrirDialogoAgregarEditarRegistro(null));
+        JButton btnEliminar = crearBotonPersonalizado("Eliminar Registro", this::accionEliminarRegistro);
         panelBotones.add(btnAgregar);
         panelBotones.add(btnEliminar);
         panelHistorialMedico.add(panelBotones, BorderLayout.SOUTH);
-
-        // Cargar los registros del historial médico desde la base de datos
         cargarDatosHistorialMedico(modeloTabla, tablaHistorial);
 
         return panelHistorialMedico;
     }
+
 
     private void accionEliminarRegistro(ActionEvent e) {
         int filaSeleccionada = tablaHistorial.getSelectedRow();
@@ -336,7 +282,7 @@ public class PanelInfoMascota extends JPanel {
     }
     private JPanel crearPanelVacunas() {
         JPanel panelVacunas = new JPanel(new BorderLayout());
-        String[] columnasVacunas = {"Fecha", "Tipo de Intervención", "Diagnóstico"};
+        String[] columnasVacunas = {"Fecha", "Tipo de Intervención", "Farmaco"};
         DefaultTableModel modeloVacunas = new DefaultTableModel(columnasVacunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -360,7 +306,7 @@ public class PanelInfoMascota extends JPanel {
                 modeloVacunas.addRow(new Object[]{
                     registro.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     registro.getTipoIntervencion(),
-                    registro.getDiagnostico()
+                    registro.getTratamiento()
                 });
             }
         }
