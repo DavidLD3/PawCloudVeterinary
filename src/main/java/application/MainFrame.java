@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+
 import java.awt.geom.RoundRectangle2D;
 import java.time.format.DateTimeFormatter;
 
@@ -25,20 +25,18 @@ import UISwing.recursos.RoundedPanel;
 import UISwing.ventanas.PanelAdministracion;
 import UISwing.ventanas.PanelAlmacen;
 import UISwing.ventanas.PanelCalendario;
-import UISwing.ventanas.PanelCitas;
 import UISwing.ventanas.PanelClienteMascota;
 import UISwing.ventanas.PanelHome;
-
+import UISwing.ventanas.PanelVentas;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javax.swing.JButton;
 
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame  {
 
     private static final long serialVersionUID = 1L;
     private CardLayout cardLayout = new CardLayout(); // CardLayout para gestionar paneles intercambiables
@@ -73,11 +71,11 @@ public class MainFrame extends JFrame {
         getContentPane().add(cardPanel);
         
         // Inicialización y adición de PanelHome al cardPanel
-        panelHome = new PanelHome(); // Asume que esta clase ya está definida correctamente
+        panelHome = new PanelHome(this); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelHome, "PanelHome");
         // Inicialización y adición de PanelCitas al cardPanel
-        PanelCitas panelCitas = new PanelCitas(); // Asume que esta clase ya está definida correctamente
-        cardPanel.add(panelCitas, "PanelCitas");
+        PanelVentas panelVentas = new PanelVentas();
+        cardPanel.add(panelVentas, "PanelVentas");
         PanelClienteMascota panelClienteMascota = new PanelClienteMascota(); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelClienteMascota, "PanelClienteMascota");
         PanelCalendario panelCalendario = new PanelCalendario(); // Asume que esta clase ya está definida correctamente
@@ -147,23 +145,25 @@ public class MainFrame extends JFrame {
         lblNewLabel_1.setBounds(25, 183, 20, 28);
         panelMenu.add(lblNewLabel_1);
         
-        //Para el menu de citas
-        JLabel lblVentas = new JLabel("Ventas");
-        lblVentas.setForeground(new Color(255, 255, 255));
-        lblVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblVentas.setBounds(55, 222, 102, 28);
-        panelMenu.add(lblVentas);
-        lblVentas.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                cardLayout.show(cardPanel, "PanelCitas"); // Cambiar al PanelCitas
-            }
-        });
-        
+      
+     // Ícono para el menú de Ventas
         JLabel lblNewLabel_2 = new JLabel("");
         lblNewLabel_2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoVentas.png")));
         lblNewLabel_2.setBounds(25, 222, 20, 28);
         panelMenu.add(lblNewLabel_2);
+
+        // Etiqueta para el texto "Ventas"
+        JLabel lblVentas = new JLabel("Ventas");
+        lblVentas.setForeground(Color.WHITE);
+        lblVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblVentas.setBounds(55, 222, 130, 28);
+        panelMenu.add(lblVentas);
+        lblVentas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(cardPanel, "PanelVentas"); // Cambiar al PanelVentas
+            }
+        });
         
         JLabel lblcalendario = new JLabel("Calendario");
         lblcalendario.setForeground(new Color(255, 255, 255));
@@ -248,24 +248,6 @@ public class MainFrame extends JFrame {
         btnLogOut.setMargin(new Insets(0, 10, 0, 10));
         panelMenu.add(btnLogOut);
 
-        
-        
-        
-        
-        
-        
-        /*JLabel lbllogout = new JLabel("Logout");
-        lbllogout.setForeground(new Color(255, 255, 255));
-        lbllogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lbllogout.setBounds(50, 712, 75, 28);
-        panelMenu.add(lbllogout);
-        lbllogout.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.exit(0); // Cierra la aplicación
-            }
-        });*/
-     
         RoundedPanel panelHeader = new RoundedPanel(20);  // Redondeado del panel
         panelHeader.setBounds(234, 11, 1112, 82);
         panelHeader.setBackground(new Color(255, 255, 255, 123)); // Establece el color de fondo y la opacidad
@@ -320,6 +302,9 @@ public class MainFrame extends JFrame {
 	    public void setNombreUsuario(String nombreUsuario) {
 	        lblNombreUsuario.setText(nombreUsuario);
 	    }
-	    
+	    public void switchPanel(String panelName) {
+	        cardLayout.show(cardPanel, panelName);
+	    }
+
 
 }

@@ -41,8 +41,8 @@ public class DialogoListaEmpleados extends JDialog {
     private void configuraTabla() {
         table.setFillsViewportHeight(true);
         table.setIntercellSpacing(new Dimension(10, 4));
-        table.setBackground(Color.decode("#5694F9"));
-        table.setForeground(Color.WHITE);
+        table.setBackground(Color.decode("#96B8F6"));
+        table.setForeground(Color.decode("#1B2582"));
         table.setFont(new Font("Segoe UI", Font.BOLD, 14));
         table.setRowHeight(table.getRowHeight() + 10);
         table.getTableHeader().setBackground(Color.decode("#0483FF"));

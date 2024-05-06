@@ -16,7 +16,7 @@ public class MascotaDAO {
     
     public List<Mascota> buscarMascotasPorNombre(String nombre) {
         List<Mascota> mascotas = new ArrayList<>();
-        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE nombre LIKE ?";
+        String sql = "SELECT id, nombre, especie, raza, pasaporte, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE nombre LIKE ?";
         try (Connection conn = conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "%" + nombre + "%");
@@ -33,7 +33,7 @@ public class MascotaDAO {
 
     public List<Mascota> buscarMascotasPorCliente(int idCliente) {
         List<Mascota> mascotas = new ArrayList<>();
-        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE id_cliente = ?";
+        String sql = "SELECT id, nombre, especie, raza, pasaporte, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE id_cliente = ?";
         try (Connection conn = conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idCliente);
@@ -53,32 +53,42 @@ public class MascotaDAO {
     }
 
     private Mascota crearMascotaDesdeResultSet(ResultSet rs) throws SQLException {
-        // Suponiendo que Mascota.Sexo.fromString maneja la conversión adecuadamente
-        Mascota.Sexo sexo = Mascota.Sexo.valueOf(rs.getString("sexo").toUpperCase()); 
+        String sexoStr = rs.getString("sexo");
+        Mascota.Sexo sexo = null;
+        if (sexoStr != null && !sexoStr.isEmpty()) { // Comprobamos que la cadena no sea nula y no esté vacía
+            try {
+                sexo = Mascota.Sexo.valueOf(sexoStr.trim().toUpperCase()); // Usamos trim y toUpperCase para asegurar compatibilidad
+            } catch (IllegalArgumentException e) {
+                // Si el valor no corresponde a ningún enum, manejar aquí el error, p.ej., loguearlo o usar un valor por defecto
+                System.err.println("Valor no válido para el campo 'sexo': " + sexoStr);
+            }
+        }
+        // Continúa con el resto de los campos
         return new Mascota(
             rs.getInt("id"),
             rs.getString("nombre"),
             rs.getString("especie"),
             rs.getString("raza"),
-            rs.getInt("edad"),
+            rs.getString("pasaporte"),
             rs.getInt("id_cliente"),
             rs.getString("microchip"),
             rs.getDate("fecha_nacimiento").toLocalDate(),
             rs.getString("caracter"),
             rs.getString("color"),
             rs.getString("tipo_pelo"),
-            sexo,
+            sexo, // Usa la variable local sexo que podría ser null
             rs.getBoolean("esterilizado")
         );
     }
+
     public boolean insertarMascota(Mascota mascota) {
-        String sql = "INSERT INTO mascotas (nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO mascotas (nombre, especie, raza, pasaporte, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = this.conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, mascota.getNombre());
             stmt.setString(2, mascota.getEspecie());
             stmt.setString(3, mascota.getRaza());
-            stmt.setInt(4, mascota.getEdad());
+            stmt.setString(4, mascota.getPasaporte());  // Cambiado de setInt a setString
             stmt.setInt(5, mascota.getIdCliente());
             stmt.setString(6, mascota.getMicrochip());
             stmt.setObject(7, mascota.getFechaNacimiento());
@@ -100,13 +110,13 @@ public class MascotaDAO {
     }
 
     public boolean actualizarMascota(Mascota mascota) {
-        String sql = "UPDATE mascotas SET nombre = ?, especie = ?, raza = ?, edad = ?, id_cliente = ?, microchip = ?, fecha_nacimiento = ?, caracter = ?, color = ?, tipo_pelo = ?, sexo = ?, esterilizado = ? WHERE id = ?";
+        String sql = "UPDATE mascotas SET nombre = ?, especie = ?, raza = ?, pasaporte = ?, id_cliente = ?, microchip = ?, fecha_nacimiento = ?, caracter = ?, color = ?, tipo_pelo = ?, sexo = ?, esterilizado = ? WHERE id = ?";
         try (Connection conn = this.conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, mascota.getNombre());
             stmt.setString(2, mascota.getEspecie());
             stmt.setString(3, mascota.getRaza());
-            stmt.setInt(4, mascota.getEdad());
+            stmt.setString(4, mascota.getPasaporte());  // Cambiado de setInt a setString
             stmt.setInt(5, mascota.getIdCliente());
             stmt.setString(6, mascota.getMicrochip());
             stmt.setObject(7, mascota.getFechaNacimiento());
@@ -138,7 +148,7 @@ public class MascotaDAO {
     }
     public Mascota obtenerMascotaPorId(int idMascota) {
         Mascota mascota = null;
-        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE id = ?";
+        String sql = "SELECT id, nombre, especie, raza, pasaporte, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE id = ?";
         try (Connection conn = conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idMascota);
@@ -177,7 +187,7 @@ public class MascotaDAO {
     
     public Mascota obtenerMascotaPorMicrochip(String microchip) {
         Mascota mascota = null;
-        String sql = "SELECT id, nombre, especie, raza, edad, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE microchip = ?";
+        String sql = "SELECT id, nombre, especie, raza, pasaporte, id_cliente, microchip, fecha_nacimiento, caracter, color, tipo_pelo, sexo, esterilizado FROM mascotas WHERE microchip = ?";
         try (Connection conn = conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, microchip);
@@ -191,5 +201,30 @@ public class MascotaDAO {
         }
         return mascota;
     }
-    
+    public List<Mascota> buscarMascotasPorNombreConDueño(String nombre) {
+        List<Mascota> mascotas = new ArrayList<>();
+        String sql = "SELECT m.*, c.nombre AS nombre_dueño, c.apellidos AS apellidos_dueño FROM mascotas m " +
+                     "JOIN clientes c ON m.id_cliente = c.id " +
+                     "WHERE m.nombre LIKE ?";
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + nombre + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Mascota mascota = crearMascotaConDueñoDesdeResultSet(rs);
+                    mascotas.add(mascota);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mascotas;
+    }
+
+    private Mascota crearMascotaConDueñoDesdeResultSet(ResultSet rs) throws SQLException {
+        Mascota mascota = crearMascotaDesdeResultSet(rs);
+        String dueño = rs.getString("apellidos_dueño") + ", " + rs.getString("nombre_dueño");
+        mascota.setNombreDueño(dueño);
+        return mascota;
+    }
 }

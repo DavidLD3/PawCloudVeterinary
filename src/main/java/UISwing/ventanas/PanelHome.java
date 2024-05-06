@@ -7,8 +7,10 @@ import DB.ClienteDAO;
 import DB.FarmacoDAO;
 import DB.HospitalizacionDAO;
 import DB.MascotaDAO;
+import DB.VentasDAO;
 import UISwing.recursos.CustomPanelOpaco;
 import UISwing.recursos.RoundedPanel;
+import application.MainFrame;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -23,10 +25,12 @@ import model.Cliente;
 import model.Hospitalizacion;
 import model.Mascota;
 import model.UsoFarmaco;
+import model.VentaDetalle;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PanelHome extends JPanel implements CitaActualizadaListener {
+public class PanelHome extends JPanel implements CitaActualizadaListener, HospitalizacionActualizadaListener  {
 	
 	private JPanel panelDatos;
 	private JLabel lblHoraCita;
@@ -47,8 +51,10 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
     private JLabel lblMascotaHospitalizacion_2;
     private JLabel lblClienteHospitalizacion_2;
     private FarmacoDAO farmacoDAO;	
+    private MainFrame mainFrame;
 
-    public PanelHome() {
+    public PanelHome(MainFrame mainFrame) {
+    	this.mainFrame = mainFrame;
         setLayout(null);
         setOpaque(false);
         this.farmacoDAO = new FarmacoDAO(); 
@@ -403,6 +409,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         btnAñadirHospita.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 VentanaHospitalizadosDialog dialog = new VentanaHospitalizadosDialog(null, true);
+                dialog.addHospitalizacionActualizadaListener(PanelHome.this);
                 dialog.setTitle("Añadir Cita");
                 dialog.setLocationRelativeTo(null);
                 dialog.setVisible(true);
@@ -457,8 +464,10 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         
         JButton btnAñadirVentas = new JButton("Añadir Venta");
         btnAñadirVentas.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
+            public void actionPerformed(ActionEvent e) {
+                // Cambia al panel de ventas
+                mainFrame.switchPanel("PanelVentas");
+            }
         });
         btnAñadirVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAñadirVentas.setBounds(24, 297, 374, 31);
@@ -514,20 +523,18 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         panelDatosVentas.setOpaque(false);
         panelOpacoVentas.add(panelDatosVentas);
 
-        // Agrega algunos datos de ventas de ejemplo
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:00", "Alimento para perros", "2", "$20.00"});
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$15.00"});
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$15.00"});
-        agregarFilaDatosVentas(panelDatosVentas, new String[]{"10:30", "Collar antipulgas", "1", "$150.00"});
+        mostrarUltimasVentas(panelDatosVentas);
        
     }
+    
+    
 
     private void inicializarPanelFarmacos() {
         // Panel principal de fármacos que contendrá todo
     	RoundedPanel panelFarmacos = new RoundedPanel(20); // Radio Borde
         panelFarmacos.setLayout(null);
         panelFarmacos.setBackground(Color.decode("#5C8CCD"));
-        panelFarmacos.setBounds(0, 413, 1112, 240); 
+        panelFarmacos.setBounds(0, 413, 1112, 238); 
         add(panelFarmacos);
 
         // Panel opaco que contendrá tanto el panel de encabezados como el panel de datos
@@ -570,18 +577,19 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
     private void mostrarCitasProximas() {
         CitaDAO citaDAO = new CitaDAO();
         List<Cita> citasProximas = citaDAO.recuperarCitasFuturas();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         if (!citasProximas.isEmpty()) {
             Cita primeraCita = citasProximas.get(0);
             lblHoraCita.setText(primeraCita.getHora() != null ? primeraCita.getHora().toString() : "Hora no disponible");
-            lblDiaCita.setText(primeraCita.getFecha() != null ? primeraCita.getFecha().toString() : "Fecha no disponible");
+            lblDiaCita.setText(primeraCita.getFecha() != null ? dateFormatter.format(primeraCita.getFecha()) : "Fecha no disponible");
             lblMascotaCita.setText(primeraCita.getNombreMascota());
             lblClienteCita.setText(primeraCita.getNombreCliente());
 
             if (citasProximas.size() > 1) {
                 Cita segundaCita = citasProximas.get(1);
                 lblHoraCita_2.setText(segundaCita.getHora() != null ? segundaCita.getHora().toString() : "Hora no disponible");
-                lblDiaCita_2.setText(segundaCita.getFecha() != null ? segundaCita.getFecha().toString() : "Fecha no disponible");
+                lblDiaCita_2.setText(segundaCita.getFecha() != null ? dateFormatter.format(segundaCita.getFecha()) : "Fecha no disponible");
                 lblMascotaCita_2.setText(segundaCita.getNombreMascota());
                 lblNombreCliente2.setText(segundaCita.getNombreCliente());
             }
@@ -590,6 +598,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         panelOpacoCitas.revalidate();
         panelOpacoCitas.repaint();
     }
+
 
 
   
@@ -650,7 +659,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         for (UsoFarmaco uso : usosFarmacos) {
             String[] datosFila = new String[]{
                 uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("HH:mm")), // Hora de uso
-                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), // Fecha de uso
+                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), // Fecha de uso
                 uso.getNombreFarmaco(), // Nombre del fármaco
                 uso.getNombreMascota(), // Nombre de la mascota tratada
                 String.valueOf(uso.getCantidadUsada()), // Cantidad usada (dosis administrada)
@@ -682,19 +691,36 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         
         return panelEncabezadosVentas;
     }
+    
+    
+    private void mostrarUltimasVentas(JPanel panelDatosVentas) {
+        VentasDAO ventasDAO = new VentasDAO();
+        try {
+            List<VentaDetalle> ultimasVentas = ventasDAO.obtenerUltimasVentas();
+            for (VentaDetalle venta : ultimasVentas) {
+                String[] datosVenta = new String[]{
+                    new SimpleDateFormat("HH:mm").format(venta.getFechaVenta()),
+                    venta.getProducto(),
+                    String.valueOf(venta.getCantidad()),
+                    String.format("%.2f €", venta.getPrecioUnitario()) 
+                };
+                agregarFilaDatosVentas(panelDatosVentas, datosVenta);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al recuperar las últimas ventas: " + e.getMessage());
+            // Considera agregar una notificación al usuario de que no se pudieron cargar los datos
+        }
+    }
+
     private void agregarFilaDatosVentas(JPanel panelDatosVentas, String[] datosVentas) {
         JPanel panelFilaVentas = new JPanel();
         panelFilaVentas.setLayout(new GridLayout(1, 4, 0, 0)); // 4 columnas para las ventas
         panelFilaVentas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Ajusta la altura de la fila
         panelFilaVentas.setOpaque(false);
 
-        for (int i = 0; i < datosVentas.length; i++) {
-            JLabel labelDato = new JLabel(datosVentas[i], SwingConstants.CENTER);
-            labelDato.setForeground(Color.WHITE); // Color de texto
-            // Configurar el tooltip para la columna del producto
-            if (i == 1) { // Asumiendo que el producto está en la segunda posición del array
-                labelDato.setToolTipText(datosVentas[i]);
-            }
+        for (String dato : datosVentas) {
+            JLabel labelDato = new JLabel(dato, SwingConstants.CENTER);
+            labelDato.setForeground(Color.WHITE);
             panelFilaVentas.add(labelDato);
         }
 
@@ -702,6 +728,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         panelDatosVentas.revalidate();
         panelDatosVentas.repaint();
     }
+
     private void mostrarHospitalizacionesRecientes() {
         HospitalizacionDAO hospitalizacionDAO = new HospitalizacionDAO();
         MascotaDAO mascotaDAO = new MascotaDAO();
@@ -731,7 +758,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
                 lblMascotaHospitalizacion_2.setText(mascotaSegunda.getNombre());
                 lblClienteHospitalizacion_2.setText(clienteSegunda.getNombre() + " " + clienteSegunda.getApellidos());
             }
-        }
+        }	
     }
     public void actualizarCitasPendientes() {
         mostrarCitasProximas();
@@ -742,6 +769,11 @@ public class PanelHome extends JPanel implements CitaActualizadaListener {
         mostrarCitasProximas();
         // Cualquier otra actualización de UI necesaria
     }
+    @Override
+    public void onHospitalizacionActualizada() {
+        mostrarHospitalizacionesRecientes(); // Actualiza la UI con los nuevos datos
+    }
+    
   
 
 }

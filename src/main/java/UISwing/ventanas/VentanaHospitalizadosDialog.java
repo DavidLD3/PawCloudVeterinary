@@ -47,7 +47,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 	private HospitalizacionDAO hospitalizacionDAO;
 	private FarmacoDAO farmacoDAO;
 	private JComboBox<Veterinario> comboBoxVeterinarios;
-
+	private List<HospitalizacionActualizadaListener> listeners = new ArrayList<>();
     
 	 public VentanaHospitalizadosDialog(Frame owner, boolean modal ) {
 	        super(owner, modal);
@@ -97,10 +97,13 @@ public class VentanaHospitalizadosDialog extends JDialog {
 
 	        // Selector de fecha de ingreso
 			dateChooserIngreso = new JDateChooser();
-			dateChooserIngreso.setDate(new Date()); // Establecer a la fecha actual
+			dateChooserIngreso.setMinSelectableDate(new Date()); // Establece la fecha mínima a la fecha actual
+		    dateChooserIngreso.setDate(new Date()); // Establece la fecha inicial en la fecha actual
 			dateChooserIngreso.setBounds(40, 127, 244, 30);
+			dateChooserIngreso.setDateFormatString("dd/MM/yyyy"); // Establece el formato de fecha
 	        // Selector de fecha de salida (opcional al inicio)
 	        dateChooserSalida = new JDateChooser();
+	        dateChooserSalida.setDateFormatString("dd/MM/yyyy"); // Establece el formato de fecha
 	        dateChooserSalida.setBounds(319, 127, 200, 30);
 
 	     // Reemplazo de JTextField por JTextArea para el motivo de la hospitalización
@@ -356,6 +359,7 @@ public class VentanaHospitalizadosDialog extends JDialog {
 
 		        boolean resultadoInsertar = hospitalizacionDAO.insertarHospitalizacion(hospitalizacion, idVeterinarioSeleccionado);
 		        if (resultadoInsertar) {
+		        	notifyHospitalizacionActualizada(); 
 		            JOptionPane.showMessageDialog(this, "Hospitalización guardada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		            dispose();
 		        } else {
@@ -428,6 +432,14 @@ public class VentanaHospitalizadosDialog extends JDialog {
 		        }
 		    }.execute();
 		}
+	  public void addHospitalizacionActualizadaListener(HospitalizacionActualizadaListener listener) {
+	        listeners.add(listener);
+	    }
+	  private void notifyHospitalizacionActualizada() {
+	        for (HospitalizacionActualizadaListener listener : listeners) {
+	            listener.onHospitalizacionActualizada();
+	        }
+	    }
 
 
 

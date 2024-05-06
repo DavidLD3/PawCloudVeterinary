@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.util.List;
 import model.Farmaco;
 import DB.FarmacoDAO;
+import UISwing.recursos.RoundedPanel;
 
 public class DialogoSeleccionFarmaco extends JDialog {
     private JComboBox<Farmaco> comboBoxFarmacos;
@@ -21,12 +22,21 @@ public class DialogoSeleccionFarmaco extends JDialog {
         this.farmacoDAO = farmacoDAO;
         setTitle("Seleccionar Fármaco");
         setUndecorated(true);
-        setSize(new Dimension(300, 250));
+        setSize(new Dimension(320, 270));
         setLocationRelativeTo(null);
+        setBackground(new Color(0, 0, 0, 0));
+        
+        RoundedPanel roundedBackground = new RoundedPanel(20);
+        roundedBackground.setLayout(null);  // Usar layout null para control manual
+        roundedBackground.setBackground(new Color(91, 123, 213));  // Color de fondo
+        roundedBackground.setOpaque(false);
+        setContentPane(roundedBackground);
 
         comboBoxFarmacos = new JComboBox<>();
+        comboBoxFarmacos.setForeground(Color.decode("#0057FF"));
         comboBoxFarmacos.setEditable(true);
-        comboBoxFarmacos.setBounds(26, 41, 248, 24);
+        comboBoxFarmacos.setBounds(34, 55, 248, 24);
+        comboBoxFarmacos.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         comboBoxFarmacos.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -48,18 +58,26 @@ public class DialogoSeleccionFarmaco extends JDialog {
         });
 
         getContentPane().setLayout(null);
+        getContentPane().setBackground(Color.decode("#A6B1D8"));
         getContentPane().add(comboBoxFarmacos);
 
         textFieldDosis = new JTextField(10);
-        textFieldDosis.setBounds(26, 96, 116, 22);
+        textFieldDosis.setForeground(Color.decode("#0057FF"));
+        textFieldDosis.setBounds(34, 110, 116, 22);
+        textFieldDosis.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         getContentPane().add(textFieldDosis);
 
         textFieldFrecuencia = new JTextField(10);
-        textFieldFrecuencia.setBounds(26, 154, 248, 22);
+        textFieldFrecuencia.setForeground(Color.decode("#0057FF"));
+        textFieldFrecuencia.setBounds(34, 168, 248, 22);
+        textFieldFrecuencia.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         getContentPane().add(textFieldFrecuencia);
 
         btnAceptar = new JButton("Aceptar");
-        btnAceptar.setBounds(182, 200, 92, 23);
+        btnAceptar.setBounds(190, 214, 92, 23);
+        btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnAceptar.setBackground(Color.WHITE);
+        btnAceptar.setForeground(Color.decode("#0057FF"));
         btnAceptar.addActionListener(e -> {
             seleccionado = true;
             setVisible(false);
@@ -67,7 +85,10 @@ public class DialogoSeleccionFarmaco extends JDialog {
         getContentPane().add(btnAceptar);
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBounds(26, 200, 95, 23);
+        btnCancelar.setBounds(34, 214, 95, 23);
+        btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnCancelar.setBackground(Color.WHITE);
+        btnCancelar.setForeground(Color.decode("#0057FF"));
         btnCancelar.addActionListener(e -> {
             seleccionado = false;
             setVisible(false);
@@ -75,24 +96,41 @@ public class DialogoSeleccionFarmaco extends JDialog {
         getContentPane().add(btnCancelar);
         
         JLabel lblFarmaco = new JLabel("Farmaco:");
-        lblFarmaco.setForeground(new Color(255, 255, 255));
+        lblFarmaco.setForeground(Color.decode("#1B2582")); 
         lblFarmaco.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblFarmaco.setBounds(26, 16, 69, 14);
+        lblFarmaco.setBounds(34, 30, 69, 14);
         getContentPane().add(lblFarmaco);
         
         JLabel lblDosis = new JLabel("Dosis:");
+        lblDosis.setForeground(Color.decode("#1B2582"));
         lblDosis.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblDosis.setForeground(new Color(255, 255, 255));
-        lblDosis.setBounds(26, 76, 46, 14);
-        getContentPane().add(lblDosis);
-        
+     
+        lblDosis.setBounds(34, 90, 46, 14);
+        getContentPane().add(lblDosis);        
         JLabel lblFrecuencia = new JLabel("Frecuencia:");
+        lblFrecuencia.setForeground(Color.decode("#1B2582"));
         lblFrecuencia.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblFrecuencia.setForeground(new Color(255, 255, 255));
-        lblFrecuencia.setBounds(26, 129, 95, 14);
+        lblFrecuencia.setBounds(34, 143, 95, 14);
         getContentPane().add(lblFrecuencia);
+        
+        
+        JPanel centerPanel = new JPanel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+            // Personaliza aquí tu componente
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+            g2.dispose();
+            super.paintComponent(g);
+	        }
+	    };
+	    centerPanel.setBackground(new Color(255, 255, 255, 70)); // Color de fondo con opacidad
+	    centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+	    centerPanel.setBounds(21, 21, 275, 227);
 
-        applyStyles();
+	    getContentPane().add(centerPanel);
     }
     
     private void actualizarListaFarmacos(String texto) {
@@ -102,20 +140,7 @@ public class DialogoSeleccionFarmaco extends JDialog {
         comboBoxFarmacos.setPopupVisible(true);
     }
 
-    private void applyStyles() {
-        getContentPane().setBackground(Color.decode("#0483FF"));
-        comboBoxFarmacos.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        textFieldDosis.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        textFieldFrecuencia.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnAceptar.setBackground(Color.WHITE);
-        btnCancelar.setBackground(Color.WHITE);
-        btnAceptar.setForeground(Color.decode("#0057FF"));
-        btnCancelar.setForeground(Color.decode("#0057FF"));
-    }
-    
-    
+  
 
     public boolean isSeleccionado() {
         return seleccionado;

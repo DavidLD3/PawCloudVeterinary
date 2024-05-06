@@ -89,5 +89,77 @@ public class VeterinarioDAO {
 
         return idVeterinario;
     }
+    
+    public Veterinario obtenerVeterinarioPorId(int id) {
+        String sql = "SELECT * FROM veterinarios WHERE id = ?";
+        Veterinario veterinario = null;
+        
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            
+            if (resultSet.next()) {
+                veterinario = new Veterinario(
+                    resultSet.getInt("id"),
+                    resultSet.getString("nombre"),
+                    resultSet.getString("apellidos"),
+                    resultSet.getString("licencia"),
+                    resultSet.getString("telefono"),
+                    resultSet.getString("email"),
+                    resultSet.getString("especialidades"),
+                    resultSet.getString("horario_trabajo"),
+                    resultSet.getDate("fecha_contratacion")
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener el veterinario por ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return veterinario;
+    }
+    
+    public boolean actualizarVeterinario(Veterinario veterinario) {
+        String sql = "UPDATE veterinarios SET nombre = ?, apellidos = ?, licencia = ?, telefono = ?, email = ?, especialidades = ?, horario_trabajo = ?, fecha_contratacion = ? WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, veterinario.getNombre());
+            statement.setString(2, veterinario.getApellidos());
+            statement.setString(3, veterinario.getLicencia());
+            statement.setString(4, veterinario.getTelefono());
+            statement.setString(5, veterinario.getEmail());
+            statement.setString(6, veterinario.getEspecialidades());
+            statement.setString(7, veterinario.getHorarioTrabajo());
+            if (veterinario.getFechaContratacion() != null) {
+                statement.setDate(8, new java.sql.Date(veterinario.getFechaContratacion().getTime()));
+            } else {
+                statement.setNull(8, java.sql.Types.DATE);
+            }
+            statement.setInt(9, veterinario.getId());
+
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar el veterinario: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean eliminarVeterinario(int id) {
+        String sql = "DELETE FROM veterinarios WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            int rowsDeleted = statement.executeUpdate();
+            return rowsDeleted > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar el veterinario: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
 }

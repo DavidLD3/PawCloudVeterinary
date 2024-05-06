@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,7 +162,7 @@ public class CitaDAO {
         return citas;
     }
     
-    public static List<Cita> recuperarCitasPorSemana(LocalDate fechaInicio, LocalDate fechaFin) {
+    public List<Cita> recuperarCitasPorSemana(LocalDate fechaInicio, LocalDate fechaFin) {
         List<Cita> citas = new ArrayList<>();
         String sql = "SELECT c.id, c.titulo, c.fecha, c.hora, c.tipo, cl.nombre AS nombre_cliente, m.nombre AS nombre_mascota " +
                      "FROM citas c " +
@@ -175,12 +176,13 @@ public class CitaDAO {
             stmt.setDate(2, Date.valueOf(fechaFin));
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-            	Cita cita = new Cita();
+                Cita cita = new Cita();
                 cita.setId(rs.getInt("id"));
                 cita.setTitulo(rs.getString("titulo"));
                 cita.setFecha(rs.getDate("fecha").toLocalDate());
                 cita.setHora(rs.getTime("hora").toLocalTime());
-                cita.setTipo(rs.getString("tipo")); // Asegúrate de incluir el tipo
+                cita.setTipo(rs.getString("tipo"));
+                cita.setNombreMascota(rs.getString("nombre_mascota"));  // Asegúrate de estar recuperando este campo
                 citas.add(cita);
             }
         } catch (SQLException e) {
@@ -188,6 +190,7 @@ public class CitaDAO {
         }
         return citas;
     }
+
     public void actualizarCita(Cita cita) throws SQLException {
         String sql = "UPDATE citas SET titulo = ?, fecha = ?, hora = ?, notas = ?, id_cliente = ?, id_mascota = ?, tipo = ? WHERE id = ?";
         
@@ -251,6 +254,56 @@ public class CitaDAO {
 
         return cita;
     }
+    public List<Cita> recuperarCitasPorCliente(int idCliente) {
+        List<Cita> citas = new ArrayList<>();
+        String sql = "SELECT c.*, cl.nombre AS nombre_cliente, m.nombre AS nombre_mascota " +
+                     "FROM citas c " +
+                     "JOIN clientes cl ON c.id_cliente = cl.id " +
+                     "JOIN mascotas m ON c.id_mascota = m.id " +
+                     "WHERE c.id_cliente = ? " +
+                     "ORDER BY c.fecha ASC, c.hora ASC";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cita cita = new Cita(
+                    rs.getInt("id"),
+                    rs.getString("titulo"),
+                    rs.getDate("fecha").toLocalDate(),
+                    rs.getTime("hora").toLocalTime(),
+                    rs.getString("notas"),
+                    rs.getInt("id_cliente"),
+                    rs.getInt("id_mascota"),
+                    // Suponiendo que Cita tiene constructores para manejar estos datos, o puedes asignarlos después
+                    rs.getString("nombre_cliente"), // Opcional, si necesitas mostrar el nombre en la interfaz
+                    rs.getString("nombre_mascota") // Opcional, si necesitas mostrar el nombre en la interfaz
+                );
+                citas.add(cita);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return citas;
+    }
+    
+    public boolean existeCita(Date fecha, LocalTime hora) {
+        String sql = "SELECT COUNT(*) FROM citas WHERE fecha = ? AND TIME(hora) = ?";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDate(1, fecha);
+            pstmt.setTime(2, Time.valueOf(hora));
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;  // Devuelve true si hay al menos una cita existente
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 
 
 
