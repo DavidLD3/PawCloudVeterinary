@@ -1,26 +1,28 @@
 package UISwing.ventanas;
 
+// file path: package UISwing.ventanas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import DB.CitaDAO;
 import DB.ClienteDAO;
 import DB.MascotaDAO;
-import UISwing.recursos.GradientPanel2;
-import UISwing.recursos.RoundedButton;
+import DB.VentasDAO;
 import UISwing.recursos.RoundedPanel;
 import model.Cita;
 import model.Cliente;
 import model.Mascota;
-import java.util.List;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import model.VentaDetalle;
 
 public class PanelCliente extends JPanel implements CitaActualizadaListener {
     private ClienteDAO clienteDao;
@@ -28,14 +30,17 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
     private JTabbedPane tabbedPane;
     private JTable tablaMascotas;
     private JTable tablaCitas;
+    private JTable tablaVentas;
     private DefaultTableModel modeloTablaCitas;
-    
+    private DefaultTableModel modeloTablaVentas;
+
     public PanelCliente(int idCliente) {
         super(new BorderLayout());
         clienteDao = new ClienteDAO();
         this.cliente = clienteDao.obtenerClientePorId(idCliente);
         initializeUI();
         actualizarTablaMascotas(); 
+        actualizarTablaVentas();
     }
 
     private void initializeUI() {
@@ -47,6 +52,7 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         tabbedPane.addTab("Cliente", crearPanelInfoCliente());
         tabbedPane.addTab("Mascotas", crearPanelMascotasTotales());
         tabbedPane.addTab("Citas", crearPanelCitas());
+        tabbedPane.addTab("Ventas", crearPanelVentas());
 
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         add(mainPanel, BorderLayout.CENTER);
@@ -152,6 +158,29 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         return panelCitas;
     }
 
+    private JPanel crearPanelVentas() {
+        String[] columnas = {"Hora", "Producto", "Cantidad", "Precio"};
+        modeloTablaVentas = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tablaVentas = new JTable(modeloTablaVentas);
+        JScrollPane scrollPane = new JScrollPane(tablaVentas);
+        scrollPane.setPreferredSize(new Dimension(500, 400));
+
+        RoundedPanel panelVentas = new RoundedPanel(20);
+        panelVentas.setBackground(Color.decode("#7E88E2"));
+        panelVentas.setLayout(new BorderLayout());
+
+        panelVentas.add(scrollPane, BorderLayout.CENTER);
+
+        actualizarTablaVentas();
+
+        return panelVentas;
+    }
+
     private JButton crearBotonPersonalizado(String texto, ActionListener listener) {
         JButton btn = new JButton(texto);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -177,6 +206,33 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         });
         btn.addActionListener(listener);
         return btn;
+    }
+
+    private void actualizarTablaVentas() {
+        VentasDAO ventasDAO = new VentasDAO();
+        modeloTablaVentas.setRowCount(0);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+
+        if (cliente != null && cliente.getId() > 0) {
+            try {
+                // Fetch all sales
+                List<VentaDetalle> listaVentas = ventasDAO.obtenerUltimasVentas();
+                for (VentaDetalle venta : listaVentas) {
+                    // Check if the sale matches the client's ID
+                    if (ventasDAO.obtenerIdClientePorIdVenta(venta.getIdVenta()) == cliente.getId()) {
+                        Object[] fila = {
+                            timeFormat.format(venta.getFechaVenta()),
+                            venta.getProducto(),
+                            venta.getCantidad(),
+                            String.format("%.2f €", venta.getPrecioUnitario())
+                        };
+                        modeloTablaVentas.addRow(fila);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -261,6 +317,7 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         if (this.cliente != null) {
             initializeUI();
             actualizarTablaMascotas();
+            actualizarTablaVentas();
         } else {
             add(new JLabel("Cliente no encontrado."), BorderLayout.CENTER);
         }

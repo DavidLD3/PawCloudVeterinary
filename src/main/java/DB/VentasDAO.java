@@ -167,7 +167,19 @@ public class VentasDAO {
     }
 
 
-
+    public int obtenerIdClientePorIdVenta(int idVenta) throws SQLException {
+        String sql = "SELECT id_cliente FROM ventas WHERE id_venta = ?";
+        try (Connection conn = this.conexion.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idVenta);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_cliente");
+            } else {
+                throw new SQLException("No sale found for the given idVenta: " + idVenta);
+            }
+        }
+    }
 
 
 }
