@@ -71,7 +71,7 @@ public class MainFrame extends JFrame  {
         getContentPane().add(cardPanel);
         
         // Inicialización y adición de PanelHome al cardPanel
-        panelHome = new PanelHome(); // Asume que esta clase ya está definida correctamente
+        panelHome = new PanelHome(this); // Asume que esta clase ya está definida correctamente
         cardPanel.add(panelHome, "PanelHome");
         // Inicialización y adición de PanelCitas al cardPanel
         PanelVentas panelVentas = new PanelVentas();
@@ -302,6 +302,9 @@ public class MainFrame extends JFrame  {
 	    public void setNombreUsuario(String nombreUsuario) {
 	        lblNombreUsuario.setText(nombreUsuario);
 	    }
-	    
+	    public void switchPanel(String panelName) {
+	        cardLayout.show(cardPanel, panelName);
+	    }
+
 
 }

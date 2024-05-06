@@ -10,6 +10,7 @@ import DB.MascotaDAO;
 import DB.VentasDAO;
 import UISwing.recursos.CustomPanelOpaco;
 import UISwing.recursos.RoundedPanel;
+import application.MainFrame;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -50,8 +51,10 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
     private JLabel lblMascotaHospitalizacion_2;
     private JLabel lblClienteHospitalizacion_2;
     private FarmacoDAO farmacoDAO;	
+    private MainFrame mainFrame;
 
-    public PanelHome() {
+    public PanelHome(MainFrame mainFrame) {
+    	this.mainFrame = mainFrame;
         setLayout(null);
         setOpaque(false);
         this.farmacoDAO = new FarmacoDAO(); 
@@ -461,8 +464,10 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         
         JButton btnAñadirVentas = new JButton("Añadir Venta");
         btnAñadirVentas.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
+            public void actionPerformed(ActionEvent e) {
+                // Cambia al panel de ventas
+                mainFrame.switchPanel("PanelVentas");
+            }
         });
         btnAñadirVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAñadirVentas.setBounds(24, 297, 374, 31);
