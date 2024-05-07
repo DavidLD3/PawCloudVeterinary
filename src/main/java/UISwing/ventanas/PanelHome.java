@@ -32,6 +32,7 @@ import java.util.List;
 public class PanelHome extends JPanel implements CitaActualizadaListener, HospitalizacionActualizadaListener  {
 	
 	private JPanel panelDatos;
+	private JPanel panelDatosVentas; // Declare as class-level variable
 	private JLabel lblHoraCita;
 	private JLabel lblDiaCita;
 	private JLabel lblMascotaCita;
@@ -61,8 +62,14 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         mostrarHospitalizacionesRecientes();
         inicializarPanelVentas(); // Lo mismo que farmacos pero mas corto
         inicializarPanelFarmacos(); // Panel fármacos sin bordes ni scrollbar visible
-        
+        actualizarTodo();
 
+    }
+    public void actualizarTodo() {
+        mostrarCitasProximas();
+        mostrarHospitalizacionesRecientes();
+        cargarDatosFarmacos();
+        actualizarVentas();
     }
 
     private void inicializarPanelCitas() {
@@ -446,82 +453,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
     }
 
-    private void inicializarPanelVentas() {
-        RoundedPanel panelVentas = new RoundedPanel(20);
-        panelVentas.setBackground(Color.decode("#577BD1"));
-        panelVentas.setBounds(692, 0, 420, 402);
-        panelVentas.setLayout(null);
-        add(panelVentas);
-        
-        JLabel lblListadoVentas = new JLabel("Ver Listado");
-        lblListadoVentas.setForeground(Color.WHITE);
-        lblListadoVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblListadoVentas.setBounds(183, 359, 74, 14);
-        panelVentas.add(lblListadoVentas);
-        
-        JButton btnAñadirVentas = new JButton("Añadir Venta");
-        btnAñadirVentas.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
-        btnAñadirVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnAñadirVentas.setBounds(24, 297, 374, 31);
-        btnAñadirVentas.setBackground(Color.WHITE);
-        btnAñadirVentas.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnAñadirVentas.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnAñadirVentas.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnAñadirVentas.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnAñadirVentas.setOpaque(true); // El botón debe pintar cada pixel dentro de sus límites. Esto es necesario para ver el color de fondo.
-
-        // Personalización del efecto rollover
-        btnAñadirVentas.setRolloverEnabled(true);
-        btnAñadirVentas.addMouseListener(new java.awt.event.MouseAdapter() {
-        	@Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAñadirVentas.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-                btnAñadirVentas.setForeground(Color.WHITE);
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAñadirVentas.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
-                btnAñadirVentas.setForeground(Color.decode("#0057FF"));
-            }
-        });
-        panelVentas.add(btnAñadirVentas);
-        
-        CustomPanelOpaco panelOpacoVentas = new CustomPanelOpaco();
-        panelOpacoVentas.setLayout(null);
-        panelOpacoVentas.setBounds(24, 77, 374, 191);
-        panelOpacoVentas.setBackground(new Color(255, 255, 255, 70));
-        panelVentas.add(panelOpacoVentas);
-          
-        JLabel lbltextoVentas = new JLabel("Últimas ventas");
-        lbltextoVentas.setForeground(Color.WHITE);
-        lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lbltextoVentas.setBounds(48, 21, 171, 31);
-        panelVentas.add(lbltextoVentas);
-        
-        JLabel lblLogoPanelVentas = new JLabel("");
-        lblLogoPanelVentas.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoPanelVentas.png")));
-        lblLogoPanelVentas.setBounds(24, 21, 22, 31);
-        panelVentas.add(lblLogoPanelVentas);
-        
-        JPanel panelEncabezadosVentas = crearPanelEncabezadosVentas();
-        panelEncabezadosVentas.setOpaque(false);
-        panelEncabezadosVentas.setBounds(0, 10, 376, 30); // Establece la posición y el tamaño del panel de encabezados de ventas
-        panelOpacoVentas.add(panelEncabezadosVentas);
-
-        JPanel panelDatosVentas = new JPanel();
-        panelDatosVentas.setLayout(new BoxLayout(panelDatosVentas, BoxLayout.Y_AXIS));
-        panelDatosVentas.setBounds(0, 40, 376, 152); // Establece la posición y el tamaño del panel de datos de ventas
-        panelDatosVentas.setOpaque(false);
-        panelOpacoVentas.add(panelDatosVentas);
-
-        mostrarUltimasVentas(panelDatosVentas);
-       
-    }
-    
+   
     
 
     private void inicializarPanelFarmacos() {
@@ -630,7 +562,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
         panelDatos.add(panelFila);
     }
-
+   
 
     private void agregarFilaDatos(String[] datos) {
         JPanel panelFila = new JPanel();
@@ -667,15 +599,93 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         panelDatos.repaint();
     }
 
+    public void actualizarVentas() {
+        if (panelDatosVentas != null) {
+            mostrarUltimasVentas(panelDatosVentas);
+        } else {
+            System.out.println("Error: panelDatosVentas is not initialized.");
+        }
+    }
+    private void inicializarPanelVentas() {
+        RoundedPanel panelVentas = new RoundedPanel(20);
+        panelVentas.setBackground(Color.decode("#577BD1"));
+        panelVentas.setBounds(692, 0, 420, 402);
+        panelVentas.setLayout(null);
+        add(panelVentas);
 
+        JLabel lblListadoVentas = new JLabel("Ver Listado");
+        lblListadoVentas.setForeground(Color.WHITE);
+        lblListadoVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblListadoVentas.setBounds(183, 359, 74, 14);
+        panelVentas.add(lblListadoVentas);
 
+        JButton btnAñadirVentas = new JButton("Añadir Venta");
+        btnAñadirVentas.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Lógica de añadir venta aquí
+            }
+        });
+        btnAñadirVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnAñadirVentas.setBounds(24, 297, 374, 31);
+        btnAñadirVentas.setBackground(Color.WHITE);
+        btnAñadirVentas.setForeground(Color.decode("#0057FF")); // Letras en azul
+        btnAñadirVentas.setFocusPainted(false);
+        btnAñadirVentas.setBorderPainted(false);
+        btnAñadirVentas.setContentAreaFilled(false);
+        btnAñadirVentas.setOpaque(true);
+        btnAñadirVentas.setRolloverEnabled(true);
+        btnAñadirVentas.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAñadirVentas.setBackground(Color.decode("#003366")); // Azul oscuro para rollover
+                btnAñadirVentas.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAñadirVentas.setBackground(Color.WHITE);
+                btnAñadirVentas.setForeground(Color.decode("#0057FF"));
+            }
+        });
+        panelVentas.add(btnAñadirVentas);
+
+        CustomPanelOpaco panelOpacoVentas = new CustomPanelOpaco();
+        panelOpacoVentas.setLayout(null);
+        panelOpacoVentas.setBounds(24, 77, 374, 191);
+        panelOpacoVentas.setBackground(new Color(255, 255, 255, 70));
+        panelVentas.add(panelOpacoVentas);
+
+        JLabel lbltextoVentas = new JLabel("Últimas ventas");
+        lbltextoVentas.setForeground(Color.WHITE);
+        lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lbltextoVentas.setBounds(48, 21, 171, 31);
+        panelVentas.add(lbltextoVentas);
+
+        JLabel lblLogoPanelVentas = new JLabel("");
+        lblLogoPanelVentas.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoPanelVentas.png")));
+        lblLogoPanelVentas.setBounds(24, 21, 22, 31);
+        panelVentas.add(lblLogoPanelVentas);
+
+        JPanel panelEncabezadosVentas = crearPanelEncabezadosVentas();
+        panelEncabezadosVentas.setOpaque(false);
+        panelEncabezadosVentas.setBounds(0, 10, 376, 30);
+        panelOpacoVentas.add(panelEncabezadosVentas);
+
+        panelDatosVentas = new JPanel(); // Inicialización correcta
+        panelDatosVentas.setLayout(new BoxLayout(panelDatosVentas, BoxLayout.Y_AXIS));
+        panelDatosVentas.setBounds(0, 40, 376, 152);
+        panelDatosVentas.setOpaque(false);
+        panelOpacoVentas.add(panelDatosVentas);
+
+        mostrarUltimasVentas(panelDatosVentas);
+    }
+    
 
     private JPanel crearPanelEncabezadosVentas() {
         JPanel panelEncabezadosVentas = new JPanel();
         panelEncabezadosVentas.setLayout(new GridLayout(1, 4, 0, 0)); // 4 columnas para las ventas
-        panelEncabezadosVentas.setBackground(new Color(75, 75, 153)); // Color de fondo azul oscuro
+        panelEncabezadosVentas.setBackground(new Color(75, 75, 153));
 
-        // Lista de encabezados para ventas
         String[] encabezadosVentas = {"Hora", "Producto", "Cantidad", "Precio"};
         for (String encabezado : encabezadosVentas) {
             JLabel labelEncabezado = new JLabel(encabezado, SwingConstants.CENTER);
@@ -683,34 +693,37 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
             labelEncabezado.setFont(new Font("Segoe UI", Font.BOLD, 16));
             panelEncabezadosVentas.add(labelEncabezado);
         }
-        
+
         return panelEncabezadosVentas;
     }
+
     
     
     private void mostrarUltimasVentas(JPanel panelDatosVentas) {
         VentasDAO ventasDAO = new VentasDAO();
         try {
             List<VentaDetalle> ultimasVentas = ventasDAO.obtenerUltimasVentas();
+            panelDatosVentas.removeAll();
             for (VentaDetalle venta : ultimasVentas) {
-                String[] datosVenta = new String[]{
-                    new SimpleDateFormat("HH:mm").format(venta.getFechaVenta()),
-                    venta.getProducto(),
-                    String.valueOf(venta.getCantidad()),
-                    String.format("%.2f €", venta.getPrecioUnitario()) 
+                String[] datosVenta = {
+                        new SimpleDateFormat("HH:mm").format(venta.getFechaVenta()),
+                        venta.getProducto(),
+                        String.valueOf(venta.getCantidad()),
+                        String.format("%.2f €", venta.getPrecioUnitario())
                 };
                 agregarFilaDatosVentas(panelDatosVentas, datosVenta);
             }
+            panelDatosVentas.revalidate();
+            panelDatosVentas.repaint();
         } catch (Exception e) {
             System.out.println("Error al recuperar las últimas ventas: " + e.getMessage());
-            // Considera agregar una notificación al usuario de que no se pudieron cargar los datos
         }
     }
 
     private void agregarFilaDatosVentas(JPanel panelDatosVentas, String[] datosVentas) {
         JPanel panelFilaVentas = new JPanel();
-        panelFilaVentas.setLayout(new GridLayout(1, 4, 0, 0)); // 4 columnas para las ventas
-        panelFilaVentas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Ajusta la altura de la fila
+        panelFilaVentas.setLayout(new GridLayout(1, 4, 0, 0));
+        panelFilaVentas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         panelFilaVentas.setOpaque(false);
 
         for (String dato : datosVentas) {
@@ -720,10 +733,9 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         }
 
         panelDatosVentas.add(panelFilaVentas);
-        panelDatosVentas.revalidate();
-        panelDatosVentas.repaint();
     }
-
+    
+    
     private void mostrarHospitalizacionesRecientes() {
         HospitalizacionDAO hospitalizacionDAO = new HospitalizacionDAO();
         MascotaDAO mascotaDAO = new MascotaDAO();
@@ -755,6 +767,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
             }
         }	
     }
+   
     public void actualizarCitasPendientes() {
         mostrarCitasProximas();
     }

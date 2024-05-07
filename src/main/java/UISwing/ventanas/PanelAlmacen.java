@@ -345,10 +345,10 @@ public class PanelAlmacen extends JPanel {
 	// Reutilizamos el método abrirDialogoInfoAlmacen para mostrar la información tanto de productos como de servicios
 	private void abrirDialogoInfoAlmacen(String nombreProducto) {
 	    try {
-	        Almacen producto = almacenDao.obtenerProductoPorNombre(nombreProducto); // Obtener el producto por su nombre
+	        Almacen producto = almacenDao.obtenerProductoPorNombre(nombreProducto);
 	        if (producto != null) {
-	            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // Buscar el JFrame ancestro
-	            DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(frame, producto); // Corrección aquí
+	            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+	            DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(frame, producto);
 	            dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	            dialogo.setVisible(true);
 	        }
@@ -470,7 +470,7 @@ public class PanelAlmacen extends JPanel {
 	    }
 	}
 
-	private void cargarDatosProductos() {
+	public void cargarDatosProductos() {
 	    try {
 	        List<Almacen> productos = almacenDao.obtenerProductosFiltradosYOrdenados();
 	        actualizarTablaProductos(productos);
@@ -537,10 +537,11 @@ public class PanelAlmacen extends JPanel {
         }
     }
     private void abrirDialogoRegistroAlmacen() {
-        DialogoRegistroAlmacen dialogo = new DialogoRegistroAlmacen();
+        DialogoRegistroAlmacen dialogo = new DialogoRegistroAlmacen(this);
         dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialogo.setVisible(true);
     }
+    
     private void abrirDialogoRegistroFarmaco() {
         DialogoRegistroFarmaco dialogo = new DialogoRegistroFarmaco();
         dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

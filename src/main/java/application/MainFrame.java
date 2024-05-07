@@ -113,11 +113,12 @@ public class MainFrame extends JFrame  {
         lblHome.setBounds(55, 105, 75, 28);
         panelMenu.add(lblHome);
         lblHome.addMouseListener(new MouseAdapter() {
-        	
-        	public void mouseClicked(MouseEvent e) {
-        		cardLayout.show(cardPanel,  "PanelHome"); //Cambia al panel Home
-        	}
-		});
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                panelHome.actualizarTodo(); // Update all tables
+                cardLayout.show(cardPanel, "PanelHome");
+            }
+        });
         JLabel lblNewLabel = new JLabel("");
         lblNewLabel.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoHome.png")));
         lblNewLabel.setBounds(25, 105, 20, 28);
