@@ -34,6 +34,7 @@ import UISwing.ventanas.DialogoRegistroAlmacen;
 import javax.swing.table.TableModel;
 import javax.swing.SwingUtilities;
 import UISwing.ventanas.DialogoRegistroFarmaco;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class PanelAlmacen extends JPanel {
 
@@ -337,6 +338,13 @@ public class PanelAlmacen extends JPanel {
 	    header.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    header.setForeground(Color.WHITE); // Color del texto blanco
 	    header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+	    // Crear el renderizador centrado
+	    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+	    
+	    // Aplicar el renderizador a las columnas de fechas
+	    tablaProductos.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+	    tablaProductos.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 	    scrollPaneProductos.setViewportView(tablaProductos);
 	    almacenDao = new AlmacenDAO();
 	    cargarDatosProductos();
