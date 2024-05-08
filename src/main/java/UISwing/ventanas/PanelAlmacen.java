@@ -335,18 +335,19 @@ public class PanelAlmacen extends JPanel {
 	            }
 	        }
 	    });	  
+	    // Crear el renderizador centrado
+	    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+	    // Aplicar el renderizador a las columnas de fechas
+	    tablaProductos.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 	  
 	    JTableHeader header = tablaProductos.getTableHeader();
 	    header.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    header.setForeground(Color.WHITE); // Color del texto blanco
 	    header.setFont(new Font("Segoe UI", Font.BOLD, 14));
-	    // Crear el renderizador centrado
-	    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-	    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-	    
-	    // Aplicar el renderizador a las columnas de fechas
-	    tablaProductos.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-	    tablaProductos.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+	 // Aplica el renderer personalizado
+	    tablaProductos.getColumnModel().getColumn(3).setCellRenderer(new ProductosCaducidadRenderer());
+
 	    scrollPaneProductos.setViewportView(tablaProductos);
 	    almacenDao = new AlmacenDAO();
 	    cargarDatosProductos();
@@ -583,6 +584,43 @@ public class PanelAlmacen extends JPanel {
                 setBackground(Color.WHITE); // Color por defecto si el valor es nulo
                 setHorizontalAlignment(JLabel.CENTER);
             }
+            return this;
+        }
+    }
+    class ProductosCaducidadRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            // Establece alineación centrada
+            setHorizontalAlignment(JLabel.CENTER);
+
+            // Verifica si el valor de la celda es nulo o no
+            if (value != null) {
+                // Obtén la fecha de caducidad como LocalDate
+                LocalDate fechaCaducidad = LocalDate.parse(value.toString());
+                LocalDate ahora = LocalDate.now();
+                
+                // Configura los colores de fondo basados en el estado de caducidad
+                if (fechaCaducidad.isBefore(ahora)) {
+                    setBackground(Color.RED); // Caducado
+                } else if (fechaCaducidad.isBefore(ahora.plusWeeks(1))) {
+                    setBackground(Color.YELLOW); // Cerca de caducar
+                } else {
+                    setBackground(Color.GREEN); // Todavía válido
+                }
+            } else {
+                setBackground(Color.WHITE); // Valor nulo
+            }
+
+            // Mantén el color de texto para destacar el contraste
+            if (isSelected) {
+                setForeground(table.getSelectionForeground());
+                setBackground(table.getSelectionBackground());
+            } else {
+                setForeground(table.getForeground());
+            }
+
             return this;
         }
     }
