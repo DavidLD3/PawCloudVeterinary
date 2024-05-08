@@ -3,7 +3,9 @@ package UISwing.ventanas;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -313,6 +315,9 @@ public class PanelAlmacen extends JPanel {
 	    // Resto de la configuración del PanelAlmacen...
 	    inicializarComponentesProductos(gestionProductos);
 	    
+
+	    
+	  
 	}
 	
 	private void inicializarComponentesProductos(JPanel panel) {
@@ -351,6 +356,18 @@ public class PanelAlmacen extends JPanel {
 	    scrollPaneProductos.setViewportView(tablaProductos);
 	    almacenDao = new AlmacenDAO();
 	    cargarDatosProductos();
+	    
+	    // Agregar leyendas con colores
+	    JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+	    legendPanel.setBounds(800, 10, 300, 30); // Ajusta según tus necesidades
+	    legendPanel.setOpaque(false);
+
+	    addColorLegend(legendPanel, Color.RED, "Caducado");
+	    addColorLegend(legendPanel, Color.YELLOW, "<1 semana");
+	    addColorLegend(legendPanel, Color.GREEN, ">1 semana");
+	    addColorLegend(legendPanel, Color.WHITE, "Sin caducidad");
+
+	    panel.add(legendPanel);
 	}
 	// Método para abrir el DialogoInfoAlmacen con la información del producto seleccionado
 	// Reutilizamos el método abrirDialogoInfoAlmacen para mostrar la información tanto de productos como de servicios
@@ -445,6 +462,17 @@ public class PanelAlmacen extends JPanel {
 
 
 	    cargarDatosFarmacos(); // Cargar datos en la tabla
+	 // Agregar leyendas de colores
+	    JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+	    legendPanel.setBounds(800, 10, 300, 30); // Ajusta según tus necesidades
+	    legendPanel.setOpaque(false);
+
+	    addColorLegend(legendPanel, Color.RED, "Caducado");
+	    addColorLegend(legendPanel, Color.YELLOW, "<1 semana");
+	    addColorLegend(legendPanel, Color.GREEN, ">1 semana");
+	    addColorLegend(legendPanel, Color.WHITE, "Sin caducidad");
+
+	    panel.add(legendPanel);
 	}
 	private void cargarDatosFarmacos() {
 	    try {
@@ -624,6 +652,36 @@ public class PanelAlmacen extends JPanel {
             return this;
         }
     }
+    private void addColorLegend(JPanel panel, Color color, String text) {
+        JLabel label = new JLabel(text, new ColorIcon(color), JLabel.LEFT);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        panel.add(label);
+    }
+
+    class ColorIcon implements Icon {
+        private final int ICON_SIZE = 10;
+        private Color color;
+
+        public ColorIcon(Color color) {
+            this.color = color;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            g.setColor(color);
+            g.fillRect(x, y, ICON_SIZE, ICON_SIZE);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return ICON_SIZE;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return ICON_SIZE;
+        }
+    }
    
     // Agregamos el método main para ejecutar y probar la interfaz
     public static void main(String[] args) {
@@ -635,11 +693,10 @@ public class PanelAlmacen extends JPanel {
 
         // Creamos una instancia del panel
         PanelAlmacen panelAlmacen = new PanelAlmacen();
-        frame.add(panelAlmacen); // Añade el panel al marco
+        frame.getContentPane().add(panelAlmacen); // Añade el panel al marco
 
         // Hace visible la ventana
         frame.setVisible(true);
     }
-    
 }
 
