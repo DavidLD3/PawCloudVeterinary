@@ -505,7 +505,7 @@ public class PanelAlmacen extends JPanel {
 	        fila[1] = farmaco.getCantidad();
 
 	        LocalDate fechaCaducidad = farmaco.getFechaCaducidad() != null ? farmaco.getFechaCaducidad().toLocalDate() : null;
-	        fila[2] = (fechaCaducidad != null) ? fechaCaducidad.toString() : "N/A"; // Mostrar "N/A" si la fecha es null
+	        fila[2] = (fechaCaducidad != null) ? fechaCaducidad.toString() : ""; // Mostrar "N/A" si la fecha es null
 
 	        fila[3] = farmaco.getPrecio().toPlainString();
 	        modeloTablaFarmacos.addRow(fila);
