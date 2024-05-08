@@ -359,7 +359,7 @@ public class PanelAlmacen extends JPanel {
 	private void inicializarComponentesServicios(JPanel panel) {
 		panel.setBackground(new Color(204, 229, 255)); // Un color azul claro para el fondo del panel
 	    panel.setOpaque(true);
-	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Cantidad Stock", "Precio Bruto"}, 0) {
+	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Precio Bruto"}, 0) {
 	        public boolean isCellEditable(int row, int column) {
 	            return false; // Hacer que la tabla no sea editable
 	        }
