@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
@@ -487,12 +488,15 @@ public class PanelAlmacen extends JPanel {
 	private void actualizarTablaFarmacos(List<Farmaco> farmacos) {
 	    modeloTablaFarmacos.setRowCount(0);
 	    for (Farmaco farmaco : farmacos) {
-	        modeloTablaFarmacos.addRow(new Object[]{
-	            farmaco.getNombre(),
-	            farmaco.getCantidad(),
-	            farmaco.getFechaCaducidad().toString(),
-	            farmaco.getPrecio().toPlainString()
-	        });
+	        Object[] fila = new Object[4];
+	        fila[0] = farmaco.getNombre();
+	        fila[1] = farmaco.getCantidad();
+
+	        LocalDate fechaCaducidad = farmaco.getFechaCaducidad() != null ? farmaco.getFechaCaducidad().toLocalDate() : null;
+	        fila[2] = (fechaCaducidad != null) ? fechaCaducidad.toString() : "N/A"; // Mostrar "N/A" si la fecha es null
+
+	        fila[3] = farmaco.getPrecio().toPlainString();
+	        modeloTablaFarmacos.addRow(fila);
 	    }
 	}
 	private void abrirDialogoInfoFarmaco(int rowIndex) {
@@ -595,23 +599,34 @@ public class PanelAlmacen extends JPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (value != null) {
-                LocalDate fechaCaducidad = LocalDate.parse(value.toString());
-                LocalDate ahora = LocalDate.now();
-                setHorizontalAlignment(JLabel.CENTER); // Centra el texto en la celda
 
-                // Cambia el color de fondo basado en el tiempo restante para la caducidad
-                if (fechaCaducidad.isBefore(ahora)) {
-                    setBackground(Color.RED); // Caducado
-                } else if (fechaCaducidad.isBefore(ahora.plusWeeks(1))) {
-                    setBackground(Color.YELLOW); // Pronto a caducar
-                } else {
-                    setBackground(Color.GREEN); // Caducidad a largo plazo
+            // Centrar el texto en la celda
+            setHorizontalAlignment(JLabel.CENTER);
+
+            // Verificar si el valor es una fecha válida o "N/A"
+            if (value != null && !value.equals("N/A")) {
+                try {
+                    LocalDate fechaCaducidad = LocalDate.parse(value.toString());
+                    LocalDate ahora = LocalDate.now();
+
+                    // Establecer colores de fondo según la fecha de caducidad
+                    if (fechaCaducidad.isBefore(ahora)) {
+                        setBackground(Color.RED);
+                    } else if (fechaCaducidad.isBefore(ahora.plusWeeks(1))) {
+                        setBackground(Color.YELLOW);
+                    } else {
+                        setBackground(Color.GREEN);
+                    }
+                } catch (DateTimeParseException e) {
+                    setBackground(Color.WHITE); // Si la fecha no se puede parsear, usa el color blanco
                 }
             } else {
-                setBackground(Color.WHITE); // Color por defecto si el valor es nulo
-                setHorizontalAlignment(JLabel.CENTER);
+                setBackground(Color.WHITE); // "N/A" o null deberían tener fondo blanco
             }
+
+            // Ajustar color de texto para mejorar el contraste
+            setForeground(Color.BLACK);
+
             return this;
         }
     }
