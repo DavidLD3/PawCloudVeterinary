@@ -346,7 +346,10 @@ public class PanelAlmacen extends JPanel {
 	    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 	    // Aplicar el renderizador a las columnas de fechas
 	    tablaProductos.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-	  
+	    
+	    // Configurar la columna "Cantidad Stock" para estar alineada a la derecha
+	    tablaProductos.getColumnModel().getColumn(4).setCellRenderer(new RightAlignedRenderer());
+
 	    JTableHeader header = tablaProductos.getTableHeader();
 	    header.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    header.setForeground(Color.WHITE); // Color del texto blanco
@@ -400,6 +403,10 @@ public class PanelAlmacen extends JPanel {
 	    headerServicios.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    headerServicios.setForeground(Color.WHITE); // Color de texto blanco
 	    headerServicios.setFont(new Font("Segoe UI", Font.BOLD, 14));
+	    
+	 // Asignar un renderizador para la columna "Precio Bruto", alineándolo a la derecha
+	    tablaServicios.getColumnModel().getColumn(2).setCellRenderer(new RightAlignedRenderer());
+	    
 	    JScrollPane scrollPaneServicios = new JScrollPane(tablaServicios);
 	    scrollPaneServicios.setBounds(0, 48, 1107, 578);
 	    scrollPaneServicios.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
@@ -442,6 +449,11 @@ public class PanelAlmacen extends JPanel {
 	    headerFarmacos.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    headerFarmacos.setForeground(Color.WHITE); // Color de texto blanco
 	    headerFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 14));
+	    
+	 // Asignar renderizadores personalizados para "Cantidad" y "Precio"
+	    tablaFarmacos.getColumnModel().getColumn(1).setCellRenderer(new RightAlignedRenderer()); // Cantidad
+	    tablaFarmacos.getColumnModel().getColumn(3).setCellRenderer(new RightAlignedRenderer()); // Precio
+	    
 	    JScrollPane scrollPaneFarmacos = new JScrollPane(tablaFarmacos);
 	    scrollPaneFarmacos.setBounds(0, 48, 1107, 578);
 	    scrollPaneFarmacos.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
@@ -695,6 +707,12 @@ public class PanelAlmacen extends JPanel {
         @Override
         public int getIconHeight() {
             return ICON_SIZE;
+        }
+    }
+ // Renderizador para alinear el texto a la derecha
+    class RightAlignedRenderer extends DefaultTableCellRenderer {
+        public RightAlignedRenderer() {
+            setHorizontalAlignment(JLabel.RIGHT);
         }
     }
    
