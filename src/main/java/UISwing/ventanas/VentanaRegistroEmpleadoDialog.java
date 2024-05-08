@@ -9,19 +9,18 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import UISwing.recursos.RoundedPanel;
-import model.Empleado;
+import model.Empleado; 
 
 public class VentanaRegistroEmpleadoDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private RoundedPanel roundedPanel;
-    private JTextField txtNombre, txtApellidos, txtDNI, txtTelefono, txtEmail, txtHorarioTrabajo;
+    private JTextField txtNombre, txtApellidos, txtDNI, txtTelefono, txtEmail,txtHorarioTrabajo;
     private JButton saveButton, cancelButton;
     private JDateChooser dateChooserContratacion;
-    private PanelAdministracion panelAdministracion;
-    public VentanaRegistroEmpleadoDialog(Frame owner, boolean modal, PanelAdministracion panel) {
+
+    public VentanaRegistroEmpleadoDialog(Frame owner, boolean modal) {
         super(owner, modal);
-        this.panelAdministracion = panel;
         setTitle("Registro de Empleado");
         setUndecorated(true);
         setSize(new Dimension(500, 400));
@@ -105,6 +104,7 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
         roundedPanel.add(lblFechaContratacion);
 
         dateChooserContratacion = new JDateChooser();
+        dateChooserContratacion.setDateFormatString("d/M/yyyy");
         dateChooserContratacion.setBounds(225, 210, 230, 25);
         roundedPanel.add(dateChooserContratacion);
         
@@ -112,28 +112,37 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
         JPanel centerPanel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
+				// Personaliza aquí tu componente
 				Graphics2D g2 = (Graphics2D) g.create();
-				g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
+				g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
 				g2.setColor(getBackground());
-				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si
+																			// es necesario
 				g2.dispose();
 				super.paintComponent(g);
 			}
 		};
-		centerPanel.setBackground(new Color(255, 255, 255, 80));
-		centerPanel.setOpaque(false);
+		centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
+		centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el
+										// fondo.
 		centerPanel.setBounds(21, 21, 457, 360);
 		roundedPanel.add(centerPanel);
 
         saveButton = new JButton("Guardar");
         saveButton.setBounds(353, 338, 100, 30);
         initButton(saveButton, "#0057FF", "#003366"); // Configuración del botón
-        saveButton.addActionListener(e -> guardarEmpleado()); // Guardar Empleado
         roundedPanel.add(saveButton);
 
         cancelButton = new JButton("Cancelar");
         cancelButton.setBounds(216, 339, 100, 30);
-        initButton(cancelButton, "#0057FF", "#003366");
+        initButton(cancelButton, "#0057FF", "#003366"); // Configuración del botón
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardarEmpleado();
+                dispose();
+            }
+        });
         cancelButton.addActionListener(e -> dispose());
         roundedPanel.add(cancelButton);
     }
@@ -160,9 +169,18 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
                 button.setForeground(Color.decode(colorHex));
             }
         });
+
+        // Agregamos la acción del botón de guardar
     }
 
     private void guardarEmpleado() {
+        // Implementación de la lógica para guardar un empleado, asegurando que no se duplique
+        if (dateChooserContratacion.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha de contratación.", "Fecha de Contratación Requerida", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Creación y asignación de valores a la instancia de Empleado
         Empleado empleado = new Empleado();
         empleado.setNombre(txtNombre.getText());
         empleado.setApellidos(txtApellidos.getText());
@@ -170,30 +188,20 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
         empleado.setTelefono(txtTelefono.getText());
         empleado.setEmail(txtEmail.getText());
         empleado.setHorarioTrabajo(txtHorarioTrabajo.getText());
-
-        if (dateChooserContratacion.getDate() != null) {
-            empleado.setFechaContratacion(new java.sql.Date(dateChooserContratacion.getDate().getTime()));
-        } else {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de contratación.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        empleado.setFechaContratacion(new java.sql.Date(dateChooserContratacion.getDate().getTime()));
 
         EmpleadoDAO empleadoDAO = new EmpleadoDAO();
-        boolean success = empleadoDAO.insertarEmpleado(empleado);
-
-        if (success) {
-            JOptionPane.showMessageDialog(this, "Empleado registrado con éxito.");
-            if (panelAdministracion != null) {
-                panelAdministracion.agregarEmpleado(empleado);
-            }
-            clearForm();
+        boolean result = empleadoDAO.insertarEmpleado(empleado);
+        if (result) {
+            JOptionPane.showMessageDialog(this, "Empleado registrado con éxito.", "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Error al registrar el empleado.");
+            JOptionPane.showMessageDialog(this, "Error al registrar el empleado.", "Error de Registro", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void clearForm() {
+        // Limpia todos los campos del formulario
         txtNombre.setText("");
         txtApellidos.setText("");
         txtDNI.setText("");
@@ -203,5 +211,11 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
         dateChooserContratacion.setDate(null);
     }
 
-    
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            VentanaRegistroEmpleadoDialog dialog = new VentanaRegistroEmpleadoDialog(null, true);
+            dialog.setVisible(true);
+        });
+    }
 }

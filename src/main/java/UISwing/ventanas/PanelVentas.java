@@ -74,7 +74,7 @@ public class PanelVentas extends JPanel {
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 3 || column == 4;  // Permite editar solo la cantidad y el precio unitario
+                return column == 4;  // Permite editar solo la cantidad y el precio unitario
             }
         };
 
@@ -164,7 +164,7 @@ public class PanelVentas extends JPanel {
         chckbxefectivo = new JCheckBox("Efectivo");
         chckbxefectivo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         chckbxefectivo.setForeground(Color.WHITE);
-        chckbxefectivo.setBounds(800, 526, 72, 23);
+        chckbxefectivo.setBounds(748, 523, 72, 23);
         chckbxefectivo.setOpaque(false); // Hacer el fondo del checkbox transparente
         chckbxefectivo.setBackground(new Color(0, 0, 0, 0)); // Asegurarse de que el fondo es completamente transparente
         panelVentas.add(chckbxefectivo);
@@ -173,7 +173,7 @@ public class PanelVentas extends JPanel {
         chckbxTarjeta = new JCheckBox("Tarjeta");
         chckbxTarjeta.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         chckbxTarjeta.setForeground(Color.WHITE);
-        chckbxTarjeta.setBounds(873, 526, 65, 23);
+        chckbxTarjeta.setBounds(821, 523, 65, 23);
         chckbxTarjeta.setOpaque(false); // Hacer el fondo del checkbox transparente
         chckbxTarjeta.setBackground(new Color(0, 0, 0, 0)); // Asegurarse de que el fondo es completamente transparente
         panelVentas.add(chckbxTarjeta);
@@ -335,17 +335,17 @@ public class PanelVentas extends JPanel {
 
      
         lblTotalPrecio = new JLabel("0.00");
-        lblTotalPrecio.setBounds(1021, 523, 46, 31);
+        lblTotalPrecio.setBounds(1002, 515, 105, 36);
         lblTotalPrecio.setForeground(Color.WHITE);
-        lblTotalPrecio.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblTotalPrecio.setFont(new Font("Segoe UI", Font.BOLD, 19));
         panel.add(lblTotalPrecio);
 
      
         
         JLabel lblNewLabel_1 = new JLabel("Total:");
         lblNewLabel_1.setForeground(new Color(255, 255, 255));
-        lblNewLabel_1.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblNewLabel_1.setBounds(978, 523, 36, 29);
+        lblNewLabel_1.setFont(new Font("Segoe UI", Font.BOLD, 19));
+        lblNewLabel_1.setBounds(927, 515, 70, 36);
         panel.add(lblNewLabel_1);
 
     
@@ -353,7 +353,7 @@ public class PanelVentas extends JPanel {
         JLabel lblNewLabel = new JLabel("Metodo de pago:");
         lblNewLabel.setForeground(new Color(255, 255, 255));
         lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblNewLabel.setBounds(683, 530, 111, 14);
+        lblNewLabel.setBounds(631, 527, 111, 14);
         panel.add(lblNewLabel);
         
       
@@ -430,7 +430,7 @@ public class PanelVentas extends JPanel {
     private void actualizarTotal() {
         BigDecimal totalGeneral = BigDecimal.ZERO;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
-            BigDecimal totalFila = new BigDecimal(tableModel.getValueAt(i, 5).toString());
+            BigDecimal totalFila = new BigDecimal(tableModel.getValueAt(i, 6).toString());
             totalGeneral = totalGeneral.add(totalFila);
         }
         lblTotalPrecio.setText(totalGeneral.setScale(2, RoundingMode.HALF_UP).toString() + " €");
@@ -479,20 +479,7 @@ public class PanelVentas extends JPanel {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
     private String obtenerMetodoPagoSeleccionado() {
         if (chckbxefectivo.isSelected()) {
