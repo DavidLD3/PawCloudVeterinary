@@ -1,6 +1,7 @@
 package UISwing.ventanas;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Dimension;
@@ -333,7 +334,8 @@ public class PanelAlmacen extends JPanel {
 	                abrirDialogoInfoAlmacen(nombreProducto);
 	            }
 	        }
-	    });
+	    });	  
+	  
 	    JTableHeader header = tablaProductos.getTableHeader();
 	    header.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    header.setForeground(Color.WHITE); // Color del texto blanco
@@ -413,6 +415,10 @@ public class PanelAlmacen extends JPanel {
 
 	    tablaFarmacos = new JTable(modeloTablaFarmacos);
 	    tablaFarmacos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    
+	 // Asigna el renderer personalizado solo a la columna de "Fecha Caducidad"
+	    tablaFarmacos.getColumnModel().getColumn(2).setCellRenderer(new FechaCaducidadRenderer());
+	    
 	    JTableHeader headerFarmacos = tablaFarmacos.getTableHeader();
 	    headerFarmacos.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    headerFarmacos.setForeground(Color.WHITE); // Color de texto blanco
@@ -435,6 +441,7 @@ public class PanelAlmacen extends JPanel {
 	            }
 	        }
 	    });
+
 
 	    cargarDatosFarmacos(); // Cargar datos en la tabla
 	}
@@ -554,6 +561,32 @@ public class PanelAlmacen extends JPanel {
         dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialogo.setVisible(true);
     }
+ // Renderer personalizado para la columna Fecha Caducidad
+    class FechaCaducidadRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (value != null) {
+                LocalDate fechaCaducidad = LocalDate.parse(value.toString());
+                LocalDate ahora = LocalDate.now();
+                setHorizontalAlignment(JLabel.CENTER); // Centra el texto en la celda
+
+                // Cambia el color de fondo basado en el tiempo restante para la caducidad
+                if (fechaCaducidad.isBefore(ahora)) {
+                    setBackground(Color.RED); // Caducado
+                } else if (fechaCaducidad.isBefore(ahora.plusWeeks(1))) {
+                    setBackground(Color.YELLOW); // Pronto a caducar
+                } else {
+                    setBackground(Color.GREEN); // Caducidad a largo plazo
+                }
+            } else {
+                setBackground(Color.WHITE); // Color por defecto si el valor es nulo
+                setHorizontalAlignment(JLabel.CENTER);
+            }
+            return this;
+        }
+    }
+   
     // Agregamos el método main para ejecutar y probar la interfaz
     public static void main(String[] args) {
         // Creamos el marco de la ventana principal
