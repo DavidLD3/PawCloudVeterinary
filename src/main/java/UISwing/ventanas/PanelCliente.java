@@ -281,19 +281,19 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
     }
 
     private void abrirPanelRegistroMascota() {
-        PanelRegistroMascota panelRegistroMascota = new PanelRegistroMascota(this.cliente.getId());
-        JFrame frameRegistroMascota = new JFrame("Registro de Mascota");
-        frameRegistroMascota.getContentPane().add(panelRegistroMascota);
-        frameRegistroMascota.pack();
-        frameRegistroMascota.setLocationRelativeTo(null);
-        frameRegistroMascota.setVisible(true);
-        frameRegistroMascota.addWindowListener(new WindowAdapter() {
+        // Crea un diálogo de registro de mascota pasando el ID del cliente
+        DialogoRegistroMascota dialogoRegistroMascota = new DialogoRegistroMascota((Frame) SwingUtilities.getWindowAncestor(this), true, this.cliente.getId());
+
+        // Añade un listener para cuando el diálogo se cierre y actualice la tabla de mascotas
+        dialogoRegistroMascota.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 actualizarTablaMascotas();
             }
         });
-        frameRegistroMascota.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+
+        // Muestra el diálogo
+        dialogoRegistroMascota.setVisible(true);
     }
 
     public void actualizarTablaMascotas() {
@@ -309,7 +309,6 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
             modeloTabla.addRow(new Object[]{mascota.getId(), mascota.getNombre(), mascota.getEspecie(), mascota.getRaza()});
         }
     }
-
     public PanelCliente(String dni) {
         super(new BorderLayout());
         clienteDao = new ClienteDAO();

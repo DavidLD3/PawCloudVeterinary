@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 
 
 public class PanelAdministracion extends JPanel {
+	private List<Veterinario> veterinarios;
+    private List<Empleado> empleados;
 	
 	private JLabel lblNombreVet_1, lblHorarioVet_1,lblNombreVet_2,lblHorarioVet_2,lblNombreVet_3,lblHorarioVet_3,lblNombreVet_4,lblHorarioVet_4;
 	private JLabel lblNombreEmpleado_1, lblHorarioEmpleado_1,lblNombreEmpleado_2,lblHorarioEmpleado_2,lblNombreEmpleado_3,lblHorarioEmpleado_3,lblNombreEmpleado_4,lblHorarioEmpleado_4;
@@ -154,37 +156,37 @@ public class PanelAdministracion extends JPanel {
         	
         	// Botones en el panel principal de Veterinarios (no en el opaco)
         	JButton btnAgregarVeterinario = new JButton("Agregar Veterinario");
-        	btnAgregarVeterinario.setBounds(261, 539, 195, 37);
-        	btnAgregarVeterinario.setFont(new Font("Tahoma", Font.BOLD, 12));
-        	btnAgregarVeterinario.setBackground(Color.WHITE);
-        	btnAgregarVeterinario.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        	btnAgregarVeterinario.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        	btnAgregarVeterinario.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        	btnAgregarVeterinario.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        	btnAgregarVeterinario.setOpaque(true);
-        	btnAgregarVeterinario.setRolloverEnabled(true);
-        	btnAgregarVeterinario.addMouseListener(new java.awt.event.MouseAdapter() {
-        		@Override
-        		public void mouseEntered(java.awt.event.MouseEvent evt) {
-        			btnAgregarVeterinario.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-        			btnAgregarVeterinario.setForeground(Color.WHITE);
-        		}
-        		
-        		@Override
-        		public void mouseExited(java.awt.event.MouseEvent evt) {
-        			btnAgregarVeterinario.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
-        			btnAgregarVeterinario.setForeground(Color.decode("#0057FF"));
-        		}
-        	});
-        	btnAgregarVeterinario.addActionListener(new ActionListener() {
-        		public void actionPerformed(ActionEvent e) {
-        			// Crear y mostrar el diálogo de registro de veterinario
-        			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(PanelAdministracion.this);
-        			VentanaRegistroVeterinarioDialog dialogoRegistroVeterinario = new VentanaRegistroVeterinarioDialog(frame, true);
-        			dialogoRegistroVeterinario.setVisible(true);
-        		}
-        	});
-        	panelVeterinarios.add(btnAgregarVeterinario);
+            btnAgregarVeterinario.setBounds(261, 539, 195, 37);
+            btnAgregarVeterinario.setFont(new Font("Tahoma", Font.BOLD, 12));
+            btnAgregarVeterinario.setBackground(Color.WHITE);
+            btnAgregarVeterinario.setForeground(Color.decode("#0057FF"));
+            btnAgregarVeterinario.setFocusPainted(false);
+            btnAgregarVeterinario.setBorderPainted(false);
+            btnAgregarVeterinario.setContentAreaFilled(false);
+            btnAgregarVeterinario.setOpaque(true);
+            btnAgregarVeterinario.setRolloverEnabled(true);
+            btnAgregarVeterinario.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    btnAgregarVeterinario.setBackground(Color.decode("#003366"));
+                    btnAgregarVeterinario.setForeground(Color.WHITE);
+                }
+
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    btnAgregarVeterinario.setBackground(Color.WHITE);
+                    btnAgregarVeterinario.setForeground(Color.decode("#0057FF"));
+                }
+            });
+            btnAgregarVeterinario.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(PanelAdministracion.this);
+                    VentanaRegistroVeterinarioDialog dialogoRegistroVeterinario = new VentanaRegistroVeterinarioDialog(frame, true, PanelAdministracion.this);
+                    dialogoRegistroVeterinario.setVisible(true);
+                }
+            });
+            panelVeterinarios.add(btnAgregarVeterinario);
+
         	
         	JButton btnListaVeterinarios = new JButton("Lista Veterinarios");
         	btnListaVeterinarios.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -357,15 +359,14 @@ public class PanelAdministracion extends JPanel {
         		}
         	});
         	btnAgregarEmpleado.addActionListener(new ActionListener() {
-        		public void actionPerformed(ActionEvent e) {
-        			// Crea y muestra el diálogo de registro de empleado
-        			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(PanelAdministracion.this);
-        			VentanaRegistroEmpleadoDialog dialogoRegistroEmpleado = new VentanaRegistroEmpleadoDialog(frame, true);
-        			dialogoRegistroEmpleado.setVisible(true);
-        		}
+        	    public void actionPerformed(ActionEvent e) {
+        	        // Crea y muestra el diálogo de registro de empleado
+        	        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(PanelAdministracion.this);
+        	        VentanaRegistroEmpleadoDialog dialogoRegistroEmpleado = new VentanaRegistroEmpleadoDialog(frame, true, PanelAdministracion.this);
+        	        dialogoRegistroEmpleado.setVisible(true);
+        	    }
         	});
         	panelEmpleados.add(btnAgregarEmpleado);
-        	
         	JButton btnListaEmpleados = new JButton("Lista Empleados");
         	btnListaEmpleados.setBounds(41, 539, 195, 37);
         	btnListaEmpleados.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -435,8 +436,8 @@ public class PanelAdministracion extends JPanel {
         VeterinarioDAO veterinarioDAO = new VeterinarioDAO();
         EmpleadoDAO empleadoDAO = new EmpleadoDAO();
 
-        List<Veterinario> veterinarios = veterinarioDAO.obtenerTodosLosVeterinarios();
-        List<Empleado> empleados = empleadoDAO.obtenerTodosLosEmpleados();
+        veterinarios = veterinarioDAO.obtenerTodosLosVeterinarios();
+        empleados = empleadoDAO.obtenerTodosLosEmpleados();
 
         actualizarVistaVeterinarios(veterinarios);
         actualizarVistaEmpleados(empleados);
@@ -445,36 +446,48 @@ public class PanelAdministracion extends JPanel {
     private void actualizarVistaVeterinarios(List<Veterinario> veterinarios) {
         JLabel[] nombresVet = {lblNombreVet_1, lblNombreVet_2, lblNombreVet_3, lblNombreVet_4};
         JLabel[] horariosVet = {lblHorarioVet_1, lblHorarioVet_2, lblHorarioVet_3, lblHorarioVet_4};
-        int count = Math.min(veterinarios.size(), nombresVet.length); // Asegura no desbordar el array
+        int count = Math.min(veterinarios.size(), nombresVet.length);
 
         for (int i = 0; i < count; i++) {
             Veterinario v = veterinarios.get(i);
             nombresVet[i].setText(v.getNombre() + " " + v.getApellidos());
             horariosVet[i].setText(v.getHorarioTrabajo());
         }
-        // Limpiar las etiquetas si hay menos veterinarios que etiquetas
+
         for (int i = count; i < nombresVet.length; i++) {
             nombresVet[i].setText("");
             horariosVet[i].setText("");
         }
     }
-
     private void actualizarVistaEmpleados(List<Empleado> empleados) {
         JLabel[] nombresEmp = {lblNombreEmpleado_1, lblNombreEmpleado_2, lblNombreEmpleado_3, lblNombreEmpleado_4};
         JLabel[] horariosEmp = {lblHorarioEmpleado_1, lblHorarioEmpleado_2, lblHorarioEmpleado_3, lblHorarioEmpleado_4};
-        int count = Math.min(empleados.size(), nombresEmp.length); // Asegura no desbordar el array
+        int count = Math.min(empleados.size(), nombresEmp.length);
 
         for (int i = 0; i < count; i++) {
             Empleado e = empleados.get(i);
             nombresEmp[i].setText(e.getNombre() + " " + e.getApellidos());
             horariosEmp[i].setText(e.getHorarioTrabajo());
         }
-        // Limpiar las etiquetas si hay menos empleados que etiquetas
+
         for (int i = count; i < nombresEmp.length; i++) {
             nombresEmp[i].setText("");
             horariosEmp[i].setText("");
         }
     }
-
-
+    public void agregarVeterinario(Veterinario veterinario) {
+        // Initialize the list if it's not already initialized
+        if (veterinarios == null) {
+            veterinarios = new ArrayList<>();
+        }
+        veterinarios.add(veterinario);
+        actualizarVistaVeterinarios(veterinarios);
+    }
+    public void agregarEmpleado(Empleado empleado) {
+        if (empleados == null) {
+            empleados = new ArrayList<>();
+        }
+        empleados.add(empleado);
+        actualizarVistaEmpleados(empleados);
+    }
 }

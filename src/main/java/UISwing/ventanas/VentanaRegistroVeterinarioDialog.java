@@ -21,8 +21,8 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 	private JButton saveButton, cancelButton;
 	private JDateChooser dateChooserContratacion;
 
-	public VentanaRegistroVeterinarioDialog(Frame owner, boolean modal) {
-		super(owner, modal);
+	public VentanaRegistroVeterinarioDialog(Frame owner, boolean modal, PanelAdministracion panel) {
+	    super(owner, modal);
 		setTitle("Registro de Veterinario");
 		setUndecorated(true);
 		setSize(new Dimension(500, 400));
@@ -129,18 +129,13 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 		lblFechaContratacion.setBounds(45, 204, 160, 25);
 		
 		roundedPanel.add(lblFechaContratacion);
+		
+		 dateChooserContratacion = new JDateChooser();
+		 dateChooserContratacion.setDateFormatString("d/M/yyyy");
+		 dateChooserContratacion.setBounds(223, 204, 230, 25);
+		 roundedPanel.add(dateChooserContratacion);
 
-		dateChooserContratacion = new JDateChooser();
-		dateChooserContratacion.setBounds(223, 204, 230, 25);
-		if (dateChooserContratacion.getDate() != null) {
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		    String fechaContratacion = sdf.format(dateChooserContratacion.getDate());
-		    System.out.println(fechaContratacion);
-		    // Aquí puedes usar fechaContratacion para lo que necesites, como guardarla en la base de datos
-		}
-
-		roundedPanel.add(dateChooserContratacion);
-
+		
 		JPanel centerPanel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -156,7 +151,6 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 		};
 		centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
 		centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el
-										// fondo.
 		centerPanel.setBounds(21, 21, 457, 360);
 		roundedPanel.add(centerPanel);
 		
@@ -224,10 +218,5 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 		});
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			VentanaRegistroVeterinarioDialog dialog = new VentanaRegistroVeterinarioDialog(null, true);
-			dialog.setVisible(true);
-		});
-	}
+	
 }

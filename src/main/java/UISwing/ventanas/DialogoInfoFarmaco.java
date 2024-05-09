@@ -32,7 +32,7 @@ public class DialogoInfoFarmaco extends JDialog {
      * Crea el diálogo con datos de Farmaco.
      */
     public DialogoInfoFarmaco(Frame owner, Farmaco farmaco) {
-        super(owner, "Detalles del Fármaco", true); // true para modal
+    	super(owner, "Detalles del Fármaco", true); // true para modal
         this.farmaco = farmaco;
         setBounds(100, 100, 650, 400);
         getContentPane().setLayout(new BorderLayout());
@@ -48,8 +48,10 @@ public class DialogoInfoFarmaco extends JDialog {
         txtDosisRecomendada = addLabelAndTextField("Dosis Recomendada:", farmaco.getDosisRecomendada());
         txtUnidadMedida = addLabelAndTextField("Unidad de Medida:", farmaco.getUnidadMedida());
         txtPrecio = addLabelAndTextField("Precio:", farmaco.getPrecio().toString());
-        txtFechaCaducidad = addLabelAndTextField("Fecha de Caducidad:", farmaco.getFechaCaducidad().toString());
 
+        // Validación para la fecha de caducidad
+        String fechaCaducidadStr = farmaco.getFechaCaducidad() != null ? farmaco.getFechaCaducidad().toString() : "Sin fecha de caducidad";
+        txtFechaCaducidad = addLabelAndTextField("Fecha de Caducidad:", fechaCaducidadStr);
         // Panel para los botones
         JPanel buttonPane = new JPanel(new BorderLayout());
         JPanel leftPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
