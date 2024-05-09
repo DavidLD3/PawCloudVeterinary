@@ -266,7 +266,7 @@ public class MainFrame extends JFrame  {
         lblRealTime.setFont(new Font("Segoe UI", Font.BOLD, 16));
         panelHeader.add(lblRealTime);
         // Formateador de fecha y hora
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         // Timer para actualizar la fecha y hora cada segundo
         new Timer(1000, e -> lblRealTime.setText(LocalDateTime.now().format(dtf))).start();
         
