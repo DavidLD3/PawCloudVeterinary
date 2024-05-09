@@ -185,8 +185,19 @@ public class DialogoRegistroAlmacen extends JDialog {
 
     private Almacen recolectarDatos() {
         LocalDate fechaCompra = (tfRfechaUltCompra.getDate() != null) ? tfRfechaUltCompra.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+<<<<<<< HEAD
         LocalDate fechaCaducidad = (tfrfecha_Caducidad.getDate() != null) ? tfrfecha_Caducidad.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
         Categoria categoria = (Categoria) cbCategoria.getSelectedItem();  
+=======
+        LocalDate fechaCaducidad = null; // Inicializa la fecha de caducidad como null
+
+        // Verifica si el componente de fecha tiene un valor antes de convertirlo
+        if (tfrfecha_Caducidad.getDate() != null) {
+            fechaCaducidad = tfrfecha_Caducidad.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+
+        Categoria categoria = (Categoria) cbCategoria.getSelectedItem();  // Obtener el valor seleccionado en el JComboBox
+>>>>>>> arturo2
 
         return new Almacen(
             0, 

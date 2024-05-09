@@ -1,8 +1,11 @@
 package UISwing.ventanas;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -22,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
@@ -34,6 +38,7 @@ import UISwing.ventanas.DialogoRegistroAlmacen;
 import javax.swing.table.TableModel;
 import javax.swing.SwingUtilities;
 import UISwing.ventanas.DialogoRegistroFarmaco;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class PanelAlmacen extends JPanel {
 
@@ -311,6 +316,9 @@ public class PanelAlmacen extends JPanel {
 	    // Resto de la configuración del PanelAlmacen...
 	    inicializarComponentesProductos(gestionProductos);
 	    
+
+	    
+	  
 	}
 	
 	private void inicializarComponentesProductos(JPanel panel) {
@@ -332,14 +340,38 @@ public class PanelAlmacen extends JPanel {
 	                abrirDialogoInfoAlmacen(nombreProducto);
 	            }
 	        }
-	    });
+	    });	  
+	    // Crear el renderizador centrado
+	    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+	    // Aplicar el renderizador a las columnas de fechas
+	    tablaProductos.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+	    
+	    // Configurar la columna "Cantidad Stock" para estar alineada a la derecha
+	    tablaProductos.getColumnModel().getColumn(4).setCellRenderer(new RightAlignedRenderer());
+
 	    JTableHeader header = tablaProductos.getTableHeader();
 	    header.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    header.setForeground(Color.WHITE); // Color del texto blanco
 	    header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+	 // Aplica el renderer personalizado
+	    tablaProductos.getColumnModel().getColumn(3).setCellRenderer(new ProductosCaducidadRenderer());
+
 	    scrollPaneProductos.setViewportView(tablaProductos);
 	    almacenDao = new AlmacenDAO();
 	    cargarDatosProductos();
+	    
+	    // Agregar leyendas con colores
+	    JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+	    legendPanel.setBounds(800, 10, 300, 30); // Ajusta según tus necesidades
+	    legendPanel.setOpaque(false);
+
+	    addColorLegend(legendPanel, Color.RED, "Caducado");
+	    addColorLegend(legendPanel, Color.YELLOW, "<1 semana");
+	    addColorLegend(legendPanel, Color.GREEN, ">1 semana");
+	    addColorLegend(legendPanel, Color.WHITE, "Sin caducidad");
+
+	    panel.add(legendPanel);
 	}
 	// Método para abrir el DialogoInfoAlmacen con la información del producto seleccionado
 	// Reutilizamos el método abrirDialogoInfoAlmacen para mostrar la información tanto de productos como de servicios
@@ -359,7 +391,7 @@ public class PanelAlmacen extends JPanel {
 	private void inicializarComponentesServicios(JPanel panel) {
 		panel.setBackground(new Color(204, 229, 255)); // Un color azul claro para el fondo del panel
 	    panel.setOpaque(true);
-	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Cantidad Stock", "Precio Bruto"}, 0) {
+	    modeloTablaServicios = new DefaultTableModel(new Object[]{"Nombre Servicio", "Categoría", "Precio Bruto"}, 0) {
 	        public boolean isCellEditable(int row, int column) {
 	            return false; // Hacer que la tabla no sea editable
 	        }
@@ -371,6 +403,10 @@ public class PanelAlmacen extends JPanel {
 	    headerServicios.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    headerServicios.setForeground(Color.WHITE); // Color de texto blanco
 	    headerServicios.setFont(new Font("Segoe UI", Font.BOLD, 14));
+	    
+	 // Asignar un renderizador para la columna "Precio Bruto", alineándolo a la derecha
+	    tablaServicios.getColumnModel().getColumn(2).setCellRenderer(new RightAlignedRenderer());
+	    
 	    JScrollPane scrollPaneServicios = new JScrollPane(tablaServicios);
 	    scrollPaneServicios.setBounds(0, 48, 1107, 578);
 	    scrollPaneServicios.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
@@ -405,10 +441,19 @@ public class PanelAlmacen extends JPanel {
 
 	    tablaFarmacos = new JTable(modeloTablaFarmacos);
 	    tablaFarmacos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    
+	 // Asigna el renderer personalizado solo a la columna de "Fecha Caducidad"
+	    tablaFarmacos.getColumnModel().getColumn(2).setCellRenderer(new FechaCaducidadRenderer());
+	    
 	    JTableHeader headerFarmacos = tablaFarmacos.getTableHeader();
 	    headerFarmacos.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
 	    headerFarmacos.setForeground(Color.WHITE); // Color de texto blanco
 	    headerFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 14));
+	    
+	 // Asignar renderizadores personalizados para "Cantidad" y "Precio"
+	    tablaFarmacos.getColumnModel().getColumn(1).setCellRenderer(new RightAlignedRenderer()); // Cantidad
+	    tablaFarmacos.getColumnModel().getColumn(3).setCellRenderer(new RightAlignedRenderer()); // Precio
+	    
 	    JScrollPane scrollPaneFarmacos = new JScrollPane(tablaFarmacos);
 	    scrollPaneFarmacos.setBounds(0, 48, 1107, 578);
 	    scrollPaneFarmacos.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
@@ -428,7 +473,19 @@ public class PanelAlmacen extends JPanel {
 	        }
 	    });
 
+
 	    cargarDatosFarmacos(); // Cargar datos en la tabla
+	 // Agregar leyendas de colores
+	    JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+	    legendPanel.setBounds(800, 10, 300, 30); // Ajusta según tus necesidades
+	    legendPanel.setOpaque(false);
+
+	    addColorLegend(legendPanel, Color.RED, "Caducado");
+	    addColorLegend(legendPanel, Color.YELLOW, "<1 semana");
+	    addColorLegend(legendPanel, Color.GREEN, ">1 semana");
+	    addColorLegend(legendPanel, Color.WHITE, "Sin caducidad");
+
+	    panel.add(legendPanel);
 	}
 	private void cargarDatosFarmacos() {
 	    try {
@@ -443,12 +500,15 @@ public class PanelAlmacen extends JPanel {
 	private void actualizarTablaFarmacos(List<Farmaco> farmacos) {
 	    modeloTablaFarmacos.setRowCount(0);
 	    for (Farmaco farmaco : farmacos) {
-	        modeloTablaFarmacos.addRow(new Object[]{
-	            farmaco.getNombre(),
-	            farmaco.getCantidad(),
-	            farmaco.getFechaCaducidad().toString(),
-	            farmaco.getPrecio().toPlainString()
-	        });
+	        Object[] fila = new Object[4];
+	        fila[0] = farmaco.getNombre();
+	        fila[1] = farmaco.getCantidad();
+
+	        LocalDate fechaCaducidad = farmaco.getFechaCaducidad() != null ? farmaco.getFechaCaducidad().toLocalDate() : null;
+	        fila[2] = (fechaCaducidad != null) ? fechaCaducidad.toString() : ""; // Mostrar "N/A" si la fecha es null
+
+	        fila[3] = farmaco.getPrecio().toPlainString();
+	        modeloTablaFarmacos.addRow(fila);
 	    }
 	}
 	private void abrirDialogoInfoFarmaco(int rowIndex) {
@@ -547,6 +607,116 @@ public class PanelAlmacen extends JPanel {
         dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialogo.setVisible(true);
     }
+ // Renderer personalizado para la columna Fecha Caducidad
+    class FechaCaducidadRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Centrar el texto en la celda
+            setHorizontalAlignment(JLabel.CENTER);
+
+            // Verificar si el valor es una fecha válida o "N/A"
+            if (value != null && !value.equals("N/A")) {
+                try {
+                    LocalDate fechaCaducidad = LocalDate.parse(value.toString());
+                    LocalDate ahora = LocalDate.now();
+
+                    // Establecer colores de fondo según la fecha de caducidad
+                    if (fechaCaducidad.isBefore(ahora)) {
+                        setBackground(Color.RED);
+                    } else if (fechaCaducidad.isBefore(ahora.plusWeeks(1))) {
+                        setBackground(Color.YELLOW);
+                    } else {
+                        setBackground(Color.GREEN);
+                    }
+                } catch (DateTimeParseException e) {
+                    setBackground(Color.WHITE); // Si la fecha no se puede parsear, usa el color blanco
+                }
+            } else {
+                setBackground(Color.WHITE); // "N/A" o null deberían tener fondo blanco
+            }
+
+            // Ajustar color de texto para mejorar el contraste
+            setForeground(Color.BLACK);
+
+            return this;
+        }
+    }
+    class ProductosCaducidadRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            // Establece alineación centrada
+            setHorizontalAlignment(JLabel.CENTER);
+
+            // Verifica si el valor de la celda es nulo o no
+            if (value != null) {
+                // Obtén la fecha de caducidad como LocalDate
+                LocalDate fechaCaducidad = LocalDate.parse(value.toString());
+                LocalDate ahora = LocalDate.now();
+                
+                // Configura los colores de fondo basados en el estado de caducidad
+                if (fechaCaducidad.isBefore(ahora)) {
+                    setBackground(Color.RED); // Caducado
+                } else if (fechaCaducidad.isBefore(ahora.plusWeeks(1))) {
+                    setBackground(Color.YELLOW); // Cerca de caducar
+                } else {
+                    setBackground(Color.GREEN); // Todavía válido
+                }
+            } else {
+                setBackground(Color.WHITE); // Valor nulo
+            }
+
+            // Mantén el color de texto para destacar el contraste
+            if (isSelected) {
+                setForeground(table.getSelectionForeground());
+                setBackground(table.getSelectionBackground());
+            } else {
+                setForeground(table.getForeground());
+            }
+
+            return this;
+        }
+    }
+    private void addColorLegend(JPanel panel, Color color, String text) {
+        JLabel label = new JLabel(text, new ColorIcon(color), JLabel.LEFT);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        panel.add(label);
+    }
+
+    class ColorIcon implements Icon {
+        private final int ICON_SIZE = 10;
+        private Color color;
+
+        public ColorIcon(Color color) {
+            this.color = color;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            g.setColor(color);
+            g.fillRect(x, y, ICON_SIZE, ICON_SIZE);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return ICON_SIZE;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return ICON_SIZE;
+        }
+    }
+ // Renderizador para alinear el texto a la derecha
+    class RightAlignedRenderer extends DefaultTableCellRenderer {
+        public RightAlignedRenderer() {
+            setHorizontalAlignment(JLabel.RIGHT);
+        }
+    }
+   
     // Agregamos el método main para ejecutar y probar la interfaz
     public static void main(String[] args) {
         // Creamos el marco de la ventana principal
@@ -557,11 +727,10 @@ public class PanelAlmacen extends JPanel {
 
         // Creamos una instancia del panel
         PanelAlmacen panelAlmacen = new PanelAlmacen();
-        frame.add(panelAlmacen); // Añade el panel al marco
+        frame.getContentPane().add(panelAlmacen); // Añade el panel al marco
 
         // Hace visible la ventana
         frame.setVisible(true);
     }
-    
 }
 

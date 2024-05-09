@@ -1,6 +1,7 @@
 package DB;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,7 +53,13 @@ public class FarmacoDAO {
             statement.setInt(4, farmaco.getCantidad());
             statement.setString(5, farmaco.getDosisRecomendada());
             statement.setString(6, farmaco.getUnidadMedida());
-            statement.setDate(7, farmaco.getFechaCaducidad());
+            
+            if (farmaco.getFechaCaducidad() != null) {
+                statement.setDate(7, Date.valueOf(farmaco.getFechaCaducidad().toString()));
+            } else {
+                statement.setNull(7, java.sql.Types.DATE);
+            }
+
             statement.setBigDecimal(8, farmaco.getPrecio());
 
             int affectedRows = statement.executeUpdate();

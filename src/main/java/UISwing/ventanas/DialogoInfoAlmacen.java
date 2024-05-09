@@ -39,11 +39,11 @@ public class DialogoInfoAlmacen extends JDialog {
      * Create the dialog with Almacen data.
      */
     public DialogoInfoAlmacen(Frame owner, Almacen almacen) {
-        super(owner, "Detalles del Almacén", true);
+    	super(owner, "Detalles del Almacén", true);
         this.almacen = almacen;
         setBounds(100, 100, 650, 400);
         getContentPane().setLayout(new BorderLayout());
-        contentPanel.setLayout(new GridLayout(0, 2));  // Usar GridLayout para un formato ordenado
+        contentPanel.setLayout(new GridLayout(0, 2));  
         contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
@@ -54,9 +54,15 @@ public class DialogoInfoAlmacen extends JDialog {
         txtCantidadStock = addLabelAndTextField("Cantidad en Stock:", String.valueOf(almacen.getCantidadStock()));
         txtPrecioBruto = addLabelAndTextField("Precio Bruto:", almacen.getPrecioBruto().toString());
         txtProveedor = addLabelAndTextField("Proveedor:", almacen.getProveedor());
-        txtFechaUltimaCompra = addLabelAndTextField("Fecha Última Compra:", almacen.getFechaUltimaCompra().toString());
+        
+        // Validación para las fechas
+        String fechaUltimaCompraStr = almacen.getFechaUltimaCompra() != null ? almacen.getFechaUltimaCompra().toString() : "Sin fecha última compra";
+        txtFechaUltimaCompra = addLabelAndTextField("Fecha Última Compra:", fechaUltimaCompraStr);
+
+        String fechaCaducidadStr = almacen.getFechaCaducidad() != null ? almacen.getFechaCaducidad().toString() : "Sin fecha de caducidad";
+        txtFechaCaducidad = addLabelAndTextField("Fecha de Caducidad:", fechaCaducidadStr);
+
         txtNumeroLote = addLabelAndTextField("Número de Lote:", almacen.getNumeroLote());
-        txtFechaCaducidad = addLabelAndTextField("Fecha de Caducidad:", almacen.getFechaCaducidad().toString());
         txtCodigoBarras = addLabelAndTextField("Código de Barras:", almacen.getCodigoBarras());
         txtObservaciones = addLabelAndTextField("Observaciones:", almacen.getObservaciones());
 
