@@ -2,6 +2,7 @@ package UISwing.ventanas;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.math.BigDecimal;
@@ -11,28 +12,26 @@ import com.toedter.calendar.JDateChooser;
 import DB.AlmacenDAO;
 import model.Almacen;
 import model.Almacen.Categoria;
-import UISwing.recursos.RoundedPanel;
+import UISwing.recursos.RoundedPanel; // Asegúrate de que esta ruta sea correcta
 
 public class DialogoRegistroAlmacen extends JDialog {
     private JTextField tfRnombre, tfRN_Lote, tfRcantidad, tfRproveedor, tfRCodigo_Barras, tfRprecio_Bruto, tfRobservaciones, tfRdescripcion;
     private JDateChooser tfRfechaUltCompra, tfrfecha_Caducidad;
     private JComboBox<Categoria> cbCategoria;
-    private PanelAlmacen panelAlmacen;
 
-    public DialogoRegistroAlmacen(PanelAlmacen panelAlmacen) {
-        this.panelAlmacen = panelAlmacen;
-        setUndecorated(true);
+    public DialogoRegistroAlmacen() {
+        setUndecorated(true); // Quitar decoración estándar, incluyendo marcos y botones de título
         setTitle("Registro en Almacén");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 600, 400);
-        setBackground(new Color(0, 0, 0, 0)); 
+        setBackground(new Color(0, 0, 0, 0)); // Hacer el fondo del diálogo transparente
 
         RoundedPanel roundedBackground = new RoundedPanel(20);
         roundedBackground.setLayout(new BorderLayout());
         roundedBackground.setBackground(Color.decode("#577BD1"));
         roundedBackground.setOpaque(false);
 
-        setContentPane(roundedBackground); 
+        setContentPane(roundedBackground); // Usar RoundedPanel como el panel de contenido
 
         JPanel centralPanel = crearPanelCentral();
         centralPanel.setOpaque(false);
@@ -50,6 +49,7 @@ public class DialogoRegistroAlmacen extends JDialog {
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setOpaque(false);
 
+        // Añadir campos y configurar estilos
         añadirCampoConEtiqueta(panel, "Nombre:", tfRnombre = new JTextField());
         añadirCampoConEtiqueta(panel, "Categoría:", cbCategoria = new JComboBox<>(Categoria.values()));
         añadirCampoConEtiqueta(panel, "Descripción:", tfRdescripcion = new JTextField());
@@ -75,13 +75,13 @@ public class DialogoRegistroAlmacen extends JDialog {
 
     private JPanel crearPanelBotones() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.decode("#577BD1"));  
+        panel.setBackground(Color.decode("#577BD1"));  // Fondo azul para el panel completo
         panel.setOpaque(true);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 40, 15));
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 15));
 
-        rightPanel.setOpaque(false); 
+        rightPanel.setOpaque(false);  // Asegurar transparencia para ver el fondo azul
         leftPanel.setOpaque(false);
 
         JButton btnGuardar = new JButton("Guardar");
@@ -105,7 +105,6 @@ public class DialogoRegistroAlmacen extends JDialog {
 
         return panel;
     }
-
     private void personalizarBoton(JButton button) {
         button.setFont(new Font("Segoe UI", Font.BOLD, 12));
         button.setBackground(Color.WHITE);
@@ -113,22 +112,24 @@ public class DialogoRegistroAlmacen extends JDialog {
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
-        button.setOpaque(true);  
+        button.setOpaque(true);  // Necesario para ver el color de fondo
         button.setRolloverEnabled(true);
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(Color.decode("#003366"));  
+                button.setBackground(Color.decode("#003366"));  // Cambio a azul oscuro cuando el ratón está encima
                 button.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(Color.WHITE); 
+                button.setBackground(Color.WHITE);  // Restaurar a blanco cuando el ratón se aleja
                 button.setForeground(Color.decode("#0057FF"));
             }
         });
     }
+
+
 
     private void guardarDatos(ActionEvent e) {
         if (validarDatos()) {
@@ -137,7 +138,6 @@ public class DialogoRegistroAlmacen extends JDialog {
             try {
                 dao.insertarAlmacen(nuevoAlmacen);
                 JOptionPane.showMessageDialog(this, "Datos guardados correctamente.");
-                panelAlmacen.cargarDatosProductos(); 
                 dispose();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error al guardar los datos: " + ex.getMessage());
@@ -148,11 +148,13 @@ public class DialogoRegistroAlmacen extends JDialog {
     }
 
     private boolean validarDatos() {
+        // Validar que el nombre del producto no esté vacío
         if (tfRnombre.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El campo 'Nombre' no puede estar vacío.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
+        // Validar que la cantidad sea un número entero válido y positivo
         try {
             int cantidad = Integer.parseInt(tfRcantidad.getText().trim());
             if (cantidad <= 0) {
@@ -164,6 +166,7 @@ public class DialogoRegistroAlmacen extends JDialog {
             return false;
         }
 
+        // Validar que el precio bruto sea un número decimal válido y no negativo
         try {
             BigDecimal precio = new BigDecimal(tfRprecio_Bruto.getText().trim());
             if (precio.compareTo(BigDecimal.ZERO) < 0) {
@@ -175,24 +178,33 @@ public class DialogoRegistroAlmacen extends JDialog {
             return false;
         }
 
+        // Validar que la fecha de última compra no sea futura
         if (tfRfechaUltCompra.getDate() != null && tfRfechaUltCompra.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isAfter(LocalDate.now())) {
             JOptionPane.showMessageDialog(this, "La fecha de última compra no puede ser futura.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
+        // Validación exitosa de todos los campos
         return true;
     }
 
+
     private Almacen recolectarDatos() {
         LocalDate fechaCompra = (tfRfechaUltCompra.getDate() != null) ? tfRfechaUltCompra.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
-        LocalDate fechaCaducidad = (tfrfecha_Caducidad.getDate() != null) ? tfrfecha_Caducidad.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
-        Categoria categoria = (Categoria) cbCategoria.getSelectedItem();  
+        LocalDate fechaCaducidad = null; // Inicializa la fecha de caducidad como null
+
+        // Verifica si el componente de fecha tiene un valor antes de convertirlo
+        if (tfrfecha_Caducidad.getDate() != null) {
+            fechaCaducidad = tfrfecha_Caducidad.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+
+        Categoria categoria = (Categoria) cbCategoria.getSelectedItem();  // Obtener el valor seleccionado en el JComboBox
 
         return new Almacen(
-            0, 
+            0, // ID es autoincremental en la base de datos
             tfRnombre.getText().trim(),
             tfRdescripcion.getText().trim(),
-            categoria, 
+            categoria, // Usar el valor obtenido del JComboBox
             Integer.parseInt(tfRcantidad.getText().trim()),
             new BigDecimal(tfRprecio_Bruto.getText().trim()),
             tfRproveedor.getText().trim(),
@@ -204,9 +216,10 @@ public class DialogoRegistroAlmacen extends JDialog {
         );
     }
 
+
     private void limpiarCampos() {
         tfRnombre.setText("");
-        cbCategoria.setSelectedIndex(0); 
+        cbCategoria.setSelectedIndex(0); // Establece la selección al primer ítem del combo box
         tfRN_Lote.setText("");
         tfRcantidad.setText("");
         tfRproveedor.setText("");
@@ -214,14 +227,14 @@ public class DialogoRegistroAlmacen extends JDialog {
         tfRprecio_Bruto.setText("");
         tfRobservaciones.setText("");
         tfRdescripcion.setText("");
-        tfRfechaUltCompra.setDate(null);  
+        tfRfechaUltCompra.setDate(null);  // Asegúrate de que estos campos de fecha estén limpios
         tfrfecha_Caducidad.setDate(null);
     }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                DialogoRegistroAlmacen dialog = new DialogoRegistroAlmacen(new PanelAlmacen());
+                DialogoRegistroAlmacen dialog = new DialogoRegistroAlmacen();
                 dialog.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();

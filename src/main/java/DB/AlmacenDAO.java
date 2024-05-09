@@ -23,24 +23,38 @@ public class AlmacenDAO {
         String sql = "INSERT INTO almacen (nombre_producto, descripcion, categoria, cantidad_stock, precio_bruto, proveedor, fecha_ultima_compra, numero_lote, fecha_caducidad, codigo_barras, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            // Campos obligatorios
             statement.setString(1, almacen.getNombreProducto());
             statement.setString(2, almacen.getDescripcion());
             statement.setString(3, almacen.getCategoria().name());
             statement.setInt(4, almacen.getCantidadStock());
-            statement.setBigDecimal(5, almacen.getPrecioBruto());  // Nuevo campo de precio bruto
+            statement.setBigDecimal(5, almacen.getPrecioBruto());
             statement.setString(6, almacen.getProveedor());
+
+            // La fecha de última compra es obligatoria
             statement.setDate(7, Date.valueOf(almacen.getFechaUltimaCompra()));
+
+            // Campos opcionales
             statement.setString(8, almacen.getNumeroLote());
-            statement.setDate(9, Date.valueOf(almacen.getFechaCaducidad()));
+
+            if (almacen.getFechaCaducidad() != null) {
+                statement.setDate(9, Date.valueOf(almacen.getFechaCaducidad()));
+            } else {
+                statement.setNull(9, java.sql.Types.DATE);
+            }
+
             statement.setString(10, almacen.getCodigoBarras());
             statement.setString(11, almacen.getObservaciones());
+
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating almacen failed, no rows affected.");
             }
+
+            // Capturar el ID generado para el nuevo registro
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    almacen.setIdAlmacen(generatedKeys.getInt(1)); // Captura y asigna el ID generado
+                    almacen.setIdAlmacen(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating almacen failed, no ID obtained.");
                 }
@@ -122,6 +136,12 @@ public class AlmacenDAO {
              PreparedStatement statement = conn.prepareStatement(sql)) {
             ResultSet resultados = statement.executeQuery();
             while (resultados.next()) {
+                java.sql.Date fechaUltimaCompraSql = resultados.getDate("fecha_ultima_compra");
+                LocalDate fechaUltimaCompra = (fechaUltimaCompraSql != null) ? fechaUltimaCompraSql.toLocalDate() : null;
+
+                java.sql.Date fechaCaducidadSql = resultados.getDate("fecha_caducidad");
+                LocalDate fechaCaducidad = (fechaCaducidadSql != null) ? fechaCaducidadSql.toLocalDate() : null;
+
                 productos.add(new Almacen(
                     resultados.getInt("id_almacen"),
                     resultados.getString("nombre_producto"),
@@ -130,9 +150,9 @@ public class AlmacenDAO {
                     resultados.getInt("cantidad_stock"),
                     resultados.getBigDecimal("precio_bruto"),
                     resultados.getString("proveedor"),
-                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    fechaUltimaCompra,
                     resultados.getString("numero_lote"),
-                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    fechaCaducidad,
                     resultados.getString("codigo_barras"),
                     resultados.getString("observaciones")
                 ));
@@ -227,6 +247,13 @@ public class AlmacenDAO {
             statement.setString(1, nombre);
             ResultSet resultados = statement.executeQuery();
             if (resultados.next()) {
+                // Obtenemos las fechas asegurándonos de que no sean nulas antes de convertirlas
+                Date fechaUltimaCompraSql = resultados.getDate("fecha_ultima_compra");
+                LocalDate fechaUltimaCompra = (fechaUltimaCompraSql != null) ? fechaUltimaCompraSql.toLocalDate() : null;
+
+                Date fechaCaducidadSql = resultados.getDate("fecha_caducidad");
+                LocalDate fechaCaducidad = (fechaCaducidadSql != null) ? fechaCaducidadSql.toLocalDate() : null;
+
                 producto = new Almacen(
                     resultados.getInt("id_almacen"),
                     resultados.getString("nombre_producto"),
@@ -235,9 +262,9 @@ public class AlmacenDAO {
                     resultados.getInt("cantidad_stock"),
                     resultados.getBigDecimal("precio_bruto"),
                     resultados.getString("proveedor"),
-                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    fechaUltimaCompra,
                     resultados.getString("numero_lote"),
-                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    fechaCaducidad,
                     resultados.getString("codigo_barras"),
                     resultados.getString("observaciones")
                 );
