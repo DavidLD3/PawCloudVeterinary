@@ -84,19 +84,17 @@ public class PanelClienteMascota extends JPanel {
 
         // Añadir a tu panel
         panel.add(btnAnadir);
-
-        // Añadir ActionListener al botón Añadir
         btnAnadir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFrame newFrame = new JFrame("Registro de Cliente"); // Crea un nuevo JFrame
-                newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Configura la acción de cierre
-                newFrame.setSize(800, 600); // Establece el tamaño del JFrame
-                PanelRegistroCliente panelRegistro = new PanelRegistroCliente(); // Crea el panel de registro
-                newFrame.getContentPane().add(panelRegistro); // Añade el panel al JFrame
-                newFrame.setLocationRelativeTo(null); // Centra el JFrame en la pantalla
-                newFrame.setVisible(true); // Hace visible el JFrame
+                // Crear el diálogo de registro de cliente como un JDialog modal
+                PanelRegistroCliente dialog = new PanelRegistroCliente((Frame) SwingUtilities.getWindowAncestor(PanelClienteMascota.this), "Registro de Cliente", true);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Configurar la acción de cierre
+                dialog.setSize(578, 450); // Configurar tamaño, ajustable según necesidad
+                dialog.setLocationRelativeTo(null); // Centrar el diálogo en pantalla
+                dialog.setVisible(true); // Hacer visible el diálogo
             }
         });
+
 
         txtBuscarClientemascota = new JTextField("Escribe el nombre de la mascota"); // Crea un JTextField con texto predeterminado
         txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establece la fuente del texto
