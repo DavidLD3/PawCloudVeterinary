@@ -21,8 +21,8 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 	private JButton saveButton, cancelButton;
 	private JDateChooser dateChooserContratacion;
 
-	public VentanaRegistroVeterinarioDialog(Frame owner, boolean modal) {
-		super(owner, modal);
+	public VentanaRegistroVeterinarioDialog(Frame owner, boolean modal, PanelAdministracion panel) {
+	    super(owner, modal);
 		setTitle("Registro de Veterinario");
 		setUndecorated(true);
 		setSize(new Dimension(500, 400));
@@ -218,10 +218,5 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 		});
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			VentanaRegistroVeterinarioDialog dialog = new VentanaRegistroVeterinarioDialog(null, true);
-			dialog.setVisible(true);
-		});
-	}
+	
 }

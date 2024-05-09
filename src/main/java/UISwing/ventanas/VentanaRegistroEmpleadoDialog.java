@@ -19,7 +19,7 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
     private JButton saveButton, cancelButton;
     private JDateChooser dateChooserContratacion;
 
-    public VentanaRegistroEmpleadoDialog(Frame owner, boolean modal) {
+    public VentanaRegistroEmpleadoDialog(Frame owner, boolean modal, PanelAdministracion panel) {
         super(owner, modal);
         setTitle("Registro de Empleado");
         setUndecorated(true);
@@ -212,10 +212,5 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
     }
 
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            VentanaRegistroEmpleadoDialog dialog = new VentanaRegistroEmpleadoDialog(null, true);
-            dialog.setVisible(true);
-        });
-    }
+    
 }
