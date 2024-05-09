@@ -46,24 +46,25 @@ public class PanelRegistroCliente extends JDialog {
     }
 
     private JPanel crearPanelBotones() {
-        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnLimpiar = new JButton("Limpiar");
         JButton btnGuardar = new JButton("Guardar");
         JButton btnCerrar = new JButton("Cerrar");
 
         // Aplicar estilos de botones al estilo de VentanaRegistroVeterinarioDialog
-        initButton(btnEliminar, "#0057FF", "#003366");
+        initButton(btnLimpiar, "#0057FF", "#003366");
         initButton(btnGuardar, "#0057FF", "#003366");
         initButton(btnCerrar, "#0057FF", "#003366");
 
-        btnEliminar.addActionListener(new ActionListener() {
+        btnLimpiar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar todos los campos?", "Eliminar", JOptionPane.YES_NO_OPTION);
+                int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere limpiar todos los campos?", "Limpiar", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     limpiarCampos();
                 }
             }
         });
+
 
         btnGuardar.addActionListener(new ActionListener() {
             @Override
@@ -85,18 +86,15 @@ public class PanelRegistroCliente extends JDialog {
                 // Mostrar el diálogo personalizado
                 int confirm = JOptionPane.showOptionDialog(null, confirmPanel, "Cerrar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    // Cambio aquí: usar dispose() en lugar de System.exit(0)
-                    Window ventana = SwingUtilities.getWindowAncestor(PanelRegistroCliente.this);
-                    if (ventana != null) {
-                        ventana.dispose(); // Esto cierra la ventana del panel, no toda la aplicación
-                    }
+                    dispose(); // Uso directo de dispose() para cerrar la ventana actual
                 }
             }
         });
 
+
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panelBotones.setBackground(new Color(147, 112, 219));
-        panelBotones.add(btnEliminar);
+        panelBotones.add(btnLimpiar);
         panelBotones.add(btnGuardar);
         panelBotones.add(btnCerrar);
 
@@ -129,9 +127,9 @@ public class PanelRegistroCliente extends JDialog {
     }
     
     private void limpiarCampos() {
+        // Resetear campos de texto
         tfRcliente_Nombre.setText("");
         tfRcliente_Apellidos.setText("");
-        tfRcliente_Fnacimiento.setText("");
         tfRcliente_DNI.setText("");
         tfRcliente_NIF.setText("");
         tfRcliente_Direccion.setText("");
@@ -140,44 +138,47 @@ public class PanelRegistroCliente extends JDialog {
         tfRcliente_Tfijo.setText("");
         tfRcliente_Tmovil.setText("");
         tfRcliente_Email.setText("");
+
+        // Resetear el componente JDateChooser
+        dateChooser.setCalendar(null);  // Esto asegura que la selección de fecha también se limpie
     }
+
     
     private void guardarDatos() {
-        LocalDate fechaNacimiento = null;
-        if (dateChooser.getDate() != null) {
-            fechaNacimiento = dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        }
-        
-        Cliente cliente = new Cliente(
-            0,
-            tfRcliente_Nombre.getText().trim(),
-            tfRcliente_Apellidos.getText().trim(),
-            fechaNacimiento,
-            tfRcliente_DNI.getText().trim(),
-            tfRcliente_NIF.getText().trim(),
-            tfRcliente_Direccion.getText().trim(),
-            tfRcliente_Poblacion.getText().trim(),
-            tfRcliente_Provincia.getText().trim(),
-            tfRcliente_Tfijo.getText().trim(),
-            tfRcliente_Tmovil.getText().trim(),
-            tfRcliente_Email.getText().trim()
-        );
-        
-        ClienteDAO clienteDao = new ClienteDAO();
-        boolean exito = clienteDao.insertarCliente(cliente);
-        
-        if (exito) {
-            JOptionPane.showMessageDialog(this, "Cliente guardado con éxito");
-
-            // Cierra la ventana después de guardar.
-            Window ventana = SwingUtilities.getWindowAncestor(this);
-            if (ventana != null) {
-                ventana.dispose();
+        try {
+            LocalDate fechaNacimiento = null;
+            if (dateChooser.getDate() != null) {
+                fechaNacimiento = dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al guardar el cliente");
+            
+            Cliente cliente = new Cliente(
+                0,
+                tfRcliente_Nombre.getText().trim(),
+                tfRcliente_Apellidos.getText().trim(),
+                fechaNacimiento,
+                tfRcliente_DNI.getText().trim(),
+                tfRcliente_NIF.getText().trim(),
+                tfRcliente_Direccion.getText().trim(),
+                tfRcliente_Poblacion.getText().trim(),
+                tfRcliente_Provincia.getText().trim(),
+                tfRcliente_Tfijo.getText().trim(),
+                tfRcliente_Tmovil.getText().trim(),
+                tfRcliente_Email.getText().trim()
+            );
+            
+            ClienteDAO clienteDao = new ClienteDAO();
+            boolean exito = clienteDao.insertarCliente(cliente);
+            if (exito) {
+                JOptionPane.showMessageDialog(this, "Cliente guardado con éxito");
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al guardar el cliente");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar el cliente: " + e.getMessage());
         }
     }
+
 
 
 	
