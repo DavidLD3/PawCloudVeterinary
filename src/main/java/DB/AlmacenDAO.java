@@ -169,6 +169,14 @@ public class AlmacenDAO {
             statement.setString(1, "%" + nombre + "%");
             ResultSet resultados = statement.executeQuery();
             while (resultados.next()) {
+                // Verifica si las fechas son nulas antes de llamar a toLocalDate()
+                java.sql.Date fechaUltimaCompraSql = resultados.getDate("fecha_ultima_compra");
+                LocalDate fechaUltimaCompra = (fechaUltimaCompraSql != null) ? fechaUltimaCompraSql.toLocalDate() : null;
+
+                java.sql.Date fechaCaducidadSql = resultados.getDate("fecha_caducidad");
+                LocalDate fechaCaducidad = (fechaCaducidadSql != null) ? fechaCaducidadSql.toLocalDate() : null;
+
+                // Crea el objeto Almacen con los valores obtenidos
                 productos.add(new Almacen(
                     resultados.getInt("id_almacen"),
                     resultados.getString("nombre_producto"),
@@ -177,9 +185,9 @@ public class AlmacenDAO {
                     resultados.getInt("cantidad_stock"),
                     resultados.getBigDecimal("precio_bruto"),
                     resultados.getString("proveedor"),
-                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    fechaUltimaCompra,
                     resultados.getString("numero_lote"),
-                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    fechaCaducidad,
                     resultados.getString("codigo_barras"),
                     resultados.getString("observaciones")
                 ));

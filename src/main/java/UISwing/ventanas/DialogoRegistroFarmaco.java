@@ -186,12 +186,30 @@ public class DialogoRegistroFarmaco extends JDialog {
     }
 
     private boolean validarDatos() {
-        // Realizar validaciones específicas de los campos del fármaco
-        // Ejemplo: Validar que el nombre no esté vacío
+        // Validar que el código no sea nulo ni negativo
+        String codigo = tfCodigo.getText().trim();
+        if (codigo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo 'Código' no puede estar vacío.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try {
+            int codigoInt = Integer.parseInt(codigo);
+            if (codigoInt <= 0) {
+                JOptionPane.showMessageDialog(this, "El código debe ser un número positivo.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El código debe ser un número válido.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar que el nombre no esté vacío
         if (tfNombre.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El campo 'Nombre' no puede estar vacío.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
         // Validar que la cantidad sea un número entero válido y positivo
         try {
             int cantidad = Integer.parseInt(tfCantidad.getText().trim());
@@ -220,9 +238,9 @@ public class DialogoRegistroFarmaco extends JDialog {
         if (tfFechaCaducidad.getDate() != null && tfFechaCaducidad.getDate().before(new java.util.Date())) {
             JOptionPane.showMessageDialog(this, "La fecha de caducidad no puede ser pasada.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
             return false;
-        }       
+        }
 
-        return true; // Modificar según las validaciones
+        return true; // Ajusta según las validaciones necesarias
     }
 
     private Farmaco recolectarDatos() {
