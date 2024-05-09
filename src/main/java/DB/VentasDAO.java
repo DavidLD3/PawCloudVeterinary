@@ -2,6 +2,7 @@ package DB;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+
 import model.Almacen;
 import model.Farmaco;
 import model.VentaDetalle;
@@ -37,6 +40,12 @@ public class VentasDAO {
             statement.setString(1, "%" + nombre + "%");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
+                Date fechaUltimaCompra = rs.getDate("fecha_ultima_compra");
+                Date fechaCaducidad = rs.getDate("fecha_caducidad");
+                
+                LocalDate ultimaCompra = (fechaUltimaCompra != null) ? fechaUltimaCompra.toLocalDate() : null;
+                LocalDate caducidad = (fechaCaducidad != null) ? fechaCaducidad.toLocalDate() : null;
+
                 productos.add(new Almacen(
                     rs.getInt("id_almacen"),
                     rs.getString("nombre_producto"),
@@ -45,9 +54,9 @@ public class VentasDAO {
                     rs.getInt("cantidad_stock"),
                     rs.getBigDecimal("precio_bruto"),
                     rs.getString("proveedor"),
-                    rs.getDate("fecha_ultima_compra").toLocalDate(),
+                    ultimaCompra,
                     rs.getString("numero_lote"),
-                    rs.getDate("fecha_caducidad").toLocalDate(),
+                    caducidad,
                     rs.getString("codigo_barras"),
                     rs.getString("observaciones")
                 ));
