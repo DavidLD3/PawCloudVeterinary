@@ -2,64 +2,58 @@ package UISwing.ventanas;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import com.toedter.calendar.JDateChooser;
 import DB.ClienteDAO;
-import UISwing.recursos.GradientPanel;
 import model.Cliente;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.BorderFactory;
 
-public class PanelRegistroCliente extends JPanel {
+public class PanelRegistroCliente extends JDialog {
     private JTextField tfRcliente_Nombre, tfRcliente_Apellidos, 
     tfRcliente_DNI, tfRcliente_NIF, tfRcliente_Direccion, tfRcliente_Poblacion,
     tfRcliente_Provincia, tfRcliente_Tfijo, tfRcliente_Tmovil, tfRcliente_Email;
     private JTextComponent tfRcliente_Fnacimiento;
     private JDateChooser dateChooser;
 
-    public PanelRegistroCliente() {
-        super(new BorderLayout());
+    public PanelRegistroCliente(Frame owner, String title, boolean modal) {
+        super(owner, title, modal);
+        setUndecorated(true);
+        getContentPane().setBackground(new Color(147, 112, 219));
+        setModal(true);
         initializeUI();
-        setOpaque(false); // Asegura que el panel sea transparente para ver el gradiente
+        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        this.setSize(578, 393); // Tamaño ajustado según necesidad
+        this.setLocationRelativeTo(null);
     }
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g); // Esta llamada debe estar al principio para preparar el panel
-
-        // Asegura la calidad del renderizado
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        // Configura el gradiente
-        GradientPaint gp = new GradientPaint(0, 0, Color.decode("#B3E5FC"), getWidth(), 0, Color.decode("#81D4FA"));
-        g2.setPaint(gp);
-        g2.fillRect(0, 0, getWidth(), getHeight());
-        g2.dispose();
-    }
-
 
     private void initializeUI() {
-        // Configuración de componentes y layout...
-        setLayout(new BorderLayout());
-        
-        // Panel transparente sobre el que se añadirán el resto de componentes
-        JPanel transparentPanel = new JPanel(new BorderLayout());
-        transparentPanel.setOpaque(false); // Garantiza que este panel no oculte el gradiente.
-        
-        // Agregar tus paneles y componentes a transparentPanel
-        transparentPanel.add(crearPanelClientes(), BorderLayout.CENTER);
-        transparentPanel.add(crearPanelBotones(), BorderLayout.SOUTH);
-
-        // Finalmente, añadir transparentPanel a this panel
-        this.add(transparentPanel, BorderLayout.CENTER);
+        setBackground(new Color(147, 112, 219)); // Tono azul suave
+        getContentPane().setLayout(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(147, 112, 219));
+        mainPanel.setOpaque(false); // Transparencia
+        mainPanel.add(crearPanelClientes(), BorderLayout.CENTER);
+        mainPanel.add(crearPanelBotones(), BorderLayout.SOUTH);
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
     }
 
     private JPanel crearPanelBotones() {
         JButton btnEliminar = new JButton("Eliminar");
         JButton btnGuardar = new JButton("Guardar");
         JButton btnCerrar = new JButton("Cerrar");
+
+        // Aplicar estilos de botones al estilo de VentanaRegistroVeterinarioDialog
+        initButton(btnEliminar, "#0057FF", "#003366");
+        initButton(btnGuardar, "#0057FF", "#003366");
+        initButton(btnCerrar, "#0057FF", "#003366");
 
         btnEliminar.addActionListener(new ActionListener() {
             @Override
@@ -100,13 +94,38 @@ public class PanelRegistroCliente extends JPanel {
             }
         });
 
-
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelBotones.setBackground(new Color(147, 112, 219));
         panelBotones.add(btnEliminar);
         panelBotones.add(btnGuardar);
         panelBotones.add(btnCerrar);
 
         return panelBotones;
+    }
+
+    // Método para inicializar y configurar los estilos de los botones
+    private void initButton(JButton button, String colorHex, String rolloverColorHex) {
+        button.setFont(new Font("Tahoma", Font.BOLD, 12));
+        button.setBackground(Color.WHITE);
+        button.setForeground(Color.decode(colorHex));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
+        button.setRolloverEnabled(true);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(Color.decode(rolloverColorHex));
+                button.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(Color.WHITE);
+                button.setForeground(Color.decode(colorHex));
+            }
+        });
     }
     
     private void limpiarCampos() {
@@ -176,7 +195,11 @@ public class PanelRegistroCliente extends JPanel {
 			tfRcliente_Tmovil = new JTextField(10);
 			tfRcliente_Email = new JTextField(10);
 			
-			  GradientPanel Pcliente = new GradientPanel();
+			Border bordeExterior = BorderFactory.createLineBorder(Color.BLACK); // Puedes cambiar el color y el estilo del borde exterior
+		    Border bordeInterior = BorderFactory.createEmptyBorder(30, 30, 30, 30); // Espacio interior para separar los componentes del borde
+		    Border bordeCompuesto = new CompoundBorder(bordeExterior, bordeInterior);
+		    
+			  JPanel Pcliente = new JPanel();
 		        Pcliente.setLayout(null);
 		        Pcliente.setOpaque(false);
 
@@ -272,6 +295,7 @@ public class PanelRegistroCliente extends JPanel {
 		    Pcliente.add(tfRcliente_Email);
 		    
 		    JPanel panel = new JPanel();
+		    panel.setBackground(new Color(147, 112, 219));
 		    panel.setBounds(0, 0, 744, 20);
 		    Pcliente.add(panel);
 		    panel.setLayout(null);
@@ -287,20 +311,12 @@ public class PanelRegistroCliente extends JPanel {
 	
 	
 	
-		public static void main(String[] args) {
-	        SwingUtilities.invokeLater(() -> {
-	            JFrame frame = new JFrame("Panel de Registro del Cliente");
-	            PanelRegistroCliente panelRegistro = new PanelRegistroCliente();
-
-	            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	            frame.setSize(578, 450);
-	            frame.setUndecorated(true); // Esto quita la barra de título y bordes de la ventana
-	            frame.add(panelRegistro);
-	            frame.setLocationRelativeTo(null);
-	            frame.setVisible(true);
-	        });
-	    }
-	
+		 public static void main(String[] args) {
+		        SwingUtilities.invokeLater(() -> {
+		            PanelRegistroCliente dialog = new PanelRegistroCliente(null, "Panel de Registro del Cliente", true);
+		            dialog.setVisible(true);
+		        });
+		    }
 			
 }
 

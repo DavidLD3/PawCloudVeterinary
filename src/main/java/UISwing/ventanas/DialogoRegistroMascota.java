@@ -1,35 +1,53 @@
 package UISwing.ventanas;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.ZoneId;
 import com.toedter.calendar.JDateChooser;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.ZoneId;
+
 import DB.MascotaDAO;
+import UISwing.recursos.RoundedPanel;
 import model.Mascota;
 
-public class PanelRegistroMascota extends JPanel {
+public class DialogoRegistroMascota extends JDialog {
+
+    private RoundedPanel roundedPanel;
     private JTextField tfMascotaNombre, tfMascotaEspecie, tfMascotaRaza, tfMascotapasaporte, tfMascotaMicrochip, tfMascotaCaracter, tfMascotaColor, tfMascotaTipoPelo;
     private JCheckBox cbMascotaEsterilizado;
     private JDateChooser dateChooserNacimiento;
     private JComboBox<String> cbMascotaSexo;
-    
     private JButton btnGuardar, btnLimpiar, btnCerrar;
+    private int idCliente;
 
-    private int idCliente; // Variable de instancia para guardar el ID del cliente
+    public DialogoRegistroMascota(Frame owner, boolean modal, int idCliente) {
+        super(owner, modal);
+        this.idCliente = idCliente;
+        setTitle("Registro de Mascota");
+        setUndecorated(true);
+        setSize(new Dimension(549, 649));
+        setLocationRelativeTo(null);
 
-    public PanelRegistroMascota(int idCliente) {
-        this.idCliente = idCliente; // Guarda el ID del cliente
-        initializeUI();
+        // Configuración del fondo transparente
+        setLayout(new BorderLayout());
+        ((JPanel)getContentPane()).setOpaque(false);
+        getRootPane().setOpaque(false);
+        getContentPane().setBackground(new Color(0, 0, 0, 0)); // Color transparente
+
+        roundedPanel = new RoundedPanel(30, new Color(112, 116, 178));
+        roundedPanel.setLayout(new BorderLayout());
+        roundedPanel.setOpaque(false); // Hacer el panel redondeado no opaco
+        getContentPane().add(roundedPanel);
+
+        initComponents();
     }
 
-    private void initializeUI() {
-        setLayout(new BorderLayout());
-        setBackground(new Color(134, 206, 249));
-
+    private void initComponents() {
         JPanel panelDatos = new JPanel(new GridLayout(0, 2, 10, 10));
-        add(panelDatos, BorderLayout.CENTER);
+        panelDatos.setOpaque(false);
+        roundedPanel.add(panelDatos, BorderLayout.CENTER);
+        
 
         tfMascotaNombre = new JTextField();
         tfMascotaEspecie = new JTextField();
@@ -54,7 +72,7 @@ public class PanelRegistroMascota extends JPanel {
         panelDatos.add(tfMascotaEspecie);
         panelDatos.add(new JLabel("Raza:"));
         panelDatos.add(tfMascotaRaza);
-        panelDatos.add(new JLabel("pasaporte:"));
+        panelDatos.add(new JLabel("Pasaporte:"));
         panelDatos.add(tfMascotapasaporte);
         panelDatos.add(new JLabel("Microchip:"));
         panelDatos.add(tfMascotaMicrochip);
@@ -68,28 +86,28 @@ public class PanelRegistroMascota extends JPanel {
         panelDatos.add(tfMascotaTipoPelo);
         panelDatos.add(new JLabel()); // Esta línea estaba duplicada
         panelDatos.add(cbMascotaEsterilizado);
-
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelBotones.setOpaque(false);
         btnGuardar = new JButton("Guardar");
         btnLimpiar = new JButton("Limpiar");
         btnCerrar = new JButton("Cerrar");
 
+        // Configuración y eventos de los botones
+        initButton(btnGuardar, "#0057FF", "#003366");
+        initButton(btnLimpiar, "#0057FF", "#003366");
+        initButton(btnCerrar, "#0057FF", "#003366");
+
         btnGuardar.addActionListener(e -> guardarMascota());
         btnLimpiar.addActionListener(e -> limpiarCampos());
-        btnCerrar.addActionListener(e -> {
-            // Obtén el JFrame que contiene este panel y ciérralo
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            if (frame != null) {
-                frame.dispose(); // Esto cerrará solo la ventana de registro de mascota
-            }
-        });
+        btnCerrar.addActionListener(e -> dispose());
 
         panelBotones.add(btnGuardar);
         panelBotones.add(btnLimpiar);
         panelBotones.add(btnCerrar);
 
-        add(panelBotones, BorderLayout.SOUTH);
+        roundedPanel.add(panelBotones, BorderLayout.SOUTH);  // Agrega el panel de botones al sur del roundedPanel
     }
+
 
     private void limpiarCampos() {
         tfMascotaNombre.setText("");
@@ -144,6 +162,31 @@ public class PanelRegistroMascota extends JPanel {
         }
     }
 
-}  
-  
+    private void initButton(JButton button, String colorHex, String rolloverColorHex) {
+        button.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        button.setForeground(Color.decode(colorHex));
+        button.setBackground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
+        button.setRolloverEnabled(true);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(Color.decode(rolloverColorHex));
+                button.setForeground(Color.WHITE);
+            }
 
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(Color.WHITE);
+                button.setForeground(Color.decode(colorHex));
+            }
+        });
+    }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        DialogoRegistroMascota dialogo = new DialogoRegistroMascota(frame, true, 123);
+        dialogo.setVisible(true);
+    }
+}
