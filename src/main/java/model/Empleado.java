@@ -12,7 +12,6 @@ public class Empleado {
     private Date fechaContratacion;
     private String horarioTrabajo;
 
-    // Constructor sin argumentos
     public Empleado() {
     }
 

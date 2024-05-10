@@ -46,7 +46,7 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         lblNombre.setForeground(Color.WHITE);
         roundedPanel.add(lblNombre);
         txtNombre = new JTextField();
-        txtNombre.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtNombre.setFont(new Font("Segoe UI", Font.BOLD, 11));
         txtNombre.setBounds(60, 61, 200, 35);
         roundedPanel.add(txtNombre);
 
@@ -56,7 +56,7 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         lblApellidos.setForeground(Color.WHITE);
         roundedPanel.add(lblApellidos);
         txtApellidos = new JTextField();
-        txtApellidos.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtApellidos.setFont(new Font("Segoe UI", Font.BOLD, 11));
         txtApellidos.setBounds(323, 61, 232, 35);
         roundedPanel.add(txtApellidos);
 
@@ -66,7 +66,7 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         lblLicencia.setForeground(Color.WHITE);
         roundedPanel.add(lblLicencia);
         txtLicencia = new JTextField();
-        txtLicencia.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtLicencia.setFont(new Font("Segoe UI", Font.BOLD, 11));
         txtLicencia.setBounds(323, 174, 232, 35);
         roundedPanel.add(txtLicencia);
 
@@ -76,7 +76,7 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         lblTelefono.setForeground(Color.WHITE);
         roundedPanel.add(lblTelefono);
         txtTelefono = new JTextField();
-        txtTelefono.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtTelefono.setFont(new Font("Segoe UI", Font.BOLD, 11));
         txtTelefono.setBounds(617, 61, 200, 35);
         roundedPanel.add(txtTelefono);
 
@@ -86,7 +86,7 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         lblEmail.setForeground(Color.WHITE);
         roundedPanel.add(lblEmail);
         txtEmail = new JTextField();
-        txtEmail.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtEmail.setFont(new Font("Segoe UI", Font.BOLD, 11));
         txtEmail.setBounds(60, 174, 200, 35);
         roundedPanel.add(txtEmail);
 
@@ -96,7 +96,7 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         lblEspecialidades.setForeground(Color.WHITE);
         roundedPanel.add(lblEspecialidades);
         txtEspecialidades = new JTextField();
-        txtEspecialidades.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtEspecialidades.setFont(new Font("Segoe UI", Font.BOLD, 11));
         txtEspecialidades.setBounds(617, 287, 200, 35);
         roundedPanel.add(txtEspecialidades);
 
@@ -106,7 +106,7 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         lblHorarioTrabajo.setForeground(Color.WHITE);
         roundedPanel.add(lblHorarioTrabajo);
         txtHorarioTrabajo = new JTextField();
-        txtHorarioTrabajo.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtHorarioTrabajo.setFont(new Font("Segoe UI", Font.BOLD, 11));
         txtHorarioTrabajo.setBounds(60, 288, 495, 35);
         roundedPanel.add(txtHorarioTrabajo);
 
@@ -117,7 +117,8 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         roundedPanel.add(lblFechaContratacion);
         dateChooserContratacion = new JDateChooser();
         dateChooserContratacion.setBounds(617, 174, 200, 35);
-        dateChooserContratacion.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        dateChooserContratacion.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        dateChooserContratacion.setDateFormatString("dd/MM/yyyy");
         roundedPanel.add(dateChooserContratacion);
 
         btnSave = new JButton("Guardar Cambios");
@@ -127,19 +128,19 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         btnSave.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnSave.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
         btnSave.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnSave.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnSave.setContentAreaFilled(false); 
         btnSave.setOpaque(true);
         btnSave.setRolloverEnabled(true);
         btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnSave.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnSave.setBackground(Color.decode("#003366"));
                 btnSave.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnSave.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnSave.setBackground(Color.WHITE); 
                 btnSave.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -153,19 +154,19 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         btnCancel.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnCancel.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
         btnCancel.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnCancel.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnCancel.setContentAreaFilled(false); 
         btnCancel.setOpaque(true);
         btnCancel.setRolloverEnabled(true);
         btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnCancel.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnCancel.setBackground(Color.decode("#003366"));
                 btnCancel.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnCancel.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnCancel.setBackground(Color.WHITE);
                 btnCancel.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -179,41 +180,39 @@ public class VentanaModificarVeterinarioDialog extends JDialog {
         btnDelete.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnDelete.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
         btnDelete.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnDelete.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnDelete.setContentAreaFilled(false); 
         btnDelete.setOpaque(true);
         btnDelete.setRolloverEnabled(true);
         btnDelete.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnDelete.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnDelete.setBackground(Color.decode("#003366"));
                 btnDelete.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnDelete.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnDelete.setBackground(Color.WHITE);
                 btnDelete.setForeground(Color.decode("#0057FF"));
             }
         });
         btnDelete.addActionListener(this::eliminarVeterinario);
         roundedPanel.add(btnDelete);
         
-        
-     // Agregar el panel central opaco al diálogo
         JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.6f));  // Ajusta la opacidad
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.6f));  
                 g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);  // Esquinas redondeadas
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);  
                 g2.dispose();
             }
         };
-        centerPanel.setBackground(new Color(255, 255, 255, 70));  // Color blanco con transparencia
+        centerPanel.setBackground(new Color(255, 255, 255, 70));  
         centerPanel.setOpaque(false);
-        centerPanel.setBounds(32, 29, 822, 395);  // Deja un margen uniforme de 10 píxeles
+        centerPanel.setBounds(32, 29, 822, 395); 
         roundedPanel.add(centerPanel);
 
         

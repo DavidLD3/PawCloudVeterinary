@@ -1,15 +1,12 @@
 package UISwing.ventanas;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.*;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
-
 import DB.CitaDAO;
 import DB.ClienteDAO;
 import DB.MascotaDAO;
@@ -30,7 +27,6 @@ public class VentanaCitasDialog extends JDialog {
     
     private JSpinner timeSpinner;
     private JSpinner dateSpinner;
-    private JButton calendarButton;
     private JTextField textFieldTituloVisita;
     private JTextPane textPaneNotas;
     private JComboBox<Veterinario> comboBoxVeterinarios;
@@ -43,7 +39,7 @@ public class VentanaCitasDialog extends JDialog {
     public VentanaCitasDialog(Frame owner, boolean modal) {
         super(owner, modal);
         setTitle("Programar Cita");
-        setUndecorated(true); // Esto elimina la decoración de la ventana
+        setUndecorated(true);
         setSize(new Dimension(888, 399));
         
         setLocationRelativeTo(null);
@@ -52,8 +48,8 @@ public class VentanaCitasDialog extends JDialog {
         
         roundedPanel = new RoundedPanel(30, Color.decode("#999CE3"));
         roundedPanel.setLayout(null);
-        roundedPanel.setBounds(0, 0, 888, 399); // Ajustar al tamaño del JDialog
-        roundedPanel.setOpaque(false); // Hacer el fondo transparente
+        roundedPanel.setBounds(0, 0, 888, 399);
+        roundedPanel.setOpaque(false);
         setBackground(new java.awt.Color(0, 0, 0, 0));
         clienteDAO = new ClienteDAO();
         mascotaDAO = new MascotaDAO();
@@ -62,8 +58,6 @@ public class VentanaCitasDialog extends JDialog {
         cargarVeterinarios();
         cargarClientesInicialmente();
         configurarSeleccionFechaHora();
-        
-        // Agrega el RoundedPanel al JDialog
         getContentPane().add(roundedPanel);
 	}
 	
@@ -75,7 +69,7 @@ public class VentanaCitasDialog extends JDialog {
         lblTipo.setBounds(56, 37, 80, 34);
         roundedPanel.add(lblTipo);
 
-        comboBoxTipo = new JComboBox<>(new String[]{"Visita", "Consulta", "Urgencia"}); // Ya no se redeclara aquí
+        comboBoxTipo = new JComboBox<>(new String[]{"Visita", "Consulta", "Urgencia"});
         comboBoxTipo.setFont(new Font("Segoe UI", Font.BOLD, 11));
         comboBoxTipo.setBounds(54, 70, 120, 25);
         roundedPanel.add(comboBoxTipo);
@@ -115,8 +109,7 @@ public class VentanaCitasDialog extends JDialog {
             public void keyReleased(KeyEvent e) {
                 String text = textEditorClientes.getText();
                 if (text.trim().length() >= 4) {
-                   
-                    List<Cliente> filtrado = clienteDAO.buscarClientesPorApellido(text); 
+                    List<Cliente> filtrado = clienteDAO.buscarClientesPorNombreApellido(text);
                     comboBoxClientes.removeAllItems();
                     for (Cliente cliente : filtrado) {
                         comboBoxClientes.addItem(cliente);
@@ -130,12 +123,12 @@ public class VentanaCitasDialog extends JDialog {
                 }
             }
         });
-     // Agregar ItemListener para cargar mascotas del cliente seleccionado
+
         comboBoxClientes.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent event) {
                 if (event.getStateChange() == ItemEvent.SELECTED) {
-                    if (cargaInicialCompleta) { // Solo carga mascotas si la UI está completamente cargada
+                    if (cargaInicialCompleta) {
                         Cliente clienteSeleccionado = (Cliente) event.getItem();
                         actualizarMascotasPorCliente(clienteSeleccionado.getId());
                     }
@@ -150,14 +143,14 @@ public class VentanaCitasDialog extends JDialog {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Cliente) {
                     Cliente cliente = (Cliente) value;
-                    setText(cliente.getApellidos() + ", " + cliente.getNombre()); // Formato apellidos, nombre
+                    setText(cliente.getApellidos() + ", " + cliente.getNombre()); 
                 }
                 return this;
             }
         });
         roundedPanel.add(comboBoxClientes);
    
-        // Combobox de Mascotas
+
         comboBoxMascotas = new JComboBox<>();
         comboBoxMascotas.setFont(new Font("Segoe UI", Font.BOLD, 11));
         comboBoxMascotas.setEditable(true);
@@ -168,7 +161,7 @@ public class VentanaCitasDialog extends JDialog {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof MascotaContenedor) {
                     MascotaContenedor contenedor = (MascotaContenedor) value;
-                    setText(contenedor.getMascota().getNombre()); // Ahora correctamente obtiene el nombre de la mascota a través del contenedor
+                    setText(contenedor.getMascota().getNombre()); 
                 }
                 return this;
             }
@@ -227,13 +220,13 @@ public class VentanaCitasDialog extends JDialog {
         btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnCancelar.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnCancelar.setBackground(Color.decode("#003366"));
                 btnCancelar.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnCancelar.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnCancelar.setBackground(Color.WHITE); 
                 btnCancelar.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -256,13 +249,13 @@ public class VentanaCitasDialog extends JDialog {
         btnGuardarCita.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnGuardarCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnGuardarCita.setBackground(Color.decode("#003366")); 
                 btnGuardarCita.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnGuardarCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnGuardarCita.setBackground(Color.WHITE); 
                 btnGuardarCita.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -276,15 +269,15 @@ public class VentanaCitasDialog extends JDialog {
             protected void paintComponent(Graphics g) {
                 // Personaliza aquí tu componente
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); 
                 g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); 
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        centerPanel.setBackground(new Color(255, 255, 255, 70)); // Color de fondo con opacidad
-        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+        centerPanel.setBackground(new Color(255, 255, 255, 70)); 
+        centerPanel.setOpaque(false); 
         centerPanel.setBounds(24, 24, 841, 352);
         roundedPanel.add(centerPanel);
  
@@ -310,14 +303,13 @@ public class VentanaCitasDialog extends JDialog {
 	
 	
 	private void configurarSeleccionFechaHora() {
-	    // Selector de fecha con JDateChooser
+	   
 	    dateChooser = new JDateChooser();
-	    dateChooser.setMinSelectableDate(new Date()); // Establece la fecha mínima seleccionable como la fecha actual
-	    dateChooser.setDateFormatString("dd/MM/yyyy"); // Establece el formato de fecha
-	    dateChooser.setBounds(434, 137, 155, 25); // Ajusta la posición y tamaño según tus necesidades
+	    dateChooser.setMinSelectableDate(new Date()); 
+	    dateChooser.setDateFormatString("dd/MM/yyyy"); 
+	    dateChooser.setBounds(434, 137, 155, 25); 
 	    roundedPanel.add(dateChooser);
 
-	    // Configuración del JSpinner para la hora
 	    timeSpinner = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY));
 	    JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
 	    timeSpinner.setEditor(timeEditor);
@@ -326,24 +318,24 @@ public class VentanaCitasDialog extends JDialog {
 	}
 
 
-	private void mostrarCalendario() {
+	/*private void mostrarCalendario() {
 	    JDialog dialog = new JDialog();
-	    dialog.setModal(true); // Hacer el diálogo modal para mantener el foco
+	    dialog.setModal(true); 
 	    dialog.setTitle("Seleccionar Fecha");
 	    dialog.setSize(300, 300);
-	    dialog.setLocationRelativeTo(null); // Centrar respecto a la pantalla o usar dialog.setLocationRelativeTo(this) para centrar respecto a la ventana principal
+	    dialog.setLocationRelativeTo(null); 
 	    JCalendar calendar = new JCalendar();
 	    dialog.getContentPane().add(calendar, BorderLayout.CENTER);
 	    
 	    JButton okButton = new JButton("OK");
 	    okButton.addActionListener(e -> {
 	        dateSpinner.setValue(calendar.getDate());
-	        dialog.dispose(); // Cierra el diálogo una vez seleccionada la fecha
+	        dialog.dispose(); 
 	    });
 	    dialog.getContentPane().add(okButton, BorderLayout.SOUTH);
 
 	    dialog.setVisible(true);
-	}
+	}*/
 	
 
 
@@ -363,7 +355,7 @@ public class VentanaCitasDialog extends JDialog {
 	                List<Mascota> mascotas = get();
 	                comboBoxMascotas.removeAllItems();
 	                for (Mascota mascota : mascotas) {
-	                    comboBoxMascotas.addItem(new Mascota.MascotaContenedor(mascota)); // Uso correcto con la clase estática
+	                    comboBoxMascotas.addItem(new Mascota.MascotaContenedor(mascota)); 
 	                }
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -386,12 +378,12 @@ public class VentanaCitasDialog extends JDialog {
 	        protected void done() {
 	            try {
 	                List<Cliente> clientes = get();
-	                comboBoxClientes.removeAllItems(); // Asegúrate de limpiar antes de añadir
+	                comboBoxClientes.removeAllItems(); 
 	                for (Cliente cliente : clientes) {
 	                	comboBoxClientes.setSelectedIndex(-1);
 	                    comboBoxClientes.addItem(cliente);
 	                }
-	                cargaInicialCompleta = true; // Indica que la carga inicial ha terminado
+	                cargaInicialCompleta = true; 
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	            }
@@ -402,14 +394,14 @@ public class VentanaCitasDialog extends JDialog {
     
     
 
-	private void actualizarListaClientes(String texto) {
-	    // Verifica si la carga inicial aún no se ha completado para evitar ejecución innecesaria
+	/*private void actualizarListaClientes(String texto) {
+	    
 	    if (!cargaInicialCompleta) return;
 
 	    new SwingWorker<List<Cliente>, Void>() {
 	        @Override
 	        protected List<Cliente> doInBackground() throws Exception {
-	            // Simula una búsqueda en base al texto ingresado por el usuario
+	           
 	            return clienteDAO.buscarClientesPorNombre(texto);
 	        }
 
@@ -418,13 +410,10 @@ public class VentanaCitasDialog extends JDialog {
 	            try {
 	                // Obtiene el resultado de la búsqueda
 	                List<Cliente> clientes = get();
-	                // Limpia el JComboBox antes de añadir nuevos elementos
 	                comboBoxClientes.removeAllItems();
 	                for (Cliente cliente : clientes) {
-	                    // Añade cada cliente encontrado al JComboBox
 	                    comboBoxClientes.addItem(cliente);
 	                }
-	                // Si hay clientes encontrados, muestra el popup del JComboBox
 	                if (!clientes.isEmpty()) {
 	                    comboBoxClientes.showPopup();
 	                }
@@ -433,12 +422,12 @@ public class VentanaCitasDialog extends JDialog {
 	            }
 	        }
 	    }.execute();
-	}
+	}*/
 
 	private void guardarCita() {
 	    try {
 	        String titulo = textFieldTituloVisita.getText();
-	        Date fechaUtil = dateChooser.getDate(); // Obtiene la fecha del JDateChooser
+	        Date fechaUtil = dateChooser.getDate();
 	        if (fechaUtil == null) {
 	            JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
 	            return;
@@ -462,7 +451,7 @@ public class VentanaCitasDialog extends JDialog {
 	        }
 
 	        Cita cita = new Cita(0, titulo, fechaSql.toLocalDate(), hora, notas, clienteSeleccionado.getId(), mascotaSeleccionada.getId());
-	        cita.setTipo(tipoCita); // Asegúrate de que este setter exista y esté implementado correctamente
+	        cita.setTipo(tipoCita);
 
 	        new CitaDAO().insertarCita(cita);
 
@@ -475,13 +464,13 @@ public class VentanaCitasDialog extends JDialog {
 
 	
 	public void setFecha(java.util.Date fecha) {
-	    dateChooser.setDate(fecha);  // Establece la fecha en JDateChooser correctamente
+	    dateChooser.setDate(fecha); 
 	}
 	
 	public void setHora(java.util.Date hora) {
 	    Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(hora);
-	    timeSpinner.setValue(calendar.getTime());  // Ajusta la hora en JSpinner correctamente
+	    timeSpinner.setValue(calendar.getTime());
 	}
 
 

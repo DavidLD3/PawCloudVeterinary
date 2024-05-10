@@ -34,35 +34,33 @@ public class VentanaModificarCitaDialog extends JDialog {
     private JComboBox<Cliente> comboBoxClientes;
     private JComboBox<Mascota.MascotaContenedor> comboBoxMascotas;
     private JComboBox<String> comboBoxTipo;
-    private boolean cargaInicialCompleta = false;
     private RoundedPanel roundedPanel;
     private Cita citaActual;
     private List<CitaActualizadaListener> listeners = new ArrayList<>();
 
-    // Asegúrate de pasar la cita actual como parámetro al crear la ventana
+
     public VentanaModificarCitaDialog(Frame owner, boolean modal, Cita citaActual) {
         super(owner, modal);
-        this.citaActual = citaActual; // Guardar la cita actual como un campo de la clase
+        this.citaActual = citaActual;
         setTitle("Modificar/Eliminar Cita");
         setUndecorated(true);
         setSize(new Dimension(888, 399));
         setLocationRelativeTo(null);
 
-        // Inicializa roundedPanel aquí, antes de llamar a inicializarComponentesUI
+
         roundedPanel = new RoundedPanel(30, Color.decode("#7E88E2"));
         roundedPanel.setLayout(null);
         roundedPanel.setBounds(0, 0, 888, 399);
         roundedPanel.setOpaque(false);
         setBackground(new Color(0, 0, 0, 0));
 
-        // Ahora que roundedPanel está inicializado, puedes proceder a inicializar los demás componentes
         clienteDAO = new ClienteDAO();
         mascotaDAO = new MascotaDAO();
 
-        inicializarComponentesUI(); // Ahora es seguro llamar a este método
+        inicializarComponentesUI(); 
         cargarVeterinarios();
-        cargarDatosCita(); // Carga los datos de la cita en la interfaz de usuario
-        getContentPane().add(roundedPanel); // Agrega roundedPanel al JDialog
+        cargarDatosCita(); 
+        getContentPane().add(roundedPanel); 
     }
 
 	private void inicializarComponentesUI() {
@@ -73,7 +71,7 @@ public class VentanaModificarCitaDialog extends JDialog {
         lblTipo.setBounds(56, 37, 80, 34);
         roundedPanel.add(lblTipo);
 
-        comboBoxTipo = new JComboBox<>(new String[]{"Visita", "Consulta", "Urgencia"}); // Ya no se redeclara aquí
+        comboBoxTipo = new JComboBox<>(new String[]{"Visita", "Consulta", "Urgencia"});
         comboBoxTipo.setFont(new Font("Segoe UI", Font.BOLD, 11));
         comboBoxTipo.setBounds(54, 70, 120, 25);
         roundedPanel.add(comboBoxTipo);
@@ -114,7 +112,7 @@ public class VentanaModificarCitaDialog extends JDialog {
                 String text = textEditorClientes.getText();
                 if (text.trim().length() >= 4) {
                    
-                    List<Cliente> filtrado = clienteDAO.buscarClientesPorApellido(text); 
+                    List<Cliente> filtrado = clienteDAO.buscarClientesPorNombreApellido(text); 
                     comboBoxClientes.removeAllItems();
                     for (Cliente cliente : filtrado) {
                         comboBoxClientes.addItem(cliente);
@@ -128,7 +126,6 @@ public class VentanaModificarCitaDialog extends JDialog {
                 }
             }
         });
-     // Agregar ItemListener para cargar mascotas del cliente seleccionado
         comboBoxClientes.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent event) {
@@ -145,7 +142,7 @@ public class VentanaModificarCitaDialog extends JDialog {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Cliente) {
                     Cliente cliente = (Cliente) value;
-                    setText(cliente.getApellidos() + ", " + cliente.getNombre()); // Formato apellidos, nombre
+                    setText(cliente.getApellidos() + ", " + cliente.getNombre()); 
                 }
                 return this;
             }
@@ -163,7 +160,7 @@ public class VentanaModificarCitaDialog extends JDialog {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof MascotaContenedor) {
                     MascotaContenedor contenedor = (MascotaContenedor) value;
-                    setText(contenedor.getMascota().getNombre()); // Ahora correctamente obtiene el nombre de la mascota a través del contenedor
+                    setText(contenedor.getMascota().getNombre());
                 }
                 return this;
             }
@@ -223,13 +220,13 @@ public class VentanaModificarCitaDialog extends JDialog {
         btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnCancelar.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnCancelar.setBackground(Color.decode("#003366"));
                 btnCancelar.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnCancelar.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnCancelar.setBackground(Color.WHITE);
                 btnCancelar.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -255,13 +252,13 @@ public class VentanaModificarCitaDialog extends JDialog {
         btneliminarCita.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btneliminarCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btneliminarCita.setBackground(Color.decode("#003366")); 
                 btneliminarCita.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btneliminarCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btneliminarCita.setBackground(Color.WHITE); 
                 btneliminarCita.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -281,13 +278,13 @@ public class VentanaModificarCitaDialog extends JDialog {
         btnModificarCita.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnModificarCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnModificarCita.setBackground(Color.decode("#003366")); 
                 btnModificarCita.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnModificarCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnModificarCita.setBackground(Color.WHITE); 
                 btnModificarCita.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -301,15 +298,15 @@ public class VentanaModificarCitaDialog extends JDialog {
             protected void paintComponent(Graphics g) {
                 // Personaliza aquí tu componente
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); 
                 g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); 
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
         centerPanel.setBackground(new Color(255, 255, 255, 70)); // Color de fondo con opacidad
-        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+        centerPanel.setOpaque(false); 
         centerPanel.setBounds(24, 24, 841, 352);
         roundedPanel.add(centerPanel);
  
@@ -338,17 +335,17 @@ public class VentanaModificarCitaDialog extends JDialog {
 
 	private void mostrarCalendario() {
 	    JDialog dialog = new JDialog();
-	    dialog.setModal(true); // Hacer el diálogo modal para mantener el foco
+	    dialog.setModal(true); 
 	    dialog.setTitle("Seleccionar Fecha");
 	    dialog.setSize(300, 300);
-	    dialog.setLocationRelativeTo(null); // Centrar respecto a la pantalla o usar dialog.setLocationRelativeTo(this) para centrar respecto a la ventana principal
+	    dialog.setLocationRelativeTo(null); 
 	    JCalendar calendar = new JCalendar();
 	    dialog.getContentPane().add(calendar, BorderLayout.CENTER);
 	    
 	    JButton okButton = new JButton("OK");
 	    okButton.addActionListener(e -> {
 	        dateSpinner.setValue(calendar.getDate());
-	        dialog.dispose(); // Cierra el diálogo una vez seleccionada la fecha
+	        dialog.dispose(); 
 	    });
 	    dialog.getContentPane().add(okButton, BorderLayout.SOUTH);
 
@@ -370,7 +367,7 @@ public class VentanaModificarCitaDialog extends JDialog {
 	                for (Mascota mascota : mascotas) {
 	                    comboBoxMascotas.addItem(new Mascota.MascotaContenedor(mascota));
 	                }
-	                // Si estamos cargando datos para una cita existente, asegurémonos de seleccionar la mascota correcta.
+
 	                if (citaActual != null && clienteId == citaActual.getClienteId()) {
 	                    cargarYSeleccionarMascota(citaActual.getMascotaId());
 	                }
@@ -379,80 +376,19 @@ public class VentanaModificarCitaDialog extends JDialog {
 	            }
 	        }
 	    }.execute();
-	}
-	/*private void cargarClientesInicialmente() {
-	    new SwingWorker<List<Cliente>, Void>() {
-	        @Override
-	        protected List<Cliente> doInBackground() throws Exception {
-	            return clienteDAO.obtenerTodosLosClientes();
-	        }
-
-	        @Override
-	        protected void done() {
-	            try {
-	                List<Cliente> clientes = get();
-	                comboBoxClientes.removeAllItems(); // Asegúrate de limpiar antes de añadir
-	                for (Cliente cliente : clientes) {
-	                	comboBoxClientes.setSelectedIndex(-1);
-	                    comboBoxClientes.addItem(cliente);
-	                }
-	                cargaInicialCompleta = true; // Indica que la carga inicial ha terminado
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }.execute();
-	}
-
-	private void actualizarListaClientes(String texto) {
-	    // Verifica si la carga inicial aún no se ha completado para evitar ejecución innecesaria
-	    if (!cargaInicialCompleta) return;
-
-	    new SwingWorker<List<Cliente>, Void>() {
-	        @Override
-	        protected List<Cliente> doInBackground() throws Exception {
-	            // Simula una búsqueda en base al texto ingresado por el usuario
-	            return clienteDAO.buscarClientesPorNombre(texto);
-	        }
-
-	        @Override
-	        protected void done() {
-	            try {
-	                // Obtiene el resultado de la búsqueda
-	                List<Cliente> clientes = get();
-	                // Limpia el JComboBox antes de añadir nuevos elementos
-	                comboBoxClientes.removeAllItems();
-	                for (Cliente cliente : clientes) {
-	                    // Añade cada cliente encontrado al JComboBox
-	                    comboBoxClientes.addItem(cliente);
-	                }
-	                // Si hay clientes encontrados, muestra el popup del JComboBox
-	                if (!clientes.isEmpty()) {
-	                    comboBoxClientes.showPopup();
-	                }
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }.execute();
-	}*/
-	
+	}	
 	private void cargarDatosCita() {
-	    // Suponemos que citaActual tiene todos los datos necesarios cargados
+	  
 	    if (citaActual != null) {
 	        textFieldTituloVisita.setText(citaActual.getTitulo());
 	        textPaneNotas.setText(citaActual.getNotas());
-
-	        // Configurar la fecha y hora
 	        LocalDate fecha = citaActual.getFecha();
 	        LocalTime hora = citaActual.getHora();
 	        dateSpinner.setValue(java.util.Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 	        timeSpinner.setValue(java.util.Date.from(hora.atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()));
 	        seleccionarVeterinarioEnComboBox(citaActual.getVeterinarioId());
-	        // Seleccionar el cliente y mascota correspondiente
 	        cargarYSeleccionarCliente(citaActual.getClienteId());
 	        cargarYSeleccionarMascota(citaActual.getMascotaId());
-	        // Seleccionar el tipo
 	        comboBoxTipo.setSelectedItem(citaActual.getTipo());
 	    }
 	}
@@ -503,7 +439,6 @@ public class VentanaModificarCitaDialog extends JDialog {
 	}
 	
 	private void cargarYSeleccionarMascota(int mascotaId) {
-	    // Asume que ya se han cargado las mascotas para el cliente seleccionado en comboBoxMascotas
 	    for (int i = 0; i < comboBoxMascotas.getItemCount(); i++) {
 	        Mascota.MascotaContenedor mascotaContenedor = comboBoxMascotas.getItemAt(i);
 	        if (mascotaContenedor.getMascota().getId() == mascotaId) {
@@ -584,15 +519,11 @@ public class VentanaModificarCitaDialog extends JDialog {
 	
 	public static void main(String[] args) {
 	    SwingUtilities.invokeLater(() -> {
-	        // Crea una cita de prueba o recupera una cita existente de tu base de datos / lógica de aplicación
-	        Cita citaDePrueba = new Cita(); // Usa un constructor adecuado o setters para establecer los datos de la cita
-	        citaDePrueba.setId(1); // Asumiendo que tienes un método setId y el ID es relevante
+	        Cita citaDePrueba = new Cita(); 
+	        citaDePrueba.setId(1); 
 	        citaDePrueba.setTitulo("Consulta de prueba");
 	        citaDePrueba.setFecha(LocalDate.now());
 	        citaDePrueba.setHora(LocalTime.now());
-	        // Continúa configurando otros campos necesarios...
-
-	        // Ahora pasas este objeto citaDePrueba al constructor
 	        VentanaModificarCitaDialog dialog = new VentanaModificarCitaDialog(null, true, citaDePrueba);
 	        dialog.setVisible(true);
 	    });

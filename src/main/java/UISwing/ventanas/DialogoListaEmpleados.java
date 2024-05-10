@@ -5,7 +5,7 @@ import javax.swing.table.DefaultTableModel;
 
 import DB.EmpleadoDAO;
 import model.Empleado;
-
+import java.text.SimpleDateFormat;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -53,7 +53,7 @@ public class DialogoListaEmpleados extends JDialog {
             public void mousePressed(MouseEvent e) {
                 if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
                     int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
-                    int id = empleadoIds.get(modelRow); // Obtener el ID utilizando la lista de IDs
+                    int id = empleadoIds.get(modelRow);
                     mostrarDialogoDetalleEmpleado(id);
                 }
             }
@@ -71,14 +71,16 @@ public class DialogoListaEmpleados extends JDialog {
             protected void done() {
                 try {
                     List<Empleado> empleados = get();
-                    empleadoIds.clear(); // Limpiar la lista de IDs
-                    model.setRowCount(0); // Limpiar el modelo de la tabla
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    empleadoIds.clear();
+                    model.setRowCount(0);
                     for (Empleado empleado : empleados) {
+                        String fechaContratacion = empleado.getFechaContratacion() != null ? formatter.format(empleado.getFechaContratacion()) : "N/A";
                         empleadoIds.add(empleado.getId());
                         model.addRow(new Object[]{
                             empleado.getNombre(), empleado.getApellidos(), empleado.getDni(),
                             empleado.getTelefono(), empleado.getEmail(),
-                            empleado.getHorarioTrabajo(), empleado.getFechaContratacion() != null ? empleado.getFechaContratacion().toString() : "N/A"
+                            empleado.getHorarioTrabajo(), fechaContratacion
                         });
                     }
                 } catch (Exception e) {
@@ -89,25 +91,24 @@ public class DialogoListaEmpleados extends JDialog {
     }
 
 
+
+
     private void mostrarDialogoDetalleEmpleado(int empleadoId) {
-        // SwingWorker para realizar la operación de base de datos en un hilo separado
         new SwingWorker<Empleado, Void>() {
             @Override
             protected Empleado doInBackground() throws Exception {
-                // Realiza la consulta en un hilo de fondo
                 return empleadoDAO.obtenerEmpleadoPorId(empleadoId);
             }
 
             @Override
             protected void done() {
                 try {
-                    // Una vez que el empleado está cargado, se accede en el hilo de la interfaz de usuario
                     Empleado empleado = get();
                     if (empleado != null) {
                         Frame frame = JOptionPane.getFrameForComponent(DialogoListaEmpleados.this);
                         VentanaModificarEmpleadoDialog dialogoDetalle = new VentanaModificarEmpleadoDialog(frame, true, empleado);
                         dialogoDetalle.setVisible(true);
-                        cargarEmpleados(); // Recargar la lista de empleados para reflejar posibles cambios
+                        cargarEmpleados();
                     } else {
                         JOptionPane.showMessageDialog(DialogoListaEmpleados.this,
                                                       "No se encontró el empleado solicitado.",
@@ -122,7 +123,7 @@ public class DialogoListaEmpleados extends JDialog {
                     e.printStackTrace();
                 }
             }
-        }.execute(); // Inicia el SwingWorker
+        }.execute();
     }
 
 

@@ -14,7 +14,6 @@ public class EmpleadoDAO {
 
     public EmpleadoDAO() {
         try {
-            // Usamos la clase Conexion para obtener la conexión
             this.connection = Conexion.getConexion();
         } catch (SQLException e) {
             System.err.println("Error al obtener la conexión: " + e.getMessage());
