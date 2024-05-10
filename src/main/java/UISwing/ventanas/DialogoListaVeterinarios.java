@@ -2,10 +2,9 @@ package UISwing.ventanas;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
+import java.text.SimpleDateFormat;
 import DB.VeterinarioDAO;
 import model.Veterinario;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -73,12 +72,14 @@ public class DialogoListaVeterinarios extends JDialog {
                     List<Veterinario> veterinarios = get();
                     veterinarioIds.clear();
                     model.setRowCount(0);
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                     for (Veterinario veterinario : veterinarios) {
                         veterinarioIds.add(veterinario.getId());
+                        String fechaContratacion = veterinario.getFechaContratacion() != null ? formatter.format(veterinario.getFechaContratacion()) : "N/A";
                         model.addRow(new Object[]{
                             veterinario.getNombre(), veterinario.getApellidos(), veterinario.getLicencia(),
                             veterinario.getTelefono(), veterinario.getEmail(), veterinario.getEspecialidades(),
-                            veterinario.getHorarioTrabajo(), veterinario.getFechaContratacion() != null ? veterinario.getFechaContratacion().toString() : "N/A"
+                            veterinario.getHorarioTrabajo(), fechaContratacion
                         });
                     }
                 } catch (Exception e) {
@@ -87,6 +88,7 @@ public class DialogoListaVeterinarios extends JDialog {
             }
         }.execute();
     }
+
 
     private void mostrarDialogoDetalleVeterinario(int veterinarioId) {
         new SwingWorker<Veterinario, Void>() {
@@ -103,7 +105,7 @@ public class DialogoListaVeterinarios extends JDialog {
                         Frame frame = JOptionPane.getFrameForComponent(DialogoListaVeterinarios.this);
                         VentanaModificarVeterinarioDialog dialogoDetalle = new VentanaModificarVeterinarioDialog(frame, true, veterinario);
                         dialogoDetalle.setVisible(true);
-                        cargarVeterinarios(); // Recargar la lista de veterinarios para reflejar posibles cambios
+                        cargarVeterinarios();
                     } else {
                         JOptionPane.showMessageDialog(DialogoListaVeterinarios.this,
                                                       "No se encontró el veterinario solicitado.",
@@ -118,7 +120,7 @@ public class DialogoListaVeterinarios extends JDialog {
                     e.printStackTrace();
                 }
             }
-        }.execute(); // Inicia el SwingWorker
+        }.execute();
     }
 
     public static void main(String[] args) {

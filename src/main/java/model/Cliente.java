@@ -37,11 +37,13 @@ public class Cliente {
     }
     
     
+
     @Override
     public String toString() {
-        // Puedes ajustar el formato a tus necesidades
-        return nombre + " " + apellidos;
+        // Devuelve "Apellido, Nombre"
+        return apellidos + ", " + nombre;
     }
+
     
    
 

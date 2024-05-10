@@ -22,8 +22,8 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
     
     public DialogoListaHospitalizados(Frame owner) {
         super(owner, "Listado de Hospitalizados", true);
-        this.ownerFrame = owner; // Asignar el propietario a la variable
-        setSize(1024, 600); // Aumentado el tamaño para una mejor visualización
+        this.ownerFrame = owner;
+        setSize(1024, 600);
         setLocationRelativeTo(owner);
 
         hospitalizacionDAO = new HospitalizacionDAO();
@@ -36,34 +36,33 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (component instanceof JLabel) {
-                ((JLabel) component).setBorder(new EmptyBorder(0, 15, 0, 15)); // Añade padding izquierdo y derecho
+                ((JLabel) component).setBorder(new EmptyBorder(0, 15, 0, 15)); 
             }
             return component;
         }
     }
 
     private void initUI() {
-        // Añadir columna "Veterinario"
     	String[] columnNames = {"ID Hospitalización", "Mascota", "Veterinario", "Fecha ingreso", "Fecha salida", "Motivo", "Estado"};
         model = new DefaultTableModel(null, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Hace que ninguna celda sea editable directamente en la tabla
+                return false;
             }
         };
 
         table = new JTable(model);
         table.setFillsViewportHeight(true);
-        table.setIntercellSpacing(new Dimension(10, 4)); // Aumenta la separación entre las celdas
+        table.setIntercellSpacing(new Dimension(10, 4)); 
 
-        // Ajustes visuales
+        
         table.setBackground(Color.decode("#96B8F6"));
         table.setForeground(Color.decode("#1B2582"));
-        table.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Tamaño de fuente aumentado
-        table.setRowHeight(table.getRowHeight() + 10); // Aumentar el espaciamiento entre filas
+        table.setFont(new Font("Segoe UI", Font.BOLD, 14)); 
+        table.setRowHeight(table.getRowHeight() + 10); 
         table.getTableHeader().setBackground(Color.decode("#0483FF"));
         table.getTableHeader().setForeground(Color.WHITE);
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16)); // Tamaño de fuente del encabezado aumentado
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16)); 
         PaddingTableCellRenderer cellRenderer = new PaddingTableCellRenderer();
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
@@ -72,7 +71,7 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
         JScrollPane scrollPane = new JScrollPane(table);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-        // Ocultar la columna del ID de hospitalización
+        
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setMinWidth(0);
         columnModel.getColumn(0).setMaxWidth(0);
@@ -102,15 +101,15 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
     
 
     private void cargarHospitalizados() {
-        model.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
+        model.setRowCount(0); 
 
         List<Hospitalizacion> hospitalizaciones = hospitalizacionDAO.recuperarTodasLasHospitalizaciones();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");  // Formateador de fecha
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 
         for (Hospitalizacion hospitalizacion : hospitalizaciones) {
-            // Usando el formateador para convertir LocalDateTime a String en el formato deseado
+            
             String fechaIngresoFormateada = hospitalizacion.getFechaIngreso().format(formatter);
-            String fechaSalidaFormateada = hospitalizacion.getFechaSalida() != null ? hospitalizacion.getFechaSalida().format(formatter) : "Hospitalizado";  // Manejo de fechas nulas
+            String fechaSalidaFormateada = hospitalizacion.getFechaSalida() != null ? hospitalizacion.getFechaSalida().format(formatter) : "Hospitalizado"; 
 
             model.addRow(new Object[]{
                 hospitalizacion.getId(),
@@ -126,8 +125,7 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
 
 
     private void mostrarDialogoDetalleHospitalizacion(Hospitalizacion hospitalizacion) {
-        // Asegúrate de que este método esté siendo llamado correctamente cuando sea necesario.
-        DialogoDetalleHospitalizados dialogoDetalle = new DialogoDetalleHospitalizados(ownerFrame, true, this); // `this` pasa la instancia de ActualizacionListener
+        DialogoDetalleHospitalizados dialogoDetalle = new DialogoDetalleHospitalizados(ownerFrame, true, this);
         dialogoDetalle.cargarDatosHospitalizacion(hospitalizacion);
         dialogoDetalle.setVisible(true);
     }
@@ -135,7 +133,7 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
     
     @Override
     public void onActualizacion() {
-        cargarHospitalizados(); // Recarga la tabla
+        cargarHospitalizados(); 
     }
     
     

@@ -18,7 +18,7 @@ public class ProductoSelectorDialog extends JDialog {
     private DefaultTableModel model;
     private JTextField searchField;
     private JButton selectButton;
-    private List<Object> productos; // Lista de productos de la base de datos
+    private List<Object> productos;
     private PanelVentas ownerPanel;
 
     public ProductoSelectorDialog(Frame owner, PanelVentas ownerPanel, boolean modal) {
@@ -38,20 +38,44 @@ public class ProductoSelectorDialog extends JDialog {
         topPanel.add(searchField);
         getContentPane().add(topPanel, BorderLayout.NORTH);
 
-        // Crear un modelo de tabla que no permite edición
+
         model = new DefaultTableModel(new String[]{"Producto", "Precio", "Descripción"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Esto hará que ninguna celda sea editable
+                return false; 
             }
         };
 
         productTable = new JTable(model);
-        productTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Configurar la selección de una sola fila a la vez
+        productTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
         JScrollPane scrollPane = new JScrollPane(productTable);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         selectButton = new JButton("Agregar Producto");
+        selectButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        selectButton.setBackground(Color.WHITE);
+        selectButton.setForeground(Color.decode("#0057FF")); 
+        selectButton.setFocusPainted(false);
+        selectButton.setBorderPainted(false);
+        selectButton.setContentAreaFilled(false);
+        selectButton.setOpaque(true);
+        selectButton.setRolloverEnabled(true);
+
+        
+        selectButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                selectButton.setBackground(Color.decode("#003366")); 
+                selectButton.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                selectButton.setBackground(Color.WHITE);
+                selectButton.setForeground(Color.decode("#0057FF"));
+            }
+        });
+
         selectButton.addActionListener(e -> agregarProductoSeleccionado());
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(selectButton);
@@ -69,10 +93,10 @@ public class ProductoSelectorDialog extends JDialog {
         try {
             VentasDAO ventasDao = new VentasDAO();
             List<Object> productosYFarmacos = ventasDao.buscarProductosYFarmacos(text);
-            model.setRowCount(0); // Limpiar tabla existente
-            productos.clear(); // Limpiar la lista
+            model.setRowCount(0);
+            productos.clear(); 
             for (Object item : productosYFarmacos) {
-                productos.add(item); // Agregamos a la lista de productos
+                productos.add(item); 
                 if (item instanceof Almacen) {
                     Almacen prod = (Almacen) item;
                     model.addRow(new Object[]{prod.getNombreProducto(), prod.getPrecioBruto(), prod.getDescripcion()});
@@ -91,7 +115,7 @@ public class ProductoSelectorDialog extends JDialog {
         if (selectedRow >= 0 && selectedRow < productos.size()) {
             Object selectedProduct = productos.get(selectedRow);
             ownerPanel.addProductToTable(selectedProduct);
-            dispose(); // Cerrar la ventana después de agregar el producto
+            dispose(); 
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione un producto primero", "Error", JOptionPane.ERROR_MESSAGE);
         }

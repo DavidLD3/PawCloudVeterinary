@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import model.Almacen;
@@ -17,13 +16,12 @@ import model.Farmaco;
 import model.VentaDetalle;
 
 public class VentasDAO {
-    private Conexion conexion;
+
 
     public VentasDAO() {
-        this.conexion = new Conexion();
+       
     }
 
-    // Método para buscar productos y fármacos por nombre
     public List<Object> buscarProductosYFarmacos(String nombre) throws SQLException {
         List<Object> resultados = new ArrayList<>();
         resultados.addAll(buscarProductosPorNombre(nombre));
@@ -31,11 +29,10 @@ public class VentasDAO {
         return resultados;
     }
 
-    // Método privado para buscar en Almacen
     private List<Almacen> buscarProductosPorNombre(String nombre) throws SQLException {
         List<Almacen> productos = new ArrayList<>();
         String sql = "SELECT * FROM almacen WHERE nombre_producto LIKE ?";
-        try (Connection conn = this.conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, "%" + nombre + "%");
             ResultSet rs = statement.executeQuery();
@@ -65,11 +62,10 @@ public class VentasDAO {
         return productos;
     }
 
-    // Método privado para buscar en Farmaco
     private List<Farmaco> buscarFarmacos(String nombre) throws SQLException {
         List<Farmaco> farmacos = new ArrayList<>();
         String sql = "SELECT * FROM farmacos WHERE nombre LIKE ?";
-        try (Connection conn = this.conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, "%" + nombre + "%");
             ResultSet rs = statement.executeQuery();
@@ -92,7 +88,7 @@ public class VentasDAO {
     
     public int insertarVenta(Integer idCliente, Integer idMascota, java.util.Date fechaVenta, String metodoPago, BigDecimal total) throws SQLException {
         String sql = "INSERT INTO ventas (id_cliente, id_mascota, fecha_venta, metodo_pago, total) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = this.conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             if (idCliente == null) {
                 ps.setNull(1, java.sql.Types.INTEGER);
@@ -104,7 +100,6 @@ public class VentasDAO {
             } else {
                 ps.setInt(2, idMascota);
             }
-            // Cambio aquí: usar Timestamp en lugar de Date para incluir la hora
             ps.setTimestamp(3, new java.sql.Timestamp(fechaVenta.getTime()));
             ps.setString(4, metodoPago);
             ps.setBigDecimal(5, total);
@@ -120,29 +115,26 @@ public class VentasDAO {
 
 
     public void insertarDetalleVenta(int idVenta, Integer idAlmacen, Integer idFarmaco, int cantidad, BigDecimal precioUnitario) throws SQLException {
-        // Definición del SQL para insertar el detalle de la venta
         String sql = "INSERT INTO detalles_ventas (id_venta, id_almacen, id_farmaco, cantidad, precio_unitario) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = this.conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idVenta); // Establece el ID de la venta
+            ps.setInt(1, idVenta);
 
-            // Establece el ID del almacen o nulo si no se proporciona
             if (idAlmacen != null) {
                 ps.setInt(2, idAlmacen);
             } else {
                 ps.setNull(2, java.sql.Types.INTEGER);
             }
 
-            // Establece el ID del farmaco o nulo si no se proporciona
             if (idFarmaco != null) {
                 ps.setInt(3, idFarmaco);
             } else {
                 ps.setNull(3, java.sql.Types.INTEGER);
             }
 
-            ps.setInt(4, cantidad); // Establece la cantidad de producto
-            ps.setBigDecimal(5, precioUnitario); // Establece el precio unitario del producto
-            ps.executeUpdate(); // Ejecuta la inserción
+            ps.setInt(4, cantidad);
+            ps.setBigDecimal(5, precioUnitario); 
+            ps.executeUpdate();
         }
     }
     
@@ -157,13 +149,13 @@ public class VentasDAO {
                      "LEFT JOIN farmacos f ON dv.id_farmaco = f.id " +
                      "ORDER BY v.fecha_venta DESC " +
                      "LIMIT 10";
-        try (Connection conn = this.conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ventas.add(new VentaDetalle(
                     rs.getInt("id_venta"),
-                    rs.getTimestamp("fecha_venta"),  // Usar getTimestamp para incluir la hora
+                    rs.getTimestamp("fecha_venta"), 
                     rs.getString("metodo_pago"),
                     rs.getBigDecimal("total"),
                     rs.getString("producto"),
@@ -178,7 +170,7 @@ public class VentasDAO {
 
     public int obtenerIdClientePorIdVenta(int idVenta) throws SQLException {
         String sql = "SELECT id_cliente FROM ventas WHERE id_venta = ?";
-        try (Connection conn = this.conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idVenta);
             ResultSet rs = ps.executeQuery();

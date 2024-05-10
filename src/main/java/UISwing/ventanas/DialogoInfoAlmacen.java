@@ -10,15 +10,15 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import model.Almacen;  // Asegúrate de importar tu clase Almacen
+import model.Almacen;  
 
 public class DialogoInfoAlmacen extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
-    private Almacen almacen;	
+    private Almacen almacen;   
     
- // Campos editables para los datos del almacen
+    // Campos editables para los datos del almacen
     private JTextField txtNombreProducto;
     private JTextField txtCategoria;
     private JTextField txtDescripcion;
@@ -32,20 +32,28 @@ public class DialogoInfoAlmacen extends JDialog {
     private JTextField txtObservaciones;
 
     private JButton saveButton;
-    /**
-     * Create the dialog with Almacen data.
-     */
+
     /**
      * Create the dialog with Almacen data.
      */
     public DialogoInfoAlmacen(Frame owner, Almacen almacen) {
-    	super(owner, "Detalles del Almacén", true);
+        super(owner, "Detalles del Almacén", true);
         this.almacen = almacen;
         setBounds(100, 100, 650, 400);
+        setUndecorated(true);
         getContentPane().setLayout(new BorderLayout());
+        
+        // Crear un panel con borde vacío y disposición BorderLayout
+        JPanel roundedBackground = new JPanel(new BorderLayout());
+        roundedBackground.setBorder(new EmptyBorder(10, 10, 10, 10));
+        roundedBackground.setBackground(Color.decode("#577BD1"));
+        roundedBackground.setOpaque(true);
+        
+        // Agregar el panel con borde vacío al contenido principal
+        getContentPane().add(roundedBackground, BorderLayout.CENTER);
+        
         contentPanel.setLayout(new GridLayout(0, 2));  
-        contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        getContentPane().add(contentPanel, BorderLayout.CENTER);
+        roundedBackground.add(contentPanel, BorderLayout.CENTER);
 
         // Inicializar campos de texto y añadirlos al panel
         txtNombreProducto = addLabelAndTextField("Nombre del Producto:", almacen.getNombreProducto());
@@ -66,34 +74,44 @@ public class DialogoInfoAlmacen extends JDialog {
         txtCodigoBarras = addLabelAndTextField("Código de Barras:", almacen.getCodigoBarras());
         txtObservaciones = addLabelAndTextField("Observaciones:", almacen.getObservaciones());
 
-        // Configuración de los botones
+     // Configuración de los botones
         JPanel buttonPane = new JPanel(new BorderLayout());
+        buttonPane.setOpaque(false); // Hacer que el panel sea transparente
         JPanel leftPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        leftPane.setOpaque(false); // Hacer que el panel sea transparente
         JPanel rightPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        rightPane.setOpaque(false); // Hacer que el panel sea transparente
 
         // Botón para eliminar
         JButton deleteButton = new JButton("Eliminar");
         deleteButton.addActionListener(e -> eliminarAlmacen());
+        personalizarBoton(deleteButton);
         leftPane.add(deleteButton);
 
         // Botón para cerrar
         JButton closeButton = new JButton("Cerrar");
         closeButton.addActionListener(e -> dispose());
+        personalizarBoton(closeButton);
         rightPane.add(closeButton);
 
         buttonPane.add(leftPane, BorderLayout.WEST);
         buttonPane.add(rightPane, BorderLayout.EAST);
-        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        roundedBackground.add(buttonPane, BorderLayout.SOUTH);
+
 
         setLocationRelativeTo(owner);
+        
+        // Hacer que el panel principal sea transparente
+        contentPanel.setOpaque(false);
     }
    
     /**
      * Helper method to add labels and text fields to the panel.
      */
-
     private JTextField addLabelAndTextField(String label, String value) {
         JLabel jLabel = new JLabel(label);
+        jLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        jLabel.setForeground(Color.WHITE);
         JTextField textField = new JTextField(value);
         textField.setEditable(false); // No editable por defecto
         contentPanel.add(jLabel);
@@ -101,6 +119,29 @@ public class DialogoInfoAlmacen extends JDialog {
         return textField;
     }
     
+    private void personalizarBoton(JButton button) {
+        button.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        button.setBackground(Color.WHITE);
+        button.setForeground(Color.decode("#0057FF"));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);  
+        button.setRolloverEnabled(true);
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(Color.decode("#003366"));  
+                button.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(Color.WHITE);  
+                button.setForeground(Color.decode("#0057FF"));
+            }
+        });
+    }
     
     private void eliminarAlmacen() {
         if (almacen != null) {

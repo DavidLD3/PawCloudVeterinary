@@ -1,11 +1,8 @@
 package DB;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,17 +10,14 @@ import model.Cliente;
 
 public class ClienteDAO {
 
-    private Conexion conexion;
-
     public ClienteDAO() {
-        conexion = new Conexion(); // Inicializa la clase Conexion
+
     }
 
     public Cliente obtenerClientePorId(int id) {
         Cliente cliente = null;
-        // Asegúrate de que la consulta utiliza "id" para referirse al identificador
         String consulta = "SELECT * FROM clientes WHERE id = ?";
-        try (Connection conn = conexion.getConexion(); PreparedStatement statement = conn.prepareStatement(consulta)) {
+        try (Connection conn = Conexion.getConexion(); PreparedStatement statement = conn.prepareStatement(consulta)) {
             statement.setInt(1, id);
             ResultSet resultados = statement.executeQuery();
             if (resultados.next()) {
@@ -50,7 +44,7 @@ public class ClienteDAO {
     }
 
     public boolean insertarCliente(Cliente cliente) {
-        try (Connection conn = conexion.getConexion()) {
+        try (Connection conn = Conexion.getConexion()) {
             String consulta = "INSERT INTO clientes (nombre, apellidos, fecha_nacimiento, dni, nif, direccion, poblacion, provincia, telefono_fijo, telefono_movil, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(consulta);
             statement.setString(1, cliente.getNombre());
@@ -73,7 +67,7 @@ public class ClienteDAO {
     }
 
     public boolean actualizarCliente(Cliente cliente) {
-        try (Connection conn = conexion.getConexion()) {
+        try (Connection conn = Conexion.getConexion()) {
             String consulta = "UPDATE clientes SET nombre = ?, apellidos = ?, fecha_nacimiento = ?, dni = ?, nif = ?, direccion = ?, poblacion = ?, provincia = ?, telefono_fijo = ?, telefono_movil = ?, email = ? WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(consulta);
             
@@ -100,7 +94,7 @@ public class ClienteDAO {
 
 
     public boolean eliminarCliente(int id) {
-        try (Connection conn = conexion.getConexion()) {
+        try (Connection conn = Conexion.getConexion()) {
             String consulta = "DELETE FROM clientes WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(consulta);
             statement.setInt(1, id);
@@ -116,7 +110,7 @@ public class ClienteDAO {
     public List<Cliente> buscarClientesPorNombre(String nombre) {
         List<Cliente> clientes = new ArrayList<>();
         String sql = "SELECT * FROM clientes WHERE nombre LIKE ?";
-        try (Connection conn = conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, "%" + nombre + "%");
@@ -147,9 +141,8 @@ public class ClienteDAO {
     
     public Cliente buscarClientePorId(int idCliente) {
         Cliente cliente = null;
-        // Asegúrate de incluir todos los campos en tu consulta SQL
         String sql = "SELECT id, nombre, apellidos, fecha_nacimiento, dni, nif, direccion, poblacion, provincia, telefono_fijo, telefono_movil, email FROM clientes WHERE id = ?";
-        try (Connection conn = conexion.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idCliente);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -157,7 +150,7 @@ public class ClienteDAO {
                     rs.getInt("id_cliente"),
                     rs.getString("nombre"),
                     rs.getString("apellidos"),
-                    rs.getDate("fecha_nacimiento").toLocalDate(), // Conversión a LocalDate
+                    rs.getDate("fecha_nacimiento").toLocalDate(), 
                     rs.getString("dni"),
                     rs.getString("nif"),
                     rs.getString("direccion"),
@@ -176,16 +169,15 @@ public class ClienteDAO {
     
     public List<Cliente> obtenerTodosLosClientes() {
         List<Cliente> clientes = new ArrayList<>();
-        // Asegúrate de seleccionar todos los campos necesarios
         String sql = "SELECT id, nombre, apellidos, fecha_nacimiento, dni, nif, direccion, poblacion, provincia, telefono_fijo, telefono_movil, email FROM clientes";
-        try (Connection conn = conexion.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Cliente cliente = new Cliente(
-                    rs.getInt("id"), // Cambiado de "id_cliente" a "id"
+                    rs.getInt("id"), 
                     rs.getString("nombre"),
                     rs.getString("apellidos"),
-                    rs.getDate("fecha_nacimiento").toLocalDate(), // Conversión a LocalDate
+                    rs.getDate("fecha_nacimiento").toLocalDate(), 
                     rs.getString("dni"),
                     rs.getString("nif"),
                     rs.getString("direccion"),
@@ -202,14 +194,17 @@ public class ClienteDAO {
         }
         return clientes;
     }
-    public List<Cliente> buscarClientesPorApellido(String apellido) {
+    public List<Cliente> buscarClientesPorNombreApellido(String texto) {
         List<Cliente> clientes = new ArrayList<>();
-        String sql = "SELECT * FROM clientes WHERE apellidos LIKE ?";
-        try (Connection conn = conexion.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, "%" + apellido + "%");
+        String sql = "SELECT * FROM clientes WHERE LOWER(nombre) LIKE ? OR LOWER(apellidos) LIKE ? OR LOWER(CONCAT(nombre, ' ', apellidos)) LIKE ?";
+        try (Connection conn = Conexion.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String textoBusqueda = "%" + texto.toLowerCase() + "%";
+            stmt.setString(1, textoBusqueda);
+            stmt.setString(2, textoBusqueda);
+            stmt.setString(3, textoBusqueda);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Cliente cliente = new Cliente(
+                clientes.add(new Cliente(
                     rs.getInt("id"),
                     rs.getString("nombre"),
                     rs.getString("apellidos"),
@@ -222,19 +217,19 @@ public class ClienteDAO {
                     rs.getString("telefono_fijo"),
                     rs.getString("telefono_movil"),
                     rs.getString("email")
-                );
-                clientes.add(cliente);
+                ));
             }
         } catch (SQLException e) {
-            System.out.println("Error al buscar clientes por apellido: " + e.getMessage());
+            System.out.println("Error al buscar clientes: " + e.getMessage());
             e.printStackTrace();
         }
         return clientes;
     }
 
+
     public boolean existeCliente(int idCliente) {
         String sql = "SELECT COUNT(id) FROM clientes WHERE id = ?";
-        try (Connection conn = conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idCliente);
             ResultSet rs = stmt.executeQuery();
@@ -250,7 +245,7 @@ public class ClienteDAO {
     public Cliente obtenerClientePorDni(String dni) {
         Cliente cliente = null;
         String consulta = "SELECT * FROM clientes WHERE dni = ?";
-        try (Connection conn = conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(consulta)) {
             stmt.setString(1, dni);
             ResultSet rs = stmt.executeQuery();
@@ -278,9 +273,8 @@ public class ClienteDAO {
 
     public List<Cliente> buscarClientes(String texto) {   //Metodo mas flexible para buscar por nombre, apellidos y dni simultaneamente
         List<Cliente> clientes = new ArrayList<>();
-        // Concatenamos nombre y apellidos en la consulta para buscar en ambos simultáneamente
         String sql = "SELECT * FROM clientes WHERE LOWER(nombre) LIKE ? OR LOWER(apellidos) LIKE ? OR LOWER(CONCAT(nombre, ' ', apellidos)) LIKE ?";
-        try (Connection conn = conexion.getConexion();
+        try (Connection conn = Conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             String textoBusqueda = "%" + texto.toLowerCase() + "%";
             stmt.setString(1, textoBusqueda);

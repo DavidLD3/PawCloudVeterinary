@@ -21,7 +21,6 @@ import model.Almacen;
 import model.Cliente;
 import model.Farmaco;
 import model.Mascota;
-import model.Mascota.MascotaContenedor;
 import DB.ClienteDAO;
 import DB.MascotaDAO;
 import DB.VentasDAO;
@@ -38,34 +37,28 @@ public class PanelVentas extends JPanel {
     private VentasDAO ventasDAO = new VentasDAO();
     private JCheckBox chckbxefectivo;  
     private JCheckBox chckbxTarjeta; 
-    private boolean cargaInicialCompleta = false;
 
     public PanelVentas() {
         setLayout(null);
-        setBackground(new Color(255, 255, 255, 0)); // Transparente
-        
-
+        setBackground(new Color(255, 255, 255, 0));
+   
         RoundedPanel panelVentas = new RoundedPanel(20);
         panelVentas.setBackground(Color.decode("#577BD1"));
         panelVentas.setBounds(0, 0, 1112, 653);
         panelVentas.setLayout(null);
         add(panelVentas);
-
-        // Configuración inicial de componentes
         initComponents(panelVentas);
-        
-      
 
         String[] columnNames = {"ID","Tipo","Producto", "Descripción", "Cantidad", "Precio Unitario", "Total"};
         tableModel = new DefaultTableModel(null, columnNames) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 switch (columnIndex) {
-                    case 0:  // ID del producto
+                    case 0:
                         return Integer.class;
-                    case 3:  // Cantidad
-                    case 4:  // Precio unitario
-                    case 5:  // Total
+                    case 3:
+                    case 4:
+                    case 5:
                         return BigDecimal.class;
                     default:
                         return String.class;
@@ -74,25 +67,25 @@ public class PanelVentas extends JPanel {
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 4;  // Permite editar solo la cantidad y el precio unitario
+                return column == 4;
             }
         };
 
 
         table = new JTable(tableModel);
-        TableColumn idColumn = table.getColumnModel().getColumn(0);  // Obtiene la columna de ID por su índice
+        setupTableRenderers();
+        TableColumn idColumn = table.getColumnModel().getColumn(0);
         table.removeColumn(idColumn);
         table.getModel().addTableModelListener(e -> {
             if (e.getType() == TableModelEvent.UPDATE) {
                 int row = e.getFirstRow();
                 int column = e.getColumn();
-                // Asegurarse que la columna modificada sea Cantidad (índice 4 según el modelo) o Precio Unitario (índice 5)
                 if (column == 4 || column == 5) {
                     try {
                         BigDecimal cantidad = new BigDecimal(tableModel.getValueAt(row, 4).toString());
                         BigDecimal precioUnitario = new BigDecimal(tableModel.getValueAt(row, 5).toString());
                         BigDecimal total = cantidad.multiply(precioUnitario).setScale(2, RoundingMode.HALF_UP);
-                        tableModel.setValueAt(total, row, 6); // Asegurarse que el índice de Total sea 6
+                        tableModel.setValueAt(total, row, 6); 
                         actualizarTotal();
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(this, "Por favor, introduzca un número válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
@@ -103,9 +96,7 @@ public class PanelVentas extends JPanel {
         
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-
-        // Aplicar el renderizador a la columna de "Total"
-        int totalColumnIndex = table.getColumnModel().getColumnIndex("Total"); // Obtén el índice visual correcto
+        int totalColumnIndex = table.getColumnModel().getColumnIndex("Total"); 
         table.getColumnModel().getColumn(totalColumnIndex).setCellRenderer(rightRenderer);
         
 
@@ -148,7 +139,7 @@ public class PanelVentas extends JPanel {
                         comboBoxMascota.removeAllItems(); // Limpia el comboBox de mascotas si el objeto seleccionado no es un Cliente
                     }
                 } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    comboBoxMascota.removeAllItems(); // También limpia las mascotas si no hay selección
+                    comboBoxMascota.removeAllItems();
                 }
             }
         });
@@ -183,7 +174,7 @@ public class PanelVentas extends JPanel {
         SwingWorker<List<Cliente>, Void> worker = new SwingWorker<List<Cliente>, Void>() {
             @Override
             protected List<Cliente> doInBackground() throws Exception {
-                return clienteDAO.buscarClientesPorApellido(searchQuery);
+                return clienteDAO.buscarClientesPorNombreApellido(searchQuery);
             }
             @Override
             protected void done() {
@@ -201,6 +192,8 @@ public class PanelVentas extends JPanel {
         worker.execute();
     }
 
+
+
     private void updatePetList(int clientId) {
         SwingWorker<List<Mascota>, Void> worker = new SwingWorker<List<Mascota>, Void>() {
             @Override
@@ -217,7 +210,7 @@ public class PanelVentas extends JPanel {
                     }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error al cargar las mascotas: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    e.printStackTrace();  // Esto imprimirá el rastreo de pila en la consola si hay un error
+                    e.printStackTrace(); 
                 }
             }
         };
@@ -226,7 +219,7 @@ public class PanelVentas extends JPanel {
 
 
     private void setUpButtons(JPanel panel) {
-        // Configuración de botones, similar a lo que ya tenías
+        // Configuración de botones
     	 JButton btnAñadirProducto = new JButton("Añadir Producto");
          btnAñadirProducto.setFont(new Font("Segoe UI", Font.BOLD, 12));
          btnAñadirProducto.setBounds(865, 99, 210, 31);
@@ -236,6 +229,20 @@ public class PanelVentas extends JPanel {
          btnAñadirProducto.setBorderPainted(false);
          btnAñadirProducto.setContentAreaFilled(false);
          btnAñadirProducto.setOpaque(true);
+         btnAñadirProducto.setRolloverEnabled(true);
+         btnAñadirProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+             @Override
+             public void mouseEntered(java.awt.event.MouseEvent evt) {
+                 btnAñadirProducto.setBackground(Color.decode("#003366")); 
+                 btnAñadirProducto.setForeground(Color.WHITE);
+             }
+
+             @Override
+             public void mouseExited(java.awt.event.MouseEvent evt) {
+                 btnAñadirProducto.setBackground(Color.WHITE); 
+                 btnAñadirProducto.setForeground(Color.decode("#0057FF"));
+             }
+         });
          btnAñadirProducto.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e) {
                  abrirDialogoDeProducto();
@@ -258,20 +265,20 @@ public class PanelVentas extends JPanel {
          btnLimpiarDatos.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
          btnLimpiarDatos.setBorderPainted(false); // Evita que se pinte el borde predeterminado
          btnLimpiarDatos.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-         btnLimpiarDatos.setOpaque(true); // El botón debe pintar cada pixel dentro de sus límites. Esto es necesario para ver el color de fondo.
+         btnLimpiarDatos.setOpaque(true); 
 
          // Personalización del efecto rollover
          btnLimpiarDatos.setRolloverEnabled(true);
          btnLimpiarDatos.addMouseListener(new java.awt.event.MouseAdapter() {
              @Override
              public void mouseEntered(java.awt.event.MouseEvent evt) {
-                 btnLimpiarDatos.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                 btnLimpiarDatos.setBackground(Color.decode("#003366"));
                  btnLimpiarDatos.setForeground(Color.WHITE);
              }
 
              @Override
              public void mouseExited(java.awt.event.MouseEvent evt) {
-                 btnLimpiarDatos.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                 btnLimpiarDatos.setBackground(Color.WHITE); 
                  btnLimpiarDatos.setForeground(Color.decode("#0057FF"));
              }
          });
@@ -291,20 +298,20 @@ public class PanelVentas extends JPanel {
          btnValidar.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
          btnValidar.setBorderPainted(false); // Evita que se pinte el borde predeterminado
          btnValidar.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-         btnValidar.setOpaque(true); // El botón debe pintar cada pixel dentro de sus límites. Esto es necesario para ver el color de fondo.
+         btnValidar.setOpaque(true); 
 
          // Personalización del efecto rollover
          btnValidar.setRolloverEnabled(true);
          btnValidar.addMouseListener(new java.awt.event.MouseAdapter() {
              @Override
              public void mouseEntered(java.awt.event.MouseEvent evt) {
-                 btnValidar.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                 btnValidar.setBackground(Color.decode("#003366")); 
                  btnValidar.setForeground(Color.WHITE);
              }
 
              @Override
              public void mouseExited(java.awt.event.MouseEvent evt) {
-                 btnValidar.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                 btnValidar.setBackground(Color.WHITE); 
                  btnValidar.setForeground(Color.decode("#0057FF"));
              }
          });
@@ -319,7 +326,7 @@ public class PanelVentas extends JPanel {
     }
 
     private void setUpLabels(JPanel panel) {
-        // Configuración de etiquetas, similar a lo que ya tenías
+        // Configuración de etiquetas
     	JLabel lbltextoVentas = new JLabel("Ventas");
         lbltextoVentas.setForeground(Color.WHITE);
         lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -377,7 +384,7 @@ public class PanelVentas extends JPanel {
     }
 
     private void abrirDialogoDeProducto() {
-        ProductoSelectorDialog dialog = new ProductoSelectorDialog(JFrame.getFrames()[0], this, true); // Pass `this` as the ownerPanel
+        ProductoSelectorDialog dialog = new ProductoSelectorDialog(JFrame.getFrames()[0], this, true); 
         dialog.setVisible(true);
     }
 
@@ -407,13 +414,13 @@ public class PanelVentas extends JPanel {
 
         if (tipoProducto != null) {
             Object[] rowData = {
-                idProducto,  // ID del producto
-                tipoProducto,  // Tipo de producto
-                nombre,  // Nombre del producto
-                descripcion,  // Descripción
-                1,  // Cantidad inicial
-                precioUnitario,  // Precio unitario
-                precioUnitario  // Total inicial
+                idProducto,  
+                tipoProducto,  
+                nombre,  
+                descripcion,  
+                1,  
+                precioUnitario,  
+                precioUnitario 
             };
             tableModel.addRow(rowData);
             actualizarTotal();
@@ -442,6 +449,11 @@ public class PanelVentas extends JPanel {
     }
     
     private void registrarVenta() {
+    	
+    	 if (tableModel.getRowCount() == 0) {
+    	        JOptionPane.showMessageDialog(this, "Debe agregar productos para validar la operación.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+    	        return; // Terminar la ejecución del método si no hay productos
+    	    }
         try {
             Integer idCliente = null;
             Integer idMascota = null;
@@ -462,8 +474,8 @@ public class PanelVentas extends JPanel {
             int idVenta = ventasDAO.insertarVenta(idCliente, idMascota, fechaVenta, metodoPago, total);
 
             for (int i = 0; i < tableModel.getRowCount(); i++) {
-                Integer idProducto = (Integer) tableModel.getValueAt(i, 0); // ID de producto
-                String tipoProducto = (String) tableModel.getValueAt(i, 1); // Tipo de producto
+                Integer idProducto = (Integer) tableModel.getValueAt(i, 0); 
+                String tipoProducto = (String) tableModel.getValueAt(i, 1);
                 int cantidad = ((Number) tableModel.getValueAt(i, 4)).intValue();
                 BigDecimal precioUnitario = (BigDecimal) tableModel.getValueAt(i, 5);
 
@@ -480,6 +492,22 @@ public class PanelVentas extends JPanel {
         }
     }
     
+    private void setupTableRenderers() {
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT); // Alinea el texto a la izquierda
+
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT); // Alinea el texto a la derecha
+
+        table.getColumnModel().getColumn(tableModel.findColumn("Descripción")).setCellRenderer(leftRenderer);
+        table.getColumnModel().getColumn(tableModel.findColumn("Total")).setCellRenderer(rightRenderer);
+        table.getColumnModel().getColumn(tableModel.findColumn("Precio Unitario")).setCellRenderer(rightRenderer);
+
+        // Asegúrate de aplicar el renderizador izquierdo a cualquier otra columna que deba estar alineada a la izquierda
+        // Por ejemplo, si la columna "Producto" también debe estar alineada a la izquierda
+        table.getColumnModel().getColumn(tableModel.findColumn("Producto")).setCellRenderer(leftRenderer);
+    }
+    
 
     private String obtenerMetodoPagoSeleccionado() {
         if (chckbxefectivo.isSelected()) {
@@ -487,7 +515,7 @@ public class PanelVentas extends JPanel {
         } else if (chckbxTarjeta.isSelected()) {
             return "Tarjeta";
         }
-        return "Desconocido"; // O maneja esta situación como prefieras
+        return "Desconocido";
     }
     
     

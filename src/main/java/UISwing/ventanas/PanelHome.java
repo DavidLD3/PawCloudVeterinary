@@ -620,6 +620,16 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         lblListadoVentas.setForeground(Color.WHITE);
         lblListadoVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblListadoVentas.setBounds(183, 359, 74, 14);
+        lblListadoVentas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        // Agregar MouseListener al JLabel
+        lblListadoVentas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Crea y muestra el diálogo de listado de citas al hacer clic en el JLabel
+                DialogoListaVentas dialogoListaVentas = new DialogoListaVentas(JFrame.getFrames()[0]); // Asume que este es el frame principal
+                dialogoListaVentas.setVisible(true);
+            }
+        });
         panelVentas.add(lblListadoVentas);
 
         JButton btnAñadirVentas = new JButton("Añadir Venta");
@@ -628,8 +638,8 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
                 // Lógica de añadir venta aquí
             }
         });
-        btnAñadirVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAñadirVentas.setBounds(24, 297, 374, 31);
+        btnAñadirVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAñadirVentas.setBackground(Color.WHITE);
         btnAñadirVentas.setForeground(Color.decode("#0057FF")); // Letras en azul
         btnAñadirVentas.setFocusPainted(false);

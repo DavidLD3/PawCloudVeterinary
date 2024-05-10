@@ -4,11 +4,9 @@ import java.awt.AlphaComposite;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -39,8 +37,8 @@ import javax.swing.JButton;
 public class MainFrame extends JFrame  {
 
     private static final long serialVersionUID = 1L;
-    private CardLayout cardLayout = new CardLayout(); // CardLayout para gestionar paneles intercambiables
-    private JPanel cardPanel; // Panel que contiene los diferentes paneles intercambiables
+    private CardLayout cardLayout = new CardLayout(); 
+    private JPanel cardPanel;
     private JLabel lblNombreUsuario;
     private JLabel lblRealTime;
     private PanelHome panelHome;
@@ -66,26 +64,24 @@ public class MainFrame extends JFrame  {
         getContentPane().setLayout(null);
         // Configuración de cardPanel
         cardPanel = new JPanel(cardLayout);
-        cardPanel.setOpaque(false); // Si quieres transparencia
+        cardPanel.setOpaque(false); 
         cardPanel.setBounds(234, 104, 1112, 653);
         getContentPane().add(cardPanel);
         
         // Inicialización y adición de PanelHome al cardPanel
-        panelHome = new PanelHome(this); // Asume que esta clase ya está definida correctamente
+        panelHome = new PanelHome(this);
         cardPanel.add(panelHome, "PanelHome");
-        // Inicialización y adición de PanelCitas al cardPanel
         PanelVentas panelVentas = new PanelVentas();
         cardPanel.add(panelVentas, "PanelVentas");
-        PanelClienteMascota panelClienteMascota = new PanelClienteMascota(); // Asume que esta clase ya está definida correctamente
+        PanelClienteMascota panelClienteMascota = new PanelClienteMascota();
         cardPanel.add(panelClienteMascota, "PanelClienteMascota");
-        PanelCalendario panelCalendario = new PanelCalendario(); // Asume que esta clase ya está definida correctamente
+        PanelCalendario panelCalendario = new PanelCalendario();
         cardPanel.add(panelCalendario, "PanelCalendario");
         panelCalendario.addCitaActualizadaListener(panelHome);
         PanelAdministracion panelAdministracion = new PanelAdministracion();
         cardPanel.add(panelAdministracion, "PanelAdministracion");
         PanelAlmacen panelAlmacen = new PanelAlmacen();
         cardPanel.add(panelAlmacen, "PanelAlmacen");
-        // Muestra inicialmente el PanelHome
         cardLayout.show(cardPanel, "PanelHome");
         
         
@@ -115,7 +111,7 @@ public class MainFrame extends JFrame  {
         lblHome.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                panelHome.actualizarTodo(); // Update all tables
+                panelHome.actualizarTodo();
                 cardLayout.show(cardPanel, "PanelHome");
             }
         });
@@ -147,13 +143,13 @@ public class MainFrame extends JFrame  {
         panelMenu.add(lblNewLabel_1);
         
       
-     // Ícono para el menú de Ventas
+     // Ícono menú de Ventas
         JLabel lblNewLabel_2 = new JLabel("");
         lblNewLabel_2.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoVentas.png")));
         lblNewLabel_2.setBounds(25, 222, 20, 28);
         panelMenu.add(lblNewLabel_2);
 
-        // Etiqueta para el texto "Ventas"
+  
         JLabel lblVentas = new JLabel("Ventas");
         lblVentas.setForeground(Color.WHITE);
         lblVentas.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -221,7 +217,7 @@ public class MainFrame extends JFrame  {
         btnLogOut.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
         btnLogOut.setBorderPainted(false); // Evita que se pinte el borde predeterminado
         btnLogOut.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnLogOut.setOpaque(true); // El botón debe pintar cada pixel dentro de sus límites. Esto es necesario para ver el color de fondo.
+        btnLogOut.setOpaque(true);
         // Personalización del efecto rollover
         btnLogOut.setRolloverEnabled(true);
         btnLogOut.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -242,10 +238,8 @@ public class MainFrame extends JFrame  {
                 System.exit(0);
             }
         });
-        // Establece el ícono dentro del botón, al lado del texto
         btnLogOut.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoLogout2.png")));
         btnLogOut.setIconTextGap(10); // Aumenta el valor para más espacio
-        // Ajusta los márgenes del botón para dar más espacio interior si es necesario
         btnLogOut.setMargin(new Insets(0, 10, 0, 10));
         panelMenu.add(btnLogOut);
 
@@ -266,7 +260,7 @@ public class MainFrame extends JFrame  {
         lblRealTime.setFont(new Font("Segoe UI", Font.BOLD, 16));
         panelHeader.add(lblRealTime);
         // Formateador de fecha y hora
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/M/yyyy HH:mm:ss");
         // Timer para actualizar la fecha y hora cada segundo
         new Timer(1000, e -> lblRealTime.setText(LocalDateTime.now().format(dtf))).start();
         

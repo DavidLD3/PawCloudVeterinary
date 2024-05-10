@@ -1,13 +1,10 @@
 package UISwing.ventanas;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import com.toedter.calendar.JDateChooser;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Date;
-
 import DB.EmpleadoDAO;
 import model.Empleado;
 import UISwing.recursos.CustomRoundedBorder;
@@ -49,7 +46,7 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         roundedPanel.add(label);
         txtNombre = new JTextField(20);
         txtNombre.setBounds(53, 61, 156, 35);
-        txtNombre.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtNombre.setFont(new Font("Segoe UI", Font.BOLD, 11));
         roundedPanel.add(txtNombre);
 
         JLabel label_1 = new JLabel("Apellidos:");
@@ -59,7 +56,7 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         roundedPanel.add(label_1);
         txtApellidos = new JTextField(20);
         txtApellidos.setBounds(258, 59, 282, 35);
-        txtApellidos.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtApellidos.setFont(new Font("Segoe UI", Font.BOLD, 11));
         roundedPanel.add(txtApellidos);
 
         JLabel label_2 = new JLabel("DNI:");
@@ -69,7 +66,7 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         roundedPanel.add(label_2);
         txtDNI = new JTextField(20);
         txtDNI.setBounds(607, 61, 223, 35);
-        txtDNI.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtDNI.setFont(new Font("Segoe UI", Font.BOLD, 11));
         roundedPanel.add(txtDNI);
 
         JLabel label_3 = new JLabel("Teléfono:");
@@ -79,7 +76,7 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         roundedPanel.add(label_3);
         txtTelefono = new JTextField(20);
         txtTelefono.setBounds(53, 160, 156, 35);
-        txtTelefono.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtTelefono.setFont(new Font("Segoe UI", Font.BOLD, 11));
         roundedPanel.add(txtTelefono);
 
         JLabel label_4 = new JLabel("Email:");
@@ -89,7 +86,7 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         roundedPanel.add(label_4);
         txtEmail = new JTextField(20);
         txtEmail.setBounds(258, 160, 282, 35);
-        txtEmail.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtEmail.setFont(new Font("Segoe UI", Font.BOLD, 11));
         roundedPanel.add(txtEmail);
 
         JLabel label_5 = new JLabel("Horario de trabajo:");
@@ -99,7 +96,7 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         roundedPanel.add(label_5);
         txtHorarioTrabajo = new JTextField(20);
         txtHorarioTrabajo.setBounds(53, 250, 777, 48);
-        txtHorarioTrabajo.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        txtHorarioTrabajo.setFont(new Font("Segoe UI", Font.BOLD, 11));
         roundedPanel.add(txtHorarioTrabajo);
 
         JLabel label_6 = new JLabel("Fecha de contratación:");
@@ -109,7 +106,9 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         roundedPanel.add(label_6);
         dateChooserContratacion = new JDateChooser();
         dateChooserContratacion.setBounds(607, 160, 223, 35);
-        dateChooserContratacion.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
+        dateChooserContratacion.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        dateChooserContratacion.setDateFormatString("dd/MM/yyyy");
+
         roundedPanel.add(dateChooserContratacion);
 
         btnSave = new JButton("Guardar Cambios");
@@ -119,23 +118,23 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         btnSave.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnSave.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
         btnSave.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnSave.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnSave.setContentAreaFilled(false);
         btnSave.setOpaque(true);
         btnSave.setRolloverEnabled(true);
         btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnSave.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnSave.setBackground(Color.decode("#003366"));
                 btnSave.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnSave.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnSave.setBackground(Color.WHITE);
                 btnSave.setForeground(Color.decode("#0057FF"));
             }
         });
-        btnSave.addActionListener(this::guardarCambios);  // Correct method reference
+        btnSave.addActionListener(this::guardarCambios);
         roundedPanel.add(btnSave);
 
         btnCancel = new JButton("Cancelar");
@@ -145,19 +144,19 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         btnCancel.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnCancel.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
         btnCancel.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnCancel.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnCancel.setContentAreaFilled(false);
         btnCancel.setOpaque(true);
         btnCancel.setRolloverEnabled(true);
         btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnCancel.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnCancel.setBackground(Color.decode("#003366")); 
                 btnCancel.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnCancel.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnCancel.setBackground(Color.WHITE); 
                 btnCancel.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -171,23 +170,23 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
         btnDelete.setForeground(Color.decode("#0057FF")); // Letras en color azul
         btnDelete.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
         btnDelete.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnDelete.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnDelete.setContentAreaFilled(false);
         btnDelete.setOpaque(true);
         btnDelete.setRolloverEnabled(true);
         btnDelete.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnDelete.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnDelete.setBackground(Color.decode("#003366"));
                 btnDelete.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnDelete.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnDelete.setBackground(Color.WHITE); 
                 btnDelete.setForeground(Color.decode("#0057FF"));
             }
         });
-        btnDelete.addActionListener(this::eliminarEmpleado);  // Correct method reference
+        btnDelete.addActionListener(this::eliminarEmpleado); 
         roundedPanel.add(btnDelete);
         
     }
@@ -200,7 +199,6 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
             txtTelefono.setText(empleadoActual.getTelefono());
             txtEmail.setText(empleadoActual.getEmail());
             txtHorarioTrabajo.setText(empleadoActual.getHorarioTrabajo());
-            // Usar directamente el Date sin conversiones de LocalDate
             dateChooserContratacion.setDate(empleadoActual.getFechaContratacion());
         }
     }
@@ -214,7 +212,6 @@ public class VentanaModificarEmpleadoDialog extends JDialog {
             empleadoActual.setTelefono(txtTelefono.getText());
             empleadoActual.setEmail(txtEmail.getText());
             empleadoActual.setHorarioTrabajo(txtHorarioTrabajo.getText());
-            // Obtener directamente la fecha de JDateChooser y asegurarse que no sea null
             Date fecha = dateChooserContratacion.getDate();
             if (fecha != null) {
                 empleadoActual.setFechaContratacion(fecha);
