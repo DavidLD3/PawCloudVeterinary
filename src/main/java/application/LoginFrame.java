@@ -18,6 +18,7 @@ import model.Authentication;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -25,9 +26,11 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
 
 
 
@@ -58,6 +61,14 @@ public class LoginFrame extends JFrame {
     public LoginFrame() {
         setBounds(100, 100, 497, 524);
         setUndecorated(true);
+        
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         GradientPanel gradientPanel = new GradientPanel();
         setContentPane(gradientPanel);
         gradientPanel.setLayout(null);

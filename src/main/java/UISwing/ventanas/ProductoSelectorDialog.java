@@ -1,5 +1,6 @@
 package UISwing.ventanas;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -9,6 +10,7 @@ import model.Farmaco;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,13 @@ public class ProductoSelectorDialog extends JDialog {
         setLocationRelativeTo(owner);
         productos = new ArrayList<>();
         initComponents();
+        
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initComponents() {

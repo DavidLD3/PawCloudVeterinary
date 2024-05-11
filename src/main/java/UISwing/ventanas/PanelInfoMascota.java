@@ -76,11 +76,18 @@ public class PanelInfoMascota extends JPanel {
     }
 
     private void agregarCampo(JPanel panel, String etiqueta, String valor) {
-        panel.add(new JLabel(etiqueta));
+        JLabel label = new JLabel(etiqueta);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 13)); 
+        label.setForeground(Color.WHITE);
+        label.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        panel.add(label);
+        
         JTextField textField = new JTextField(valor, 20);
         textField.setEditable(false);
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         panel.add(textField);
     }
+
 
     private JPanel crearPanelHospitalizaciones() {
         RoundedPanel panelHospitalizaciones = new RoundedPanel(20);

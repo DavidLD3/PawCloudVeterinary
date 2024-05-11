@@ -1,5 +1,6 @@
 package UISwing.ventanas;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -8,6 +9,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import model.Hospitalizacion;
@@ -29,6 +31,12 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
         hospitalizacionDAO = new HospitalizacionDAO();
         initUI();
         cargarHospitalizados();
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     class PaddingTableCellRenderer extends DefaultTableCellRenderer {

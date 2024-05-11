@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.JFrame;
@@ -20,14 +22,19 @@ import javax.swing.JPanel;
 
 import UISwing.recursos.GradientPanel2;
 import UISwing.recursos.RoundedPanel;
+import UISwing.ventanas.ConfigDialog;
+import UISwing.ventanas.ConfiguracionClinica;
 import UISwing.ventanas.PanelAdministracion;
 import UISwing.ventanas.PanelAlmacen;
 import UISwing.ventanas.PanelCalendario;
 import UISwing.ventanas.PanelClienteMascota;
 import UISwing.ventanas.PanelHome;
 import UISwing.ventanas.PanelVentas;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.time.LocalDateTime;
@@ -42,6 +49,7 @@ public class MainFrame extends JFrame  {
     private JLabel lblNombreUsuario;
     private JLabel lblRealTime;
     private PanelHome panelHome;
+    private PanelVentas panelVentas;
 
 
     public static void main(String[] args) {
@@ -67,6 +75,13 @@ public class MainFrame extends JFrame  {
         cardPanel.setOpaque(false); 
         cardPanel.setBounds(234, 104, 1112, 653);
         getContentPane().add(cardPanel);
+        
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
         // Inicialización y adición de PanelHome al cardPanel
         panelHome = new PanelHome(this);
@@ -267,6 +282,13 @@ public class MainFrame extends JFrame  {
         
         JLabel lbllogoHeader = new JLabel("");
         lbllogoHeader.setBounds(1000, 11, 35, 60);
+        lbllogoHeader.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showConfigDialog();
+            }
+        });
+
         panelHeader.add(lbllogoHeader);
         lbllogoHeader.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoHeader.png")));
         
@@ -293,6 +315,9 @@ public class MainFrame extends JFrame  {
         
         
     }
+    public void changePanel(String name) {
+        cardLayout.show(cardPanel, name);
+    }
 	 // Método para actualizar el nombre del usuario en el JLabel
 	    public void setNombreUsuario(String nombreUsuario) {
 	        lblNombreUsuario.setText(nombreUsuario);
@@ -300,6 +325,18 @@ public class MainFrame extends JFrame  {
 	    public void switchPanel(String panelName) {
 	        cardLayout.show(cardPanel, panelName);
 	    }
+	    public void showConfigDialog() {
+	        ConfigDialog configDialog = new ConfigDialog(this, ConfiguracionClinica.getLimiteUsuarios());
+	        configDialog.setVisible(true);
+	    }
+
+
+	    public void updateUserLimit(int newLimit) {
+	        ConfiguracionClinica.setLimiteUsuarios(newLimit);
+	        JOptionPane.showMessageDialog(this, "El límite de usuarios se ha actualizado a: " + newLimit);
+	    }
+
+
 
 
 }
