@@ -58,7 +58,6 @@ public class DialogoRegistroAlmacen extends JDialog {
         añadirCampoConEtiqueta(panel, "Cantidad:", tfRcantidad = new JTextField());
         añadirCampoConEtiqueta(panel, "Fecha Caducidad:", tfrfecha_Caducidad = new JDateChooser());
         añadirCampoConEtiqueta(panel, "Proveedor:", tfRproveedor = new JTextField());
-        añadirCampoConEtiqueta(panel, "Código de Barras:", tfRCodigo_Barras = new JTextField());
         añadirCampoConEtiqueta(panel, "Precio Bruto:", tfRprecio_Bruto = new JTextField());
         añadirCampoConEtiqueta(panel, "Observaciones:", tfRobservaciones = new JTextField());
 
@@ -207,14 +206,15 @@ public class DialogoRegistroAlmacen extends JDialog {
             categoria, // Usar el valor obtenido del JComboBox
             Integer.parseInt(tfRcantidad.getText().trim()),
             new BigDecimal(tfRprecio_Bruto.getText().trim()),
-            tfRproveedor.getText().trim(),
+            "", // Campo del código de barras eliminado
             fechaCompra,
             tfRN_Lote.getText().trim(),
             fechaCaducidad,
-            tfRCodigo_Barras.getText().trim(),
+            "", // Campo del proveedor eliminado
             tfRobservaciones.getText().trim()
         );
     }
+
 
 
     private void limpiarCampos() {

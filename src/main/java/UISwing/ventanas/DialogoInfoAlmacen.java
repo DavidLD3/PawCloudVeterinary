@@ -71,7 +71,6 @@ public class DialogoInfoAlmacen extends JDialog {
         txtFechaCaducidad = addLabelAndTextField("Fecha de Caducidad:", fechaCaducidadStr);
 
         txtNumeroLote = addLabelAndTextField("Número de Lote:", almacen.getNumeroLote());
-        txtCodigoBarras = addLabelAndTextField("Código de Barras:", almacen.getCodigoBarras());
         txtObservaciones = addLabelAndTextField("Observaciones:", almacen.getObservaciones());
 
      // Configuración de los botones

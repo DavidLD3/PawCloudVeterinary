@@ -586,16 +586,17 @@ public class PanelAlmacen extends JPanel {
         }
     }
     private void actualizarTablaServicios(List<Almacen> servicios) {
-        modeloTablaServicios.setRowCount(0);
+        modeloTablaServicios.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
         for (Almacen servicio : servicios) {
-            modeloTablaServicios.addRow(new Object[]{
-                servicio.getNombreProducto(),
-                servicio.getCategoria().name(),
-                servicio.getCantidadStock(),
-                servicio.getPrecioBruto().toPlainString() // Agrega el precio bruto como cadena
-            });
+            Object[] fila = new Object[]{
+                servicio.getNombreProducto(), // Nombre del servicio
+                servicio.getCategoria().name(), // Categoría del servicio
+                servicio.getPrecioBruto().toPlainString() // Precio bruto del servicio
+            };
+            modeloTablaServicios.addRow(fila);
         }
     }
+
     private void abrirDialogoRegistroAlmacen() {
         DialogoRegistroAlmacen dialogo = new DialogoRegistroAlmacen();
         dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

@@ -203,6 +203,12 @@ public class AlmacenDAO {
              PreparedStatement statement = conn.prepareStatement(sql)) {
             ResultSet resultados = statement.executeQuery();
             while (resultados.next()) {
+                java.sql.Date fechaUltimaCompraSql = resultados.getDate("fecha_ultima_compra");
+                LocalDate fechaUltimaCompra = fechaUltimaCompraSql != null ? fechaUltimaCompraSql.toLocalDate() : null;
+
+                java.sql.Date fechaCaducidadSql = resultados.getDate("fecha_caducidad");
+                LocalDate fechaCaducidad = fechaCaducidadSql != null ? fechaCaducidadSql.toLocalDate() : null;
+
                 servicios.add(new Almacen(
                     resultados.getInt("id_almacen"),
                     resultados.getString("nombre_producto"),
@@ -211,9 +217,9 @@ public class AlmacenDAO {
                     resultados.getInt("cantidad_stock"),
                     resultados.getBigDecimal("precio_bruto"),
                     resultados.getString("proveedor"),
-                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    fechaUltimaCompra,
                     resultados.getString("numero_lote"),
-                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    fechaCaducidad,
                     resultados.getString("codigo_barras"),
                     resultados.getString("observaciones")
                 ));
@@ -221,6 +227,7 @@ public class AlmacenDAO {
         }
         return servicios;
     }
+
     public List<Almacen> buscarServiciosPorNombre(String nombre) throws SQLException {
         List<Almacen> servicios = new ArrayList<>();
         String sql = "SELECT * FROM almacen WHERE nombre_producto LIKE ? AND categoria IN ('Servicio', 'Cargo', 'Estancia_Hospitalizacion', 'Estancia_Residencia', 'Peticion_Analitica', 'Intervencion', 'Vacuna', 'Prueba_Diagnostica', 'Servicio_Estetico', 'Plan_Salud')";
@@ -229,6 +236,12 @@ public class AlmacenDAO {
             statement.setString(1, "%" + nombre + "%");
             ResultSet resultados = statement.executeQuery();
             while (resultados.next()) {
+                java.sql.Date fechaUltimaCompraSql = resultados.getDate("fecha_ultima_compra");
+                LocalDate fechaUltimaCompra = fechaUltimaCompraSql != null ? fechaUltimaCompraSql.toLocalDate() : null;
+
+                java.sql.Date fechaCaducidadSql = resultados.getDate("fecha_caducidad");
+                LocalDate fechaCaducidad = fechaCaducidadSql != null ? fechaCaducidadSql.toLocalDate() : null;
+
                 servicios.add(new Almacen(
                     resultados.getInt("id_almacen"),
                     resultados.getString("nombre_producto"),
@@ -237,9 +250,9 @@ public class AlmacenDAO {
                     resultados.getInt("cantidad_stock"),
                     resultados.getBigDecimal("precio_bruto"),
                     resultados.getString("proveedor"),
-                    resultados.getDate("fecha_ultima_compra").toLocalDate(),
+                    fechaUltimaCompra,
                     resultados.getString("numero_lote"),
-                    resultados.getDate("fecha_caducidad").toLocalDate(),
+                    fechaCaducidad,
                     resultados.getString("codigo_barras"),
                     resultados.getString("observaciones")
                 ));
@@ -247,6 +260,7 @@ public class AlmacenDAO {
         }
         return servicios;
     }
+
     public Almacen obtenerProductoPorNombre(String nombre) throws SQLException {
         String sql = "SELECT * FROM almacen WHERE nombre_producto = ?";
         Almacen producto = null;
