@@ -1,5 +1,6 @@
 package UISwing.ventanas;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -8,6 +9,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import model.Cita;
@@ -28,6 +30,12 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
         citaDAO = new CitaDAO();
         initUI();
         cargarCitas();
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     

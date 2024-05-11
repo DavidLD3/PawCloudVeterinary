@@ -660,6 +660,12 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
                 btnAñadirVentas.setForeground(Color.decode("#0057FF"));
             }
         });
+        
+        btnAñadirVentas.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel("PanelVentas");
+            }
+        });
         panelVentas.add(btnAñadirVentas);
 
         CustomPanelOpaco panelOpacoVentas = new CustomPanelOpaco();

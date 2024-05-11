@@ -1,11 +1,13 @@
 package UISwing.ventanas;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -24,6 +26,14 @@ public class DialogoListaVentas extends JDialog {
         ventasDAO = new VentasDAO();
         initUI();
         cargarVentas();
+        
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     private void initUI() {

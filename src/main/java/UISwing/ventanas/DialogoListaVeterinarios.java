@@ -1,5 +1,6 @@
 package UISwing.ventanas;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
@@ -8,6 +9,7 @@ import model.Veterinario;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,12 @@ public class DialogoListaVeterinarios extends JDialog {
         veterinarioIds = new ArrayList<>();
         initUI();
         cargarVeterinarios();
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initUI() {

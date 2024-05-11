@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.JFrame;
@@ -28,6 +30,7 @@ import UISwing.ventanas.PanelHome;
 import UISwing.ventanas.PanelVentas;
 import javax.swing.JLabel;
 import javax.swing.Timer;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.time.LocalDateTime;
@@ -42,6 +45,7 @@ public class MainFrame extends JFrame  {
     private JLabel lblNombreUsuario;
     private JLabel lblRealTime;
     private PanelHome panelHome;
+    private PanelVentas panelVentas;
 
 
     public static void main(String[] args) {
@@ -67,6 +71,13 @@ public class MainFrame extends JFrame  {
         cardPanel.setOpaque(false); 
         cardPanel.setBounds(234, 104, 1112, 653);
         getContentPane().add(cardPanel);
+        
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
         // Inicialización y adición de PanelHome al cardPanel
         panelHome = new PanelHome(this);
@@ -292,6 +303,9 @@ public class MainFrame extends JFrame  {
         gradientPanel.add(centerPanel1);
         
         
+    }
+    public void changePanel(String name) {
+        cardLayout.show(cardPanel, name);
     }
 	 // Método para actualizar el nombre del usuario en el JLabel
 	    public void setNombreUsuario(String nombreUsuario) {

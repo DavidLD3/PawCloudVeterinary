@@ -30,10 +30,10 @@ public class DialogoRegistroMascota extends JDialog {
         setLocationRelativeTo(null);
 
         // Configuración del fondo transparente
-        setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
         ((JPanel)getContentPane()).setOpaque(false);
         getRootPane().setOpaque(false);
-        getContentPane().setBackground(new Color(0, 0, 0, 0)); // Color transparente
+        setBackground(new Color(0, 0, 0, 0)); // Color transparente
 
         roundedPanel = new RoundedPanel(30, new Color(112, 116, 178));
         roundedPanel.setLayout(new BorderLayout());
@@ -62,31 +62,65 @@ public class DialogoRegistroMascota extends JDialog {
         // Crear el JComboBox antes de agregarlo al panelDatos
         cbMascotaSexo = new JComboBox<>(new String[] {"Macho", "Hembra"});
         cbMascotaEsterilizado = new JCheckBox("Esterilizado");
+        
+        dateChooserNacimiento = new JDateChooser();
+        dateChooserNacimiento.setDateFormatString("dd/MM/yyyy");
 
-        panelDatos.add(new JLabel("Sexo:"));
+
+        JLabel label_9 = new JLabel("Sexo:");
+        label_9.setForeground(new Color(255, 255, 255));
+        label_9.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_9);
         panelDatos.add(cbMascotaSexo);
 
-        panelDatos.add(new JLabel("Nombre:"));
+        JLabel label_8 = new JLabel("Nombre:");
+        label_8.setForeground(new Color(255, 255, 255));
+        label_8.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_8);
         panelDatos.add(tfMascotaNombre);
-        panelDatos.add(new JLabel("Especie:"));
+        JLabel label_7 = new JLabel("Especie:");
+        label_7.setForeground(new Color(255, 255, 255));
+        label_7.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_7);
         panelDatos.add(tfMascotaEspecie);
-        panelDatos.add(new JLabel("Raza:"));
+        JLabel label_6 = new JLabel("Raza:");
+        label_6.setForeground(new Color(255, 255, 255));
+        label_6.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_6);
         panelDatos.add(tfMascotaRaza);
-        panelDatos.add(new JLabel("Pasaporte:"));
+        JLabel label_5 = new JLabel("Pasaporte:");
+        label_5.setForeground(new Color(255, 255, 255));
+        label_5.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_5);
         panelDatos.add(tfMascotapasaporte);
-        panelDatos.add(new JLabel("Microchip:"));
+        JLabel label_4 = new JLabel("Microchip:");
+        label_4.setForeground(new Color(255, 255, 255));
+        label_4.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_4);
         panelDatos.add(tfMascotaMicrochip);
-        panelDatos.add(new JLabel("Fecha de Nacimiento:"));
+        JLabel label_3 = new JLabel("Fecha de Nacimiento:");
+        label_3.setForeground(new Color(255, 255, 255));
+        label_3.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_3);
         panelDatos.add(dateChooserNacimiento);
-        panelDatos.add(new JLabel("Carácter:"));
+        JLabel label_2 = new JLabel("Carácter:");
+        label_2.setForeground(new Color(255, 255, 255));
+        label_2.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_2);
         panelDatos.add(tfMascotaCaracter);
-        panelDatos.add(new JLabel("Color:"));
+        JLabel label_1 = new JLabel("Color:");
+        label_1.setForeground(new Color(255, 255, 255));
+        label_1.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panelDatos.add(label_1);
         panelDatos.add(tfMascotaColor);
-        panelDatos.add(new JLabel("Tipo de Pelo:"));
+        JLabel label = new JLabel("Tipo de Pelo:");
+        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        label.setForeground(new Color(255, 255, 255));
+        panelDatos.add(label);
         panelDatos.add(tfMascotaTipoPelo);
         panelDatos.add(new JLabel()); // Esta línea estaba duplicada
         panelDatos.add(cbMascotaEsterilizado);
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 10));
         panelBotones.setOpaque(false);
         btnGuardar = new JButton("Guardar");
         btnLimpiar = new JButton("Limpiar");
@@ -101,9 +135,9 @@ public class DialogoRegistroMascota extends JDialog {
         btnLimpiar.addActionListener(e -> limpiarCampos());
         btnCerrar.addActionListener(e -> dispose());
 
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnLimpiar);
         panelBotones.add(btnCerrar);
+        panelBotones.add(btnLimpiar);
+        panelBotones.add(btnGuardar);
 
         roundedPanel.add(panelBotones, BorderLayout.SOUTH);  // Agrega el panel de botones al sur del roundedPanel
     }

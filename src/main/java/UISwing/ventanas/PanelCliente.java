@@ -3,6 +3,8 @@ package UISwing.ventanas;
 // file path: package UISwing.ventanas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -83,9 +85,16 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
     }
 
     private void agregarCampo(JPanel panel, String etiqueta, String valor) {
-        panel.add(new JLabel(etiqueta));
+        JLabel label = new JLabel(etiqueta);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        label.setForeground(Color.WHITE); 
+        label.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
+        panel.add(label);
+        
         JTextField textField = new JTextField(valor, 20);
         textField.setEditable(false);
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 13)); 
+        textField.setMargin(new Insets(2, 5, 2, 10));
         panel.add(textField);
     }
 
@@ -107,6 +116,10 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         scrollPane.setPreferredSize(new Dimension(500, 400));
         panelMascotas.add(scrollPane, BorderLayout.CENTER);
 
+        // Ocultar la columna de ID Mascota en la vista
+        TableColumn idColumn = tablaMascotas.getColumn("ID Mascota");
+        tablaMascotas.removeColumn(idColumn);
+
         JButton botonAgregarMascota = crearBotonPersonalizado("Añadir Mascota", e -> abrirPanelRegistroMascota());
         JPanel panelBoton = new JPanel();
         panelBoton.setOpaque(false);
@@ -119,7 +132,8 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
                 if (e.getClickCount() == 2) {
                     int filaSeleccionada = tablaMascotas.getSelectedRow();
                     if (filaSeleccionada != -1) {
-                        int idMascota = (Integer) modeloTabla.getValueAt(filaSeleccionada, 0);
+                        // Aquí accedemos al modelo directamente para obtener el ID de la mascota
+                        int idMascota = (Integer) modeloTabla.getValueAt(tablaMascotas.convertRowIndexToModel(filaSeleccionada), 0);
                         abrirPanelInfoMascota(idMascota);
                     }
                 }
@@ -128,6 +142,7 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
 
         return panelMascotas;
     }
+
 
     private JPanel crearPanelCitas() {
         String[] columnas = {"Mascota", "Fecha", "Título"};

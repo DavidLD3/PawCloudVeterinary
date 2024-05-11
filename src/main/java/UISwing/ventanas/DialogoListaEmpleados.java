@@ -1,5 +1,6 @@
 package UISwing.ventanas;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,12 @@ public class DialogoListaEmpleados extends JDialog {
         empleadoIds = new ArrayList<>();
         initUI();
         cargarEmpleados();
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initUI() {

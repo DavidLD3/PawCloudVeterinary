@@ -206,7 +206,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        roundedPanel.add(comboBoxVeterinarios);
 	        llenarComboBoxVeterinarios();
 	        
-	       /* JPanel centerPanel = new JPanel() {
+	       JPanel centerPanel = new JPanel() {
 	            @Override
 	            protected void paintComponent(Graphics g) {
 	                // Personaliza aquí tu componente
@@ -220,7 +220,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        };
 	        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
 	        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
-	        centerPanel.setBounds(21, 21, 846, 414);*/
+	        centerPanel.setBounds(21, 21, 846, 414);
 	        
 	        // Agregar los componentes al panel
 	        
@@ -233,6 +233,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        roundedPanel.add(scrollPaneNotas);
 	        roundedPanel.add(saveButton);
 	        roundedPanel.add(cancelButton);
+	        roundedPanel.add(centerPanel);
 	        
 	        JLabel lblEstado = new JLabel("Estado:");
 	        lblEstado.setForeground(new Color(255, 255, 255));
@@ -277,7 +278,28 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        roundedPanel.add(lblVeterinario);
 	        
 	        btnAddFarmaco = new JButton("Añadir Fármaco");
+	        btnAddFarmaco.setFont(new Font("Tahoma", Font.BOLD, 12));
 	        btnAddFarmaco.setBounds(369, 396, 150, 25); // Ajusta la posición como necesites
+	        btnAddFarmaco.setBackground(Color.WHITE);
+	        btnAddFarmaco.setForeground(Color.decode("#0057FF")); // Letras en color azul
+	        btnAddFarmaco.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
+	        btnAddFarmaco.setBorderPainted(false); // Evita que se pinte el borde predeterminado
+	        btnAddFarmaco.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+	        btnAddFarmaco.setOpaque(true);
+	        btnAddFarmaco.setRolloverEnabled(true);
+	        btnAddFarmaco.addMouseListener(new java.awt.event.MouseAdapter() {
+	            @Override
+	            public void mouseEntered(java.awt.event.MouseEvent evt) {
+	                btnAddFarmaco.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+	                btnAddFarmaco.setForeground(Color.WHITE);
+	            }
+
+	            @Override
+	            public void mouseExited(java.awt.event.MouseEvent evt) {
+	                btnAddFarmaco.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+	                btnAddFarmaco.setForeground(Color.decode("#0057FF"));
+	            }
+	        });
 	        btnAddFarmaco.addActionListener(e -> abrirDialogoSeleccionFarmaco());
 	        roundedPanel.add(btnAddFarmaco);
 	        
