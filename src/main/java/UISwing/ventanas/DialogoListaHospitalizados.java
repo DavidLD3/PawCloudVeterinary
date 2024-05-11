@@ -32,7 +32,7 @@ public class DialogoListaHospitalizados extends JDialog implements Actualizacion
         initUI();
         cargarHospitalizados();
         try {
-            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
             setIconImage(img);
         } catch (IOException e) {
             e.printStackTrace();

@@ -499,7 +499,20 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         lblLogoUltimosFarmacos.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoFarmacos.png")));
         lblLogoUltimosFarmacos.setBounds(24, 11, 26, 28);
         panelFarmacos.add(lblLogoUltimosFarmacos);
-
+        
+        JLabel lblListadoFarmacos = new JLabel("Ver Listado");
+        lblListadoFarmacos.setForeground(Color.WHITE);
+        lblListadoFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblListadoFarmacos.setBounds(323, 22, 71, 14);
+        lblListadoFarmacos.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lblListadoFarmacos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                DialogoListaUsosFarmacos dialog = new DialogoListaUsosFarmacos(mainFrame);
+                dialog.setVisible(true);
+            }
+        });
+        panelFarmacos.add(lblListadoFarmacos);
   
         
     }
@@ -800,7 +813,4 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
     public void onHospitalizacionActualizada() {
         mostrarHospitalizacionesRecientes(); // Actualiza la UI con los nuevos datos
     }
-    
-  
-
 }

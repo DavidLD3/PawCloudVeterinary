@@ -31,7 +31,7 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
         initUI();
         cargarCitas();
         try {
-            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
             setIconImage(img);
         } catch (IOException e) {
             e.printStackTrace();

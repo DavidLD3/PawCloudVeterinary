@@ -29,7 +29,7 @@ public class DialogoListaEmpleados extends JDialog {
         initUI();
         cargarEmpleados();
         try {
-            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
             setIconImage(img);
         } catch (IOException e) {
             e.printStackTrace();

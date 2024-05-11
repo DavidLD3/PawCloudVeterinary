@@ -30,4 +30,18 @@ public class Authentication {
         
         return false;
     }
+    
+    public int getUserCount() {
+        String sql = "SELECT COUNT(*) AS total FROM usuarios";
+        try (Connection conn = new Conexion().getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al contar los usuarios: " + e.getMessage());
+        }
+        return 0;  // Retornar 0 en caso de error para evitar nuevos registros
+    }
 }

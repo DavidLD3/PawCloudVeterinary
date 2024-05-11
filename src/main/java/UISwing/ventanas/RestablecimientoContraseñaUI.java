@@ -6,12 +6,15 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -60,6 +63,13 @@ public class RestablecimientoContraseñaUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 497, 524);
         setUndecorated(true);
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         GradientPanel gradientPanel = new GradientPanel();
         setContentPane(gradientPanel);
         gradientPanel.setLayout(null);

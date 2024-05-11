@@ -22,13 +22,17 @@ import javax.swing.JPanel;
 
 import UISwing.recursos.GradientPanel2;
 import UISwing.recursos.RoundedPanel;
+import UISwing.ventanas.ConfigDialog;
+import UISwing.ventanas.ConfiguracionClinica;
 import UISwing.ventanas.PanelAdministracion;
 import UISwing.ventanas.PanelAlmacen;
 import UISwing.ventanas.PanelCalendario;
 import UISwing.ventanas.PanelClienteMascota;
 import UISwing.ventanas.PanelHome;
 import UISwing.ventanas.PanelVentas;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -73,7 +77,7 @@ public class MainFrame extends JFrame  {
         getContentPane().add(cardPanel);
         
         try {
-            Image img = ImageIO.read(getClass().getResource("/imagenes/MediaPawcloud.png"));
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
             setIconImage(img);
         } catch (IOException e) {
             e.printStackTrace();
@@ -278,6 +282,13 @@ public class MainFrame extends JFrame  {
         
         JLabel lbllogoHeader = new JLabel("");
         lbllogoHeader.setBounds(1000, 11, 35, 60);
+        lbllogoHeader.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showConfigDialog();
+            }
+        });
+
         panelHeader.add(lbllogoHeader);
         lbllogoHeader.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoHeader.png")));
         
@@ -314,6 +325,18 @@ public class MainFrame extends JFrame  {
 	    public void switchPanel(String panelName) {
 	        cardLayout.show(cardPanel, panelName);
 	    }
+	    public void showConfigDialog() {
+	        ConfigDialog configDialog = new ConfigDialog(this, ConfiguracionClinica.getLimiteUsuarios());
+	        configDialog.setVisible(true);
+	    }
+
+
+	    public void updateUserLimit(int newLimit) {
+	        ConfiguracionClinica.setLimiteUsuarios(newLimit);
+	        JOptionPane.showMessageDialog(this, "El límite de usuarios se ha actualizado a: " + newLimit);
+	    }
+
+
 
 
 }

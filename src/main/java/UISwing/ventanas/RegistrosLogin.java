@@ -6,10 +6,13 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -56,6 +59,14 @@ public class RegistrosLogin extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 497, 524);
         setUndecorated(true);
+        
+        try {
+            Image img = ImageIO.read(getClass().getResource("/imagenes/LogoOscuroPawCloud.png"));
+            setIconImage(img);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         GradientPanel gradientPanel = new GradientPanel();
         setContentPane(gradientPanel);
         gradientPanel.setLayout(null);
@@ -168,16 +179,21 @@ public class RegistrosLogin extends JFrame {
             }
 
             UserModel userModel = new UserModel();
-            boolean success = userModel.registerUser(username, email, password);
+            int result = userModel.registerUser(username, email, password);
 
-            if (success) {
-                JOptionPane.showMessageDialog(RegistrosLogin.this, "Registro exitoso. Por favor, inicie sesión.", "Registro", JOptionPane.INFORMATION_MESSAGE);
-                // Opcional: limpiar campos o cerrar ventana de registro aquí
-            } else {
-                JOptionPane.showMessageDialog(RegistrosLogin.this, "Error al registrar el usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+            switch (result) {
+                case 1: // Registro exitoso
+                    JOptionPane.showMessageDialog(this, "Registro exitoso. Por favor, inicie sesión.", "Registro", JOptionPane.INFORMATION_MESSAGE);
+                    // Limpieza de campos o cierre de ventana aquí, si se desea
+                    break;
+                case -1: // Límite de usuarios alcanzado
+                    JOptionPane.showMessageDialog(this, "Se ha alcanzado el número máximo de registros permitidos. Hable con el administrador.", "Límite Alcanzado", JOptionPane.ERROR_MESSAGE);
+                    break;
+                default: // Error en el registro
+                    JOptionPane.showMessageDialog(this, "Error al registrar el usuario. Por favor, inténtelo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
             }
         });
-
 
         
         JLabel lblVolver = new JLabel("Volver");
