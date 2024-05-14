@@ -224,13 +224,13 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        lblMotivo.setBounds(568, 26, 79, 30);
 	        roundedPanel.add(lblMotivo);
 	        
-	        JLabel lblFechaIngreso = new JLabel("Fecha ingreso:");
+	        JLabel lblFechaIngreso = new JLabel("Fecha de ingreso:");
 	        lblFechaIngreso.setForeground(new Color(255, 255, 255));
 	        lblFechaIngreso.setFont(new Font("Segoe UI", Font.BOLD, 13));
 	        lblFechaIngreso.setBounds(40, 96, 111, 30);
 	        roundedPanel.add(lblFechaIngreso);
 	        
-	        JLabel lblFechaSalida = new JLabel("Fecha salida:");
+	        JLabel lblFechaSalida = new JLabel("Fecha de salida:");
 	        lblFechaSalida.setForeground(new Color(255, 255, 255));
 	        lblFechaSalida.setFont(new Font("Segoe UI", Font.BOLD, 13));
 	        lblFechaSalida.setBounds(329, 94, 111, 30);

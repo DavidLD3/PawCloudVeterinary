@@ -17,7 +17,7 @@ public class DialogoRegistroFarmaco extends JDialog {
     private JDateChooser tfFechaCaducidad;
 
     public DialogoRegistroFarmaco() {
-    	setUndecorated(true);
+        setUndecorated(true);
         setTitle("Registro de Fármacos");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 600, 400);
@@ -54,6 +54,7 @@ public class DialogoRegistroFarmaco extends JDialog {
         tfUnidadMedida = new JTextField();
         tfPrecio = new JTextField();
         tfFechaCaducidad = new JDateChooser();
+        tfFechaCaducidad.setDateFormatString("dd/MM/yyyy"); // Formato de fecha
 
         JLabel lblCodigo = new JLabel("Código:");
         lblCodigo.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -139,8 +140,6 @@ public class DialogoRegistroFarmaco extends JDialog {
 
         return panel;
     }
-    
-
 
     private void personalizarBoton(JButton button) {
         button.setFont(new Font("Segoe UI", Font.BOLD, 12));

@@ -2,17 +2,17 @@ package UISwing.ventanas;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import com.toedter.calendar.JDateChooser;
 import DB.AlmacenDAO;
 import model.Almacen;
 import model.Almacen.Categoria;
 import UISwing.recursos.RoundedPanel; // Asegúrate de que esta ruta sea correcta
+import java.awt.*;
+import java.awt.event.*;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class DialogoRegistroAlmacen extends JDialog {
     private JTextField tfRnombre, tfRN_Lote, tfRcantidad, tfRproveedor, tfRCodigo_Barras, tfRprecio_Bruto, tfRobservaciones, tfRdescripcion;
@@ -54,9 +54,11 @@ public class DialogoRegistroAlmacen extends JDialog {
         añadirCampoConEtiqueta(panel, "Categoría:", cbCategoria = new JComboBox<>(Categoria.values()));
         añadirCampoConEtiqueta(panel, "Descripción:", tfRdescripcion = new JTextField());
         añadirCampoConEtiqueta(panel, "Fecha de Compra:", tfRfechaUltCompra = new JDateChooser());
+        tfRfechaUltCompra.setDateFormatString("dd/MM/yyyy"); // Formato de fecha
         añadirCampoConEtiqueta(panel, "Número Lote:", tfRN_Lote = new JTextField());
         añadirCampoConEtiqueta(panel, "Cantidad:", tfRcantidad = new JTextField());
         añadirCampoConEtiqueta(panel, "Fecha Caducidad:", tfrfecha_Caducidad = new JDateChooser());
+        tfrfecha_Caducidad.setDateFormatString("dd/MM/yyyy"); // Formato de fecha
         añadirCampoConEtiqueta(panel, "Proveedor:", tfRproveedor = new JTextField());
         añadirCampoConEtiqueta(panel, "Precio Bruto:", tfRprecio_Bruto = new JTextField());
         añadirCampoConEtiqueta(panel, "Observaciones:", tfRobservaciones = new JTextField());
@@ -104,6 +106,7 @@ public class DialogoRegistroAlmacen extends JDialog {
 
         return panel;
     }
+
     private void personalizarBoton(JButton button) {
         button.setFont(new Font("Segoe UI", Font.BOLD, 12));
         button.setBackground(Color.WHITE);
@@ -127,8 +130,6 @@ public class DialogoRegistroAlmacen extends JDialog {
             }
         });
     }
-
-
 
     private void guardarDatos(ActionEvent e) {
         if (validarDatos()) {
@@ -187,7 +188,6 @@ public class DialogoRegistroAlmacen extends JDialog {
         return true;
     }
 
-
     private Almacen recolectarDatos() {
         LocalDate fechaCompra = (tfRfechaUltCompra.getDate() != null) ? tfRfechaUltCompra.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
         LocalDate fechaCaducidad = null; // Inicializa la fecha de caducidad como null
@@ -214,8 +214,6 @@ public class DialogoRegistroAlmacen extends JDialog {
             tfRobservaciones.getText().trim()
         );
     }
-
-
 
     private void limpiarCampos() {
         tfRnombre.setText("");

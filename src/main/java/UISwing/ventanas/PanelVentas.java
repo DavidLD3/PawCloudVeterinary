@@ -11,12 +11,15 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
+import java.text.NumberFormat;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.event.TableModelEvent;
 import java.util.List;
+import java.util.Locale;
+
 import model.Almacen;
 import model.Cliente;
 import model.Farmaco;
@@ -437,11 +440,12 @@ public class PanelVentas extends JPanel {
     private void actualizarTotal() {
         BigDecimal totalGeneral = BigDecimal.ZERO;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
-            BigDecimal totalFila = new BigDecimal(tableModel.getValueAt(i, 6).toString());
+            BigDecimal totalFila = (BigDecimal) tableModel.getValueAt(i, 6);
             totalGeneral = totalGeneral.add(totalFila);
         }
         lblTotalPrecio.setText(totalGeneral.setScale(2, RoundingMode.HALF_UP).toString() + " €");
     }
+
 
     private void limpiarTabla() {
         tableModel.setRowCount(0); // Elimina todas las filas
@@ -449,17 +453,22 @@ public class PanelVentas extends JPanel {
     }
     
     private void registrarVenta() {
-    	
-    	 if (tableModel.getRowCount() == 0) {
-    	        JOptionPane.showMessageDialog(this, "Debe agregar productos para validar la operación.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
-    	        return; // Terminar la ejecución del método si no hay productos
-    	    }
+        if (tableModel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Debe agregar productos para validar la operación.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return; // Terminar la ejecución del método si no hay productos
+        }
+
+        String metodoPago = obtenerMetodoPagoSeleccionado();
+        if (metodoPago.equals("Desconocido")) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un método de pago.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return; // Terminar la ejecución del método si no se seleccionó un método de pago
+        }
+
         try {
             Integer idCliente = null;
             Integer idMascota = null;
             BigDecimal total = new BigDecimal(lblTotalPrecio.getText().replace(" €", ""));
             Date fechaVenta = new Date(System.currentTimeMillis());
-            String metodoPago = obtenerMetodoPagoSeleccionado();
 
             Cliente cliente = (Cliente) comboBoxCliente.getSelectedItem();
             if (cliente != null) {
@@ -491,22 +500,24 @@ public class PanelVentas extends JPanel {
             e.printStackTrace();
         }
     }
+
     
     private void setupTableRenderers() {
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
         leftRenderer.setHorizontalAlignment(JLabel.LEFT); // Alinea el texto a la izquierda
 
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(JLabel.RIGHT); // Alinea el texto a la derecha
+        EuroCellRenderer euroRenderer = new EuroCellRenderer();
+        euroRenderer.setHorizontalAlignment(JLabel.RIGHT); // Alinea el texto a la derecha
 
         table.getColumnModel().getColumn(tableModel.findColumn("Descripción")).setCellRenderer(leftRenderer);
-        table.getColumnModel().getColumn(tableModel.findColumn("Total")).setCellRenderer(rightRenderer);
-        table.getColumnModel().getColumn(tableModel.findColumn("Precio Unitario")).setCellRenderer(rightRenderer);
+        table.getColumnModel().getColumn(tableModel.findColumn("Precio Unitario")).setCellRenderer(euroRenderer);
+        table.getColumnModel().getColumn(tableModel.findColumn("Total")).setCellRenderer(euroRenderer);
 
         // Asegúrate de aplicar el renderizador izquierdo a cualquier otra columna que deba estar alineada a la izquierda
         // Por ejemplo, si la columna "Producto" también debe estar alineada a la izquierda
         table.getColumnModel().getColumn(tableModel.findColumn("Producto")).setCellRenderer(leftRenderer);
     }
+
     
 
     private String obtenerMetodoPagoSeleccionado() {
@@ -517,6 +528,22 @@ public class PanelVentas extends JPanel {
         }
         return "Desconocido";
     }
+    public class EuroCellRenderer extends DefaultTableCellRenderer {
+        private final NumberFormat euroFormat;
+
+        public EuroCellRenderer() {
+            euroFormat = NumberFormat.getCurrencyInstance(new Locale("es", "ES"));
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value instanceof BigDecimal) {
+                value = euroFormat.format(((BigDecimal) value).doubleValue());
+            }
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+    }
+
     
     
     

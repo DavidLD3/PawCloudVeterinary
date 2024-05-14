@@ -2,7 +2,9 @@ package UISwing.ventanas;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import DB.VentasDAO;
 import model.Almacen;
@@ -11,9 +13,12 @@ import model.Farmaco;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ProductoSelectorDialog extends JDialog {
     private JTable productTable;
@@ -47,7 +52,6 @@ public class ProductoSelectorDialog extends JDialog {
         topPanel.add(searchField);
         getContentPane().add(topPanel, BorderLayout.NORTH);
 
-
         model = new DefaultTableModel(new String[]{"Producto", "Precio", "Descripción"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -57,6 +61,11 @@ public class ProductoSelectorDialog extends JDialog {
 
         productTable = new JTable(model);
         productTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
+
+        // Aplicar el renderizador a la columna "Precio"
+        TableColumnModel columnModel = productTable.getColumnModel();
+        columnModel.getColumn(1).setCellRenderer(new EuroCellRenderer());
+
         JScrollPane scrollPane = new JScrollPane(productTable);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
 
@@ -70,7 +79,6 @@ public class ProductoSelectorDialog extends JDialog {
         selectButton.setOpaque(true);
         selectButton.setRolloverEnabled(true);
 
-        
         selectButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -96,7 +104,6 @@ public class ProductoSelectorDialog extends JDialog {
             }
         });
     }
-
 
     private void updateProductList(String text) {
         try {
@@ -127,6 +134,23 @@ public class ProductoSelectorDialog extends JDialog {
             dispose(); 
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione un producto primero", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public class EuroCellRenderer extends DefaultTableCellRenderer {
+        private final NumberFormat euroFormat;
+
+        public EuroCellRenderer() {
+            euroFormat = NumberFormat.getCurrencyInstance(new Locale("es", "ES"));
+            setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value instanceof BigDecimal) {
+                value = euroFormat.format(((BigDecimal) value).doubleValue());
+            }
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
     }
 }

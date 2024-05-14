@@ -195,7 +195,7 @@ public class MainFrame extends JFrame  {
         lblNewLabel_3.setBounds(25, 261, 20, 28);
         panelMenu.add(lblNewLabel_3);
         
-        JLabel lblAlmacen = new JLabel("Almacen");
+        JLabel lblAlmacen = new JLabel("Almacén");
         lblAlmacen.setForeground(new Color(255, 255, 255));
         lblAlmacen.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblAlmacen.setBounds(55, 261, 130, 28);

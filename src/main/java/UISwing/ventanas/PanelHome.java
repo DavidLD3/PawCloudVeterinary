@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import model.Cita;
@@ -737,11 +738,12 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
             List<VentaDetalle> ultimasVentas = ventasDAO.obtenerUltimasVentas();
             panelDatosVentas.removeAll();
             for (VentaDetalle venta : ultimasVentas) {
+                BigDecimal precioTotal = venta.getPrecioUnitario().multiply(new BigDecimal(venta.getCantidad()));
                 String[] datosVenta = {
                         new SimpleDateFormat("HH:mm").format(venta.getFechaVenta()),
                         venta.getProducto(),
                         String.valueOf(venta.getCantidad()),
-                        String.format("%.2f €", venta.getPrecioUnitario())
+                        String.format("%.2f €", precioTotal)
                 };
                 agregarFilaDatosVentas(panelDatosVentas, datosVenta);
             }
@@ -766,6 +768,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
         panelDatosVentas.add(panelFilaVentas);
     }
+
     
     
     private void mostrarHospitalizacionesRecientes() {

@@ -9,8 +9,10 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import DB.VentasDAO;
 import model.VentaDetalle;
 
@@ -92,14 +94,15 @@ public class DialogoListaVentas extends JDialog {
 			e.printStackTrace();
 		}
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("es", "ES"));
 
         for (VentaDetalle venta : ventas) {
             String fechaFormateada = formatter.format(venta.getFechaVenta());
             String metodoPago = venta.getMetodoPago();
             String producto = venta.getProducto();
             Integer cantidad = venta.getCantidad();
-            String precioUnitario = venta.getPrecioUnitario() != null ? venta.getPrecioUnitario().toPlainString() : "N/A";
-            String total = venta.getTotal() != null ? venta.getTotal().toPlainString() : "N/A";
+            String precioUnitario = venta.getPrecioUnitario() != null ? currencyFormat.format(venta.getPrecioUnitario()) : "N/A";
+            String total = venta.getTotal() != null ? currencyFormat.format(venta.getTotal()) : "N/A";
 
             model.addRow(new Object[]{
                 venta.getIdVenta(),
