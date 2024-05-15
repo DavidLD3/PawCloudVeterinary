@@ -5,10 +5,10 @@ import java.time.format.DateTimeFormatter;
 
 public class Cliente {
    
-	private int id; // Cambiado a int para un manejo más estándar de IDs.
+	private int id;
     private String nombre;
     private String apellidos;
-    private LocalDate fechaNacimiento; // Usamos LocalDate para manejar la fecha
+    private LocalDate fechaNacimiento; 
     private String dni;
     private String nif;
     private String direccion;
@@ -18,11 +18,11 @@ public class Cliente {
     private String telefonoMovil;
     private String email;
 
-    // Constructor modificado para incluir el email y recibir LocalDate directamente
+   
     public Cliente(int id, String nombre, String apellidos, LocalDate fechaNacimiento, String dni, String nif,
             String direccion, String poblacion, String provincia, String telefonoFijo,
             String telefonoMovil, String email) {
-		 this.id = id; // Asumiendo que quieres mantener un id numérico
+		 this.id = id; 
 		 this.nombre = nombre;
 		 this.apellidos = apellidos;
 		 this.fechaNacimiento = fechaNacimiento;
@@ -40,7 +40,7 @@ public class Cliente {
 
     @Override
     public String toString() {
-        // Devuelve "Apellido, Nombre"
+      
         return apellidos + ", " + nombre;
     }
 
@@ -52,7 +52,7 @@ public class Cliente {
         return id;
     }
 
-    public void setId(int id) { // Ajustado para aceptar int
+    public void setId(int id) {
         this.id = id;
     }
 

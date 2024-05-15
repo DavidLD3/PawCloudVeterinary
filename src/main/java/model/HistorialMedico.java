@@ -8,7 +8,7 @@ public class HistorialMedico {
     private LocalDate fecha;
     private String diagnostico;
     private String tratamiento;
-    private String tipoIntervencion; // Nuevo campo para tipo de intervención
+    private String tipoIntervencion;
 
     // Constructor completo
     public HistorialMedico(int id, int idMascota, LocalDate fecha, String diagnostico, String tratamiento, String tipoIntervencion) {
@@ -17,16 +17,16 @@ public class HistorialMedico {
         this.fecha = fecha;
         this.diagnostico = diagnostico;
         this.tratamiento = tratamiento;
-        this.tipoIntervencion = tipoIntervencion; // Inicializa el nuevo campo
+        this.tipoIntervencion = tipoIntervencion;
     }
 
-    // Constructor para inserción (sin ID, ya que se genera automáticamente en la base de datos)
+   
     public HistorialMedico(int idMascota, LocalDate fecha, String diagnostico, String tratamiento, String tipoIntervencion) {
         this.idMascota = idMascota;
         this.fecha = fecha;
         this.diagnostico = diagnostico;
         this.tratamiento = tratamiento;
-        this.tipoIntervencion = tipoIntervencion; // Inicializa el nuevo campo
+        this.tipoIntervencion = tipoIntervencion;
     }
 
     // Getters y Setters

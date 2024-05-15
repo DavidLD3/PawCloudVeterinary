@@ -112,30 +112,30 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
         JPanel centerPanel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
-				// Personaliza aquí tu componente
+			
 				Graphics2D g2 = (Graphics2D) g.create();
-				g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+				g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
 				g2.setColor(getBackground());
-				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si
-																			// es necesario
+				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+																			
 				g2.dispose();
 				super.paintComponent(g);
 			}
 		};
-		centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
-		centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el
-										// fondo.
+		centerPanel.setBackground(new Color(255, 255, 255, 80));
+		centerPanel.setOpaque(false);
+										
 		centerPanel.setBounds(21, 21, 457, 360);
 		roundedPanel.add(centerPanel);
 
         saveButton = new JButton("Guardar");
         saveButton.setBounds(353, 338, 100, 30);
-        initButton(saveButton, "#0057FF", "#003366"); // Configuración del botón
+        initButton(saveButton, "#0057FF", "#003366");
         roundedPanel.add(saveButton);
 
         cancelButton = new JButton("Cancelar");
         cancelButton.setBounds(216, 339, 100, 30);
-        initButton(cancelButton, "#0057FF", "#003366"); // Configuración del botón
+        initButton(cancelButton, "#0057FF", "#003366");
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,17 +170,17 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
             }
         });
 
-        // Agregamos la acción del botón de guardar
+        
     }
 
     private void guardarEmpleado() {
-        // Implementación de la lógica para guardar un empleado, asegurando que no se duplique
+       
         if (dateChooserContratacion.getDate() == null) {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha de contratación.", "Fecha de Contratación Requerida", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Creación y asignación de valores a la instancia de Empleado
+       
         Empleado empleado = new Empleado();
         empleado.setNombre(txtNombre.getText());
         empleado.setApellidos(txtApellidos.getText());
@@ -201,7 +201,7 @@ public class VentanaRegistroEmpleadoDialog extends JDialog {
     }
 
     private void clearForm() {
-        // Limpia todos los campos del formulario
+        
         txtNombre.setText("");
         txtApellidos.setText("");
         txtDNI.setText("");

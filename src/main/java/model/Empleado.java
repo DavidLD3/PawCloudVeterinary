@@ -15,7 +15,6 @@ public class Empleado {
     public Empleado() {
     }
 
-    // Constructor con todos los argumentos
     public Empleado(String nombre, String apellidos, String dni, String telefono, String email, Date fechaContratacion, String horarioTrabajo) {
         this.nombre = nombre;
         this.apellidos = apellidos;

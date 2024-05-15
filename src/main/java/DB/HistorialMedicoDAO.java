@@ -30,7 +30,7 @@ public class HistorialMedicoDAO {
                         resultados.getDate("fecha").toLocalDate(),
                         resultados.getString("diagnostico"),
                         resultados.getString("tratamiento"),
-                        resultados.getString("tipo_intervencion")  // Añade el manejo del nuevo campo aquí
+                        resultados.getString("tipo_intervencion")
                 );
             }
         } catch (SQLException e) {
@@ -48,7 +48,7 @@ public class HistorialMedicoDAO {
             statement.setDate(2, java.sql.Date.valueOf(historial.getFecha()));
             statement.setString(3, historial.getDiagnostico());
             statement.setString(4, historial.getTratamiento());
-            statement.setString(5, historial.getTipoIntervencion());  // Inserta el nuevo campo aquí
+            statement.setString(5, historial.getTipoIntervencion());
             int filasInsertadas = statement.executeUpdate();
             return filasInsertadas > 0;
         } catch (SQLException e) {
@@ -64,7 +64,7 @@ public class HistorialMedicoDAO {
             statement.setDate(1, java.sql.Date.valueOf(historial.getFecha()));
             statement.setString(2, historial.getDiagnostico());
             statement.setString(3, historial.getTratamiento());
-            statement.setString(4, historial.getTipoIntervencion());  // Actualiza el nuevo campo aquí
+            statement.setString(4, historial.getTipoIntervencion());
             statement.setInt(5, historial.getId());
             int filasActualizadas = statement.executeUpdate();
             return filasActualizadas > 0;
@@ -101,7 +101,7 @@ public class HistorialMedicoDAO {
                         rs.getDate("fecha").toLocalDate(),
                         rs.getString("diagnostico"),
                         rs.getString("tratamiento"),
-                        rs.getString("tipo_intervencion") // Asegúrate de recuperar y manejar el nuevo campo
+                        rs.getString("tipo_intervencion")
                 );
                 historiales.add(historial);
             }

@@ -14,7 +14,6 @@ public class VeterinarioDAO {
 
     public VeterinarioDAO() {
         try {
-            // Usamos la clase Conexion para obtener la conexión
             this.connection = Conexion.getConexion();
         } catch (SQLException e) {
             System.err.println("Error al obtener la conexión: " + e.getMessage());
@@ -72,7 +71,7 @@ public class VeterinarioDAO {
     }
     
     public int obtenerIdVeterinarioPorNombre(String nombreCompletoVeterinario) {
-        int idVeterinario = -1; // Un valor que indica que el id no fue encontrado
+        int idVeterinario = -1;
         String sql = "SELECT id FROM veterinarios WHERE CONCAT(nombre, ' ', apellidos) = ?";
 
         try (Connection conn = Conexion.getConexion();

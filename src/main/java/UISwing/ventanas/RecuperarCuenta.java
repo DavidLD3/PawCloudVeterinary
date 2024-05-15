@@ -23,7 +23,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import DB.BaseDatosServicio;
@@ -35,16 +34,13 @@ import UISwing.recursos.GradientPanel;
 import application.LoginFrame;
 import model.ServicioRecuperacion;
 
-import javax.swing.JTextPane;
 
 public class RecuperarCuenta extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -58,9 +54,6 @@ public class RecuperarCuenta extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public RecuperarCuenta() {
 		setBounds(100, 100, 497, 524);
         setUndecorated(true);
@@ -84,8 +77,8 @@ public class RecuperarCuenta extends JFrame {
         gradientPanel.add(lblLogoVertical);
         
         Border roundedBorder = BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.WHITE, 1, true), // Borde blanco
-                BorderFactory.createEmptyBorder(5, 10, 5, 10) // Espacio interno
+                BorderFactory.createLineBorder(Color.WHITE, 1, true), 
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
         );
         
         JTextField textcorreo = new JTextField();
@@ -147,9 +140,9 @@ public class RecuperarCuenta extends JFrame {
         lblVolver.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                LoginFrame login = new LoginFrame(); // Crear una nueva instancia de LoginFrame
-                login.setVisible(true); // Hacer visible LoginFrame
-                RecuperarCuenta.this.dispose(); // Cerrar y liberar los recursos de RegistrosLogin
+                LoginFrame login = new LoginFrame(); 
+                login.setVisible(true); 
+                RecuperarCuenta.this.dispose();
             }
         });
 
@@ -161,8 +154,8 @@ public class RecuperarCuenta extends JFrame {
         lbllogocerrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Cierra la ventana y termina la aplicación
-                System.exit(0); // O puedes usar LoginFrame.this.dispose(); si prefieres solo cerrar la ventana
+               
+                System.exit(0);
             }
         });
         
@@ -184,23 +177,23 @@ public class RecuperarCuenta extends JFrame {
         lblNewLabel_2.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblNewLabel_2.setBounds(211, 240, 105, 14);
         gradientPanel.add(lblNewLabel_2);
-        // Añade un MouseListener a lbllogocerrar para cerrar la aplicación
+     
         
         
         JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                // Personaliza aquí tu componente
+                
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
                 g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
-        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+        centerPanel.setBackground(new Color(255, 255, 255, 80)); 
+        centerPanel.setOpaque(false);
         centerPanel.setBounds(95, 52, 308, 414);
         gradientPanel.add(centerPanel);
         

@@ -55,15 +55,15 @@ public class MascotaDAO {
     private Mascota crearMascotaDesdeResultSet(ResultSet rs) throws SQLException {
         String sexoStr = rs.getString("sexo");
         Mascota.Sexo sexo = null;
-        if (sexoStr != null && !sexoStr.isEmpty()) { // Comprobamos que la cadena no sea nula y no esté vacía
+        if (sexoStr != null && !sexoStr.isEmpty()) {
             try {
-                sexo = Mascota.Sexo.valueOf(sexoStr.trim().toUpperCase()); // Usamos trim y toUpperCase para asegurar compatibilidad
+                sexo = Mascota.Sexo.valueOf(sexoStr.trim().toUpperCase()); 
             } catch (IllegalArgumentException e) {
-                // Si el valor no corresponde a ningún enum, manejar aquí el error, p.ej., loguearlo o usar un valor por defecto
+                
                 System.err.println("Valor no válido para el campo 'sexo': " + sexoStr);
             }
         }
-        // Continúa con el resto de los campos
+        
         return new Mascota(
             rs.getInt("id"),
             rs.getString("nombre"),
@@ -76,7 +76,7 @@ public class MascotaDAO {
             rs.getString("caracter"),
             rs.getString("color"),
             rs.getString("tipo_pelo"),
-            sexo, // Usa la variable local sexo que podría ser null
+            sexo, 
             rs.getBoolean("esterilizado")
         );
     }
@@ -88,7 +88,7 @@ public class MascotaDAO {
             stmt.setString(1, mascota.getNombre());
             stmt.setString(2, mascota.getEspecie());
             stmt.setString(3, mascota.getRaza());
-            stmt.setString(4, mascota.getPasaporte());  // Cambiado de setInt a setString
+            stmt.setString(4, mascota.getPasaporte());
             stmt.setInt(5, mascota.getIdCliente());
             stmt.setString(6, mascota.getMicrochip());
             stmt.setObject(7, mascota.getFechaNacimiento());
@@ -116,7 +116,7 @@ public class MascotaDAO {
             stmt.setString(1, mascota.getNombre());
             stmt.setString(2, mascota.getEspecie());
             stmt.setString(3, mascota.getRaza());
-            stmt.setString(4, mascota.getPasaporte());  // Cambiado de setInt a setString
+            stmt.setString(4, mascota.getPasaporte());
             stmt.setInt(5, mascota.getIdCliente());
             stmt.setString(6, mascota.getMicrochip());
             stmt.setObject(7, mascota.getFechaNacimiento());
@@ -176,7 +176,6 @@ public class MascotaDAO {
                 Mascota mascota = new Mascota();
                 mascota.setNombre(rs.getString("nombre"));
                 mascota.setMicrochip(rs.getString("microchip"));
-                // Concatena los apellidos y nombre del dueño
                 String dueño = rs.getString("apellidos") + ", " + rs.getString("nombre_cliente");
                 mascota.setNombreDueño(dueño);
                 mascotas.add(mascota);

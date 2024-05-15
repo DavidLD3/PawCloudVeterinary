@@ -27,7 +27,7 @@ public class CitaDAO {
 	        pstmt.setString(4, cita.getNotas());
 	        pstmt.setInt(5, cita.getClienteId());
 	        pstmt.setInt(6, cita.getMascotaId());
-	        pstmt.setString(7, cita.getTipo()); // Añadir el tipo de cita
+	        pstmt.setString(7, cita.getTipo()); 
 	        pstmt.executeUpdate();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -37,11 +37,11 @@ public class CitaDAO {
     
     public List<Cita> recuperarCitas() {
         List<Cita> citas = new ArrayList<>();
-        // Ajuste en la consulta SQL para incluir JOIN con las tablas clientes y mascotas
+        
         String sql = "SELECT c.id, c.titulo, c.fecha, c.hora, c.notas, c.id_cliente, c.id_mascota, cl.nombre AS nombre_cliente, m.nombre AS nombre_mascota " +
                      "FROM citas c " +
-                     "JOIN clientes cl ON cl.id = c.id_cliente " + // Asegúrate de que el nombre del campo id en clientes sea correcto
-                     "JOIN mascotas m ON m.id = c.id_mascota " + // Asegúrate de que el nombre del campo id en mascotas sea correcto
+                     "JOIN clientes cl ON cl.id = c.id_cliente " + 
+                     "JOIN mascotas m ON m.id = c.id_mascota " + 
                      "ORDER BY c.fecha DESC, c.hora DESC";
 
         try (Connection conn = Conexion.getConexion();
@@ -56,8 +56,8 @@ public class CitaDAO {
                     rs.getString("notas"),
                     rs.getInt("id_cliente"),
                     rs.getInt("id_mascota"),
-                    rs.getString("nombre_cliente"), // Recuperamos el nombre del cliente
-                    rs.getString("nombre_mascota") // Recuperamos el nombre de la mascota
+                    rs.getString("nombre_cliente"),
+                    rs.getString("nombre_mascota")
                 );
                 citas.add(cita);
             }
@@ -72,7 +72,7 @@ public class CitaDAO {
     
     public List<Cita> recuperarCitasHome() {
         List<Cita> citas = new ArrayList<>();
-        // Modifica la consulta SQL para incluir JOIN con las tablas clientes y mascotas
+        
         String sql = "SELECT c.id, c.titulo, c.fecha, c.hora, c.notas, c.id_cliente, c.id_mascota, cl.nombre AS nombre_cliente, m.nombre AS nombre_mascota " +
                      "FROM citas c " +
                      "JOIN clientes cl ON c.id_cliente = cl.id " +
@@ -108,7 +108,7 @@ public class CitaDAO {
     
     public List<Cita> recuperarCitasFuturas() {
         List<Cita> citas = new ArrayList<>();
-        // Asume que tienes una columna 'fecha' y una columna 'hora' en tu tabla 'citas'
+        
         String sql = "SELECT c.*, cl.nombre AS nombre_cliente, m.nombre AS nombre_mascota " +
                      "FROM citas c " +
                      "JOIN clientes cl ON c.id_cliente = cl.id " +
@@ -153,7 +153,7 @@ public class CitaDAO {
                 cita.setTitulo(rs.getString("titulo"));
                 cita.setFecha(rs.getDate("fecha").toLocalDate());
                 cita.setHora(rs.getTime("hora").toLocalTime());
-                cita.setTipo(rs.getString("tipo")); // Asegúrate de incluir el tipo
+                cita.setTipo(rs.getString("tipo"));
                 citas.add(cita);
             }
         } catch (SQLException e) {
@@ -182,7 +182,7 @@ public class CitaDAO {
                 cita.setFecha(rs.getDate("fecha").toLocalDate());
                 cita.setHora(rs.getTime("hora").toLocalTime());
                 cita.setTipo(rs.getString("tipo"));
-                cita.setNombreMascota(rs.getString("nombre_mascota"));  // Asegúrate de estar recuperando este campo
+                cita.setNombreMascota(rs.getString("nombre_mascota"));
                 citas.add(cita);
             }
         } catch (SQLException e) {
@@ -245,8 +245,7 @@ public class CitaDAO {
                 cita.setClienteId(rs.getInt("id_cliente"));
                 cita.setMascotaId(rs.getInt("id_mascota"));
                 cita.setTipo(rs.getString("tipo"));
-                // Los campos nombre_cliente y nombre_mascota pueden ser usados si necesitas mostrar esta información
-                // Pero si solo necesitas la información de la cita, puede que no necesites asignar estos campos aquí.
+                
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -275,9 +274,8 @@ public class CitaDAO {
                     rs.getString("notas"),
                     rs.getInt("id_cliente"),
                     rs.getInt("id_mascota"),
-                    // Suponiendo que Cita tiene constructores para manejar estos datos, o puedes asignarlos después
-                    rs.getString("nombre_cliente"), // Opcional, si necesitas mostrar el nombre en la interfaz
-                    rs.getString("nombre_mascota") // Opcional, si necesitas mostrar el nombre en la interfaz
+                    rs.getString("nombre_cliente"), 
+                    rs.getString("nombre_mascota")
                 );
                 citas.add(cita);
             }
@@ -295,7 +293,7 @@ public class CitaDAO {
             pstmt.setTime(2, Time.valueOf(hora));
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) > 0;  // Devuelve true si hay al menos una cita existente
+                return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();

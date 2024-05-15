@@ -89,7 +89,6 @@ public class Farmaco {
     
     @Override
     public String toString() {
-        // Asumiendo que tienes un atributo 'nombre' en tu clase Farmaco
         return this.nombre;
     }
 

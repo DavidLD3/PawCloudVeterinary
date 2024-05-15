@@ -93,7 +93,6 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 		saveButton.setBounds(353, 338, 100, 30);
 		initButton(saveButton, "#0057FF", "#003366");
 		saveButton.addActionListener(e -> {
-			// Aquí va la lógica para guardar el veterinario
 		});
 		roundedPanel.add(saveButton);
 
@@ -139,18 +138,18 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 		JPanel centerPanel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
-				// Personaliza aquí tu componente
+				
 				Graphics2D g2 = (Graphics2D) g.create();
-				g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+				g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); 
 				g2.setColor(getBackground());
-				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si
-																			// es necesario
+				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+																		
 				g2.dispose();
 				super.paintComponent(g);
 			}
 		};
-		centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
-		centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el
+		centerPanel.setBackground(new Color(255, 255, 255, 80));
+		centerPanel.setOpaque(false);
 		centerPanel.setBounds(21, 21, 457, 360);
 		roundedPanel.add(centerPanel);
 		
@@ -164,13 +163,13 @@ public class VentanaRegistroVeterinarioDialog extends JDialog {
 		    veterinario.setEspecialidades(txtEspecialidades.getText());
 		    veterinario.setHorarioTrabajo(txtHorarioTrabajo.getText());
 
-		    // Captura de la fecha de contratación desde el JDateChooser
+		    
 		    if (dateChooserContratacion.getDate() != null) {
 		        veterinario.setFechaContratacion(new java.sql.Date(dateChooserContratacion.getDate().getTime()));
 		    } else {
-		        // Manejar el caso en que no se haya seleccionado una fecha
+		        
 		        JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de contratación.", "Error", JOptionPane.ERROR_MESSAGE);
-		        return; // Para no proceder con el registro si la fecha no está establecida
+		        return;
 		    }
 
 		    try {

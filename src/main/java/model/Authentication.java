@@ -42,6 +42,6 @@ public class Authentication {
         } catch (SQLException e) {
             System.err.println("Error al contar los usuarios: " + e.getMessage());
         }
-        return 0;  // Retornar 0 en caso de error para evitar nuevos registros
+        return 0;
     }
 }

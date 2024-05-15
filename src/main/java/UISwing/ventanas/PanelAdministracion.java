@@ -35,22 +35,18 @@ public class PanelAdministracion extends JPanel {
 
     }
         private void initComponents() {
-        	// Panel Veterinarios con bordes redondeados
         	RoundedPanel panelVeterinarios = new RoundedPanel(20);
         	panelVeterinarios.setBackground(Color.decode("#6C7BED"));
         	panelVeterinarios.setBounds(38, 24, 496, 607);
         	panelVeterinarios.setLayout(null);
         	add(panelVeterinarios);
         	
-        	// Panel opaco interno para Veterinarios
         	CustomPanelOpaco panelOpacoVeterinarios = new CustomPanelOpaco();
         	panelOpacoVeterinarios.setLayout(null);
         	panelOpacoVeterinarios.setBounds(41, 72, 415, 434);
-        	panelOpacoVeterinarios.setBackground(new Color(255, 255, 255, 70)); // Semi-transparente
+        	panelOpacoVeterinarios.setBackground(new Color(255, 255, 255, 70));
         	panelVeterinarios.add(panelOpacoVeterinarios);
-        	
-        	// Componentes dentro del panel opaco de Veterinarios
-        	// Estos labels y separadores se colocan sobre el panel opaco
+
         	JLabel lblImageVet_1 = new JLabel("");
         	lblImageVet_1.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoCitasCliente.png")));
         	lblImageVet_1.setBounds(33, 11, 28, 38);
@@ -154,7 +150,6 @@ public class PanelAdministracion extends JPanel {
         	lblImageVet_4.setBounds(33, 326, 28, 38);
         	panelOpacoVeterinarios.add(lblImageVet_4);
         	
-        	// Botones en el panel principal de Veterinarios (no en el opaco)
         	JButton btnAgregarVeterinario = new JButton("Agregar Veterinario");
             btnAgregarVeterinario.setBounds(261, 539, 195, 37);
             btnAgregarVeterinario.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -191,7 +186,7 @@ public class PanelAdministracion extends JPanel {
         	JButton btnListaVeterinarios = new JButton("Lista Veterinarios");
         	btnListaVeterinarios.setFont(new Font("Tahoma", Font.BOLD, 12));
         	btnListaVeterinarios.setBackground(Color.WHITE);
-        	btnListaVeterinarios.setForeground(Color.decode("#0057FF")); // Color azul para el texto
+        	btnListaVeterinarios.setForeground(Color.decode("#0057FF"));
         	btnListaVeterinarios.setFocusPainted(false);
         	btnListaVeterinarios.setBorderPainted(false);
         	btnListaVeterinarios.setContentAreaFilled(false);
@@ -200,8 +195,7 @@ public class PanelAdministracion extends JPanel {
         	btnListaVeterinarios.addMouseListener(new java.awt.event.MouseAdapter() {
         		@Override
         		public void mouseEntered(java.awt.event.MouseEvent evt) {
-        			btnListaVeterinarios.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
-        			btnListaVeterinarios.setForeground(Color.WHITE);
+        			btnListaVeterinarios.setBackground(Color.decode("#003366"));
         		}
         		
         		@Override
@@ -217,14 +211,12 @@ public class PanelAdministracion extends JPanel {
         	});
         	panelVeterinarios.add(btnListaVeterinarios);
         	
-        	// Panel Empleados con bordes redondeados
         	RoundedPanel panelEmpleados = new RoundedPanel(20);
         	panelEmpleados.setBackground(Color.decode("#0483FF"));
         	panelEmpleados.setBounds(578, 24, 496, 607);
         	panelEmpleados.setLayout(null);
         	add(panelEmpleados);
         	
-        	// Panel opaco interno para Empleados
         	CustomPanelOpaco panelOpacoEmpleados = new CustomPanelOpaco();
         	panelOpacoEmpleados.setLayout(null);
         	panelOpacoEmpleados.setBounds(41, 72, 415, 434);
@@ -334,33 +326,31 @@ public class PanelAdministracion extends JPanel {
         	lblImageEmp_4.setBounds(33, 326, 28, 38);
         	panelOpacoEmpleados.add(lblImageEmp_4);
         	
-        	// Botones en el panel principal de Empleados (no en el opaco)
         	JButton btnAgregarEmpleado = new JButton("Agregar Empleado");
         	btnAgregarEmpleado.setBounds(262, 539, 195, 37);
         	btnAgregarEmpleado.setFont(new Font("Tahoma", Font.BOLD, 12));
         	btnAgregarEmpleado.setBackground(Color.WHITE);
-        	btnAgregarEmpleado.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        	btnAgregarEmpleado.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        	btnAgregarEmpleado.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        	btnAgregarEmpleado.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        	btnAgregarEmpleado.setForeground(Color.decode("#0057FF"));
+        	btnAgregarEmpleado.setFocusPainted(false);
+        	btnAgregarEmpleado.setBorderPainted(false); 
+        	btnAgregarEmpleado.setContentAreaFilled(false); 
         	btnAgregarEmpleado.setOpaque(true);
         	btnAgregarEmpleado.setRolloverEnabled(true);
         	btnAgregarEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
         		@Override
         		public void mouseEntered(java.awt.event.MouseEvent evt) {
-        			btnAgregarEmpleado.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+        			btnAgregarEmpleado.setBackground(Color.decode("#003366"));
         			btnAgregarEmpleado.setForeground(Color.WHITE);
         		}
         		
         		@Override
         		public void mouseExited(java.awt.event.MouseEvent evt) {
-        			btnAgregarEmpleado.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+        			btnAgregarEmpleado.setBackground(Color.WHITE);
         			btnAgregarEmpleado.setForeground(Color.decode("#0057FF"));
         		}
         	});
         	btnAgregarEmpleado.addActionListener(new ActionListener() {
         	    public void actionPerformed(ActionEvent e) {
-        	        // Crea y muestra el diálogo de registro de empleado
         	        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(PanelAdministracion.this);
         	        VentanaRegistroEmpleadoDialog dialogoRegistroEmpleado = new VentanaRegistroEmpleadoDialog(frame, true, PanelAdministracion.this);
         	        dialogoRegistroEmpleado.setVisible(true);
@@ -371,22 +361,22 @@ public class PanelAdministracion extends JPanel {
         	btnListaEmpleados.setBounds(41, 539, 195, 37);
         	btnListaEmpleados.setFont(new Font("Tahoma", Font.BOLD, 12));
         	btnListaEmpleados.setBackground(Color.WHITE);
-        	btnListaEmpleados.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        	btnListaEmpleados.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        	btnListaEmpleados.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        	btnListaEmpleados.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        	btnListaEmpleados.setForeground(Color.decode("#0057FF"));
+        	btnListaEmpleados.setFocusPainted(false);
+        	btnListaEmpleados.setBorderPainted(false);
+        	btnListaEmpleados.setContentAreaFilled(false);
         	btnListaEmpleados.setOpaque(true);
         	btnListaEmpleados.setRolloverEnabled(true);
         	btnListaEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
         		@Override
         		public void mouseEntered(java.awt.event.MouseEvent evt) {
-        			btnListaEmpleados.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+        			btnListaEmpleados.setBackground(Color.decode("#003366"));
         			btnListaEmpleados.setForeground(Color.WHITE);
         		}
         		
         		@Override
         		public void mouseExited(java.awt.event.MouseEvent evt) {
-        			btnListaEmpleados.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+        			btnListaEmpleados.setBackground(Color.WHITE);
         			btnListaEmpleados.setForeground(Color.decode("#0057FF"));
         		}
         	});
@@ -422,12 +412,12 @@ public class PanelAdministracion extends JPanel {
         }
 
     private void abrirListaEmpleados() {
-        Frame frame = JOptionPane.getFrameForComponent(this);  // Encuentra el JFrame contenedor
+        Frame frame = JOptionPane.getFrameForComponent(this);
         DialogoListaEmpleados dialog = new DialogoListaEmpleados(frame);
         dialog.setVisible(true);
     }
     private void abrirListaVeterinarios() {
-        Frame frame = JOptionPane.getFrameForComponent(this);  // Encuentra el JFrame contenedor
+        Frame frame = JOptionPane.getFrameForComponent(this);
         DialogoListaVeterinarios dialog = new DialogoListaVeterinarios(frame);
         dialog.setVisible(true);
     }
@@ -476,7 +466,6 @@ public class PanelAdministracion extends JPanel {
         }
     }
     public void agregarVeterinario(Veterinario veterinario) {
-        // Initialize the list if it's not already initialized
         if (veterinarios == null) {
             veterinarios = new ArrayList<>();
         }

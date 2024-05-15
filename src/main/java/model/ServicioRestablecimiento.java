@@ -32,8 +32,7 @@ public class ServicioRestablecimiento {
         if (!verificarToken(token)) {
             return false;
         }
-        // Aquí deberías hashear la nueva contraseña antes de almacenarla
-        String hashedPassword = hashPassword(nuevaContraseña); // Implementa esta función según tu lógica de hashing
+        String hashedPassword = hashPassword(nuevaContraseña); 
 
         // Actualizar la contraseña del usuario
         String sql = "UPDATE usuarios SET PasswordHash = ? WHERE UserID = (SELECT UserID FROM reset_tokens WHERE Token = ?)";
@@ -42,14 +41,13 @@ public class ServicioRestablecimiento {
                ps.setString(1, hashedPassword);
             ps.setString(2, token);
             int affectedRows = ps.executeUpdate();
-            return affectedRows > 0; // Devuelve true si la contraseña se actualizó correctamente
+            return affectedRows > 0;
         } catch (Exception e) {
         	 System.err.println("Error al actualizar la contraseña: " + e.getMessage());
             return false;
         }
     }
 
-    // Implementa esta función según tu lógica de hashing
     private String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }

@@ -42,14 +42,10 @@ public class DialogoInfoAlmacen extends JDialog {
         setBounds(100, 100, 650, 400);
         setUndecorated(true);
         getContentPane().setLayout(new BorderLayout());
-        
-        // Crear un panel con borde vacío y disposición BorderLayout
         JPanel roundedBackground = new JPanel(new BorderLayout());
         roundedBackground.setBorder(new EmptyBorder(10, 10, 10, 10));
         roundedBackground.setBackground(Color.decode("#577BD1"));
         roundedBackground.setOpaque(true);
-        
-        // Agregar el panel con borde vacío al contenido principal
         getContentPane().add(roundedBackground, BorderLayout.CENTER);
         
         contentPanel.setLayout(new GridLayout(0, 2));  
@@ -75,11 +71,11 @@ public class DialogoInfoAlmacen extends JDialog {
 
      // Configuración de los botones
         JPanel buttonPane = new JPanel(new BorderLayout());
-        buttonPane.setOpaque(false); // Hacer que el panel sea transparente
+        buttonPane.setOpaque(false);
         JPanel leftPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        leftPane.setOpaque(false); // Hacer que el panel sea transparente
+        leftPane.setOpaque(false);
         JPanel rightPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        rightPane.setOpaque(false); // Hacer que el panel sea transparente
+        rightPane.setOpaque(false);
 
         // Botón para eliminar
         JButton deleteButton = new JButton("Eliminar");
@@ -100,19 +96,14 @@ public class DialogoInfoAlmacen extends JDialog {
 
         setLocationRelativeTo(owner);
         
-        // Hacer que el panel principal sea transparente
         contentPanel.setOpaque(false);
     }
-   
-    /**
-     * Helper method to add labels and text fields to the panel.
-     */
     private JTextField addLabelAndTextField(String label, String value) {
         JLabel jLabel = new JLabel(label);
         jLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
         jLabel.setForeground(Color.WHITE);
         JTextField textField = new JTextField(value);
-        textField.setEditable(false); // No editable por defecto
+        textField.setEditable(false);
         contentPanel.add(jLabel);
         contentPanel.add(textField);
         return textField;
@@ -160,28 +151,17 @@ public class DialogoInfoAlmacen extends JDialog {
             JOptionPane.showMessageDialog(this, "No se encontró el almacén para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    /**
-     * Launch the dialog for testing.
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                // Crear un objeto Almacen para prueba
-                Almacen testAlmacen = new Almacen(1, "Producto XYZ", "Descripción del producto", Almacen.Categoria.Normal, 100, new BigDecimal("19.99"), "Proveedor XYZ", LocalDate.now(), "Lote123", LocalDate.now().plusYears(1), "1234567890", "Sin observaciones");
-                
-                // Crear un JFrame temporal para usar como owner
+                Almacen testAlmacen = new Almacen(1, "Producto XYZ", "Descripción del producto", Almacen.Categoria.Normal, 100, new BigDecimal("19.99"), "Proveedor XYZ", LocalDate.now(), "Lote123", LocalDate.now().plusYears(1), "1234567890", "Sin observaciones");         
                 JFrame frame = new JFrame("Test Frame");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                frame.setSize(200, 200); // Dimensiones mínimas para que sea visible
-                frame.setLocationRelativeTo(null); // Centrar en la pantalla
-
-                // Crear y mostrar el diálogo
+                frame.setSize(200, 200);
+                frame.setLocationRelativeTo(null);
                 DialogoInfoAlmacen dialog = new DialogoInfoAlmacen(frame, testAlmacen);
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                dialog.setVisible(true);
-                
-                // Asegurarse de que el JFrame se cierra cuando cerramos el diálogo
+                dialog.setVisible(true);             
                 frame.dispose();
             } catch (Exception e) {
                 e.printStackTrace();

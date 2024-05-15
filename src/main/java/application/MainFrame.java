@@ -70,7 +70,6 @@ public class MainFrame extends JFrame  {
         setLocationRelativeTo(null);
         setUndecorated(true);
         getContentPane().setLayout(null);
-        // Configuración de cardPanel
         cardPanel = new JPanel(cardLayout);
         cardPanel.setOpaque(false); 
         cardPanel.setBounds(234, 104, 1112, 653);
@@ -143,7 +142,7 @@ public class MainFrame extends JFrame  {
         lblclientemascotas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardLayout.show(cardPanel, "PanelClienteMascota"); // Cambiar al PanelCitas
+                cardLayout.show(cardPanel, "PanelClienteMascota");
             }
         });
         
@@ -173,7 +172,7 @@ public class MainFrame extends JFrame  {
         lblVentas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardLayout.show(cardPanel, "PanelVentas"); // Cambiar al PanelVentas
+                cardLayout.show(cardPanel, "PanelVentas");
             }
         });
         
@@ -195,7 +194,7 @@ public class MainFrame extends JFrame  {
         lblNewLabel_3.setBounds(25, 261, 20, 28);
         panelMenu.add(lblNewLabel_3);
         
-        JLabel lblAlmacen = new JLabel("Almacen");
+        JLabel lblAlmacen = new JLabel("Almacén");
         lblAlmacen.setForeground(new Color(255, 255, 255));
         lblAlmacen.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblAlmacen.setBounds(55, 261, 130, 28);
@@ -228,23 +227,22 @@ public class MainFrame extends JFrame  {
         btnLogOut.setBounds(25, 714, 165, 28);
         btnLogOut.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnLogOut.setBackground(Color.WHITE);
-        btnLogOut.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnLogOut.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnLogOut.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnLogOut.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        btnLogOut.setForeground(Color.decode("#0057FF"));
+        btnLogOut.setFocusPainted(false);
+        btnLogOut.setBorderPainted(false);
+        btnLogOut.setContentAreaFilled(false);
         btnLogOut.setOpaque(true);
-        // Personalización del efecto rollover
         btnLogOut.setRolloverEnabled(true);
         btnLogOut.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnLogOut.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnLogOut.setBackground(Color.decode("#003366")); 
                 btnLogOut.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnLogOut.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnLogOut.setBackground(Color.WHITE);
                 btnLogOut.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -254,13 +252,13 @@ public class MainFrame extends JFrame  {
             }
         });
         btnLogOut.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoLogout2.png")));
-        btnLogOut.setIconTextGap(10); // Aumenta el valor para más espacio
+        btnLogOut.setIconTextGap(10);
         btnLogOut.setMargin(new Insets(0, 10, 0, 10));
         panelMenu.add(btnLogOut);
 
-        RoundedPanel panelHeader = new RoundedPanel(20);  // Redondeado del panel
+        RoundedPanel panelHeader = new RoundedPanel(20);
         panelHeader.setBounds(234, 11, 1112, 82);
-        panelHeader.setBackground(new Color(255, 255, 255, 123)); // Establece el color de fondo y la opacidad
+        panelHeader.setBackground(new Color(255, 255, 255, 123));
         getContentPane().add(panelHeader);
         panelHeader.setLayout(null);
         
@@ -274,9 +272,8 @@ public class MainFrame extends JFrame  {
         lblRealTime.setForeground(Color.decode("#909090"));
         lblRealTime.setFont(new Font("Segoe UI", Font.BOLD, 16));
         panelHeader.add(lblRealTime);
-        // Formateador de fecha y hora
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/M/yyyy HH:mm:ss");
-        // Timer para actualizar la fecha y hora cada segundo
+        
         new Timer(1000, e -> lblRealTime.setText(LocalDateTime.now().format(dtf))).start();
         
         
@@ -293,23 +290,23 @@ public class MainFrame extends JFrame  {
         lbllogoHeader.setIcon(new ImageIcon(getClass().getResource("/imagenes/logoHeader.png")));
         
 
-        // Hacer las esquinas del JFrame ligeramente redondeadas
+       
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
         
         JPanel centerPanel1 = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                // Personaliza aquí tu componente
+               
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); 
                 g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30); // Puedes ajustar el radio de las esquinas si es necesario
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        centerPanel1.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
-        centerPanel1.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+        centerPanel1.setBackground(new Color(255, 255, 255, 80));
+        centerPanel1.setOpaque(false);
         centerPanel1.setBounds(10, 11, 195, 746);
         gradientPanel.add(centerPanel1);
         

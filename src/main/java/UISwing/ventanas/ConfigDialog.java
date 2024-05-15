@@ -13,13 +13,11 @@ public class ConfigDialog extends JDialog {
     public ConfigDialog(Frame parent, int currentLimit) {
         super(parent, "Configuración de Usuarios", true);
         setSize(300, 200);
-        setLocationRelativeTo(parent);
-        
-        // Establecer el color de fondo del contenedor
+        setLocationRelativeTo(parent);      
         getContentPane().setBackground(Color.decode("#577BD1"));
         getContentPane().setLayout(null);
 
-        JLabel lblMaxUsers = new JLabel("Numero de Usuarios Registro :");
+        JLabel lblMaxUsers = new JLabel("Número de Usuarios Registro :");
         lblMaxUsers.setForeground(Color.WHITE);
         lblMaxUsers.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblMaxUsers.setBounds(38, 39, 199, 14);

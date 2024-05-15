@@ -9,7 +9,7 @@ public class Almacen {
     private String descripcion;
     private Categoria categoria;
     private int cantidadStock;
-    private BigDecimal precioBruto;  // Campo único de precio
+    private BigDecimal precioBruto;
     private String proveedor;
     private LocalDate fechaUltimaCompra;
     private String numeroLote;
@@ -17,7 +17,6 @@ public class Almacen {
     private String codigoBarras;
     private String observaciones;
 
-    // Enumeración para categoría
     public enum Categoria {
         Normal, Cobertura, Servicio, Cargo, Estancia_Hospitalizacion, Estancia_Residencia,
         Peticion_Analitica, Intervencion, Vacuna, Alimento, Medicamento, Suplemento,
@@ -25,7 +24,6 @@ public class Almacen {
         Prueba_Diagnostica, Articulo_Educaional, Servicio_Estetico, Plan_Salud
     }
 
-    // Constructor modificado
     public Almacen(int idAlmacen, String nombreProducto, String descripcion, Categoria categoria, 
                    int cantidadStock, BigDecimal precioBruto, String proveedor, 
                    LocalDate fechaUltimaCompra, String numeroLote, LocalDate fechaCaducidad, 

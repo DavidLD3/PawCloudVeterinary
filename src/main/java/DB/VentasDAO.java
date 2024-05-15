@@ -106,7 +106,7 @@ public class VentasDAO {
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1); // Devuelve el ID auto-generado de la venta
+                return rs.getInt(1); 
             }
             throw new SQLException("Creating sale failed, no ID obtained.");
         }

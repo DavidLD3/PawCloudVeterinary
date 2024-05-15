@@ -79,8 +79,8 @@ public class RegistrosLogin extends JFrame {
         gradientPanel.add(lblLogoVertical);
         
         Border roundedBorder = BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.WHITE, 1, true), // Borde blanco
-                BorderFactory.createEmptyBorder(5, 10, 5, 10) // Espacio interno
+                BorderFactory.createLineBorder(Color.WHITE, 1, true),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
         );
 
         JTextField textUsuario = new JTextField();
@@ -182,14 +182,14 @@ public class RegistrosLogin extends JFrame {
             int result = userModel.registerUser(username, email, password);
 
             switch (result) {
-                case 1: // Registro exitoso
+                case 1: 
                     JOptionPane.showMessageDialog(this, "Registro exitoso. Por favor, inicie sesión.", "Registro", JOptionPane.INFORMATION_MESSAGE);
-                    // Limpieza de campos o cierre de ventana aquí, si se desea
+                    
                     break;
-                case -1: // Límite de usuarios alcanzado
+                case -1: 
                     JOptionPane.showMessageDialog(this, "Se ha alcanzado el número máximo de registros permitidos. Hable con el administrador.", "Límite Alcanzado", JOptionPane.ERROR_MESSAGE);
                     break;
-                default: // Error en el registro
+                default: 
                     JOptionPane.showMessageDialog(this, "Error al registrar el usuario. Por favor, inténtelo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
                     break;
             }
@@ -204,9 +204,9 @@ public class RegistrosLogin extends JFrame {
         lblVolver.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                LoginFrame login = new LoginFrame(); // Crear una nueva instancia de LoginFrame
-                login.setVisible(true); // Hacer visible LoginFrame
-                RegistrosLogin.this.dispose(); // Cerrar y liberar los recursos de RegistrosLogin
+                LoginFrame login = new LoginFrame(); 
+                login.setVisible(true); 
+                RegistrosLogin.this.dispose();
             }
         });
 
@@ -215,29 +215,26 @@ public class RegistrosLogin extends JFrame {
         lbllogocerrar.setIcon(new ImageIcon(getClass().getResource("/imagenes/cerrar.png")));
         lbllogocerrar.setBounds(445, 11, 26, 30);
         gradientPanel.add(lbllogocerrar);
-        // Añade un MouseListener a lbllogocerrar para cerrar la aplicación
         lbllogocerrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Cierra la ventana y termina la aplicación
-                System.exit(0); // O puedes usar LoginFrame.this.dispose(); si prefieres solo cerrar la ventana
+                System.exit(0);
             }
         });
         
         JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                // Personaliza aquí tu componente
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
                 g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); 
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
-        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+        centerPanel.setBackground(new Color(255, 255, 255, 80));
+        centerPanel.setOpaque(false);
         centerPanel.setBounds(95, 21, 308, 480);
         gradientPanel.add(centerPanel);
  

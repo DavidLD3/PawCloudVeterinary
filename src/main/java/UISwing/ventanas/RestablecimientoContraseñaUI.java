@@ -82,8 +82,8 @@ public class RestablecimientoContraseñaUI extends JFrame {
         gradientPanel.add(lblLogoVertical);
         
         Border roundedBorder = BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.WHITE, 1, true), // Borde blanco
-                BorderFactory.createEmptyBorder(5, 10, 5, 10) // Espacio interno
+                BorderFactory.createLineBorder(Color.WHITE, 1, true),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10) 
         );
         
         
@@ -144,13 +144,13 @@ public class RestablecimientoContraseñaUI extends JFrame {
         btnRestablecer.setBounds(148, 406, 204, 34);
         gradientPanel.add(btnRestablecer);
         
-     // En RestablecimientoContraseñaUI, dentro de tu constructor o método de inicialización
+     
         btnRestablecer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String email = textcorreo.getText().trim();
                 String token = texttoken.getText().trim();
-                char[] nuevaContraseñaArray = textcontraseña.getPassword();  // Usar getPassword() que devuelve un array de char
-                String nuevaContraseña = new String(nuevaContraseñaArray);  // Convertir char[] a String
+                char[] nuevaContraseñaArray = textcontraseña.getPassword();  
+                String nuevaContraseña = new String(nuevaContraseñaArray); 
                 char[] confirmarContraseñaArray = textrepeatcontraseña.getPassword();
                 String confirmarContraseña = new String(confirmarContraseñaArray);
 
@@ -182,9 +182,9 @@ public class RestablecimientoContraseñaUI extends JFrame {
         lblVolver.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                LoginFrame login = new LoginFrame(); // Crear una nueva instancia de LoginFrame
-                login.setVisible(true); // Hacer visible LoginFrame
-                RestablecimientoContraseñaUI.this.dispose(); // Cerrar y liberar los recursos de RegistrosLogin
+                LoginFrame login = new LoginFrame();
+                login.setVisible(true);
+                RestablecimientoContraseñaUI.this.dispose();
             }
         });
 
@@ -200,29 +200,27 @@ public class RestablecimientoContraseñaUI extends JFrame {
         lblemail.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblemail.setBounds(148, 157, 46, 14);
         gradientPanel.add(lblemail);
-        // Añade un MouseListener a lbllogocerrar para cerrar la aplicación
         lbllogocerrar.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                // Cierra la ventana y termina la aplicación
-                System.exit(0); // O puedes usar LoginFrame.this.dispose(); si prefieres solo cerrar la ventana
+            public void mouseClicked(MouseEvent e) {            
+                System.exit(0);
             }
         });
         
         JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                // Personaliza aquí tu componente
+              
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
                 g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
-        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+        centerPanel.setBackground(new Color(255, 255, 255, 80));
+        centerPanel.setOpaque(false);
         centerPanel.setBounds(95, 21, 308, 480);
         gradientPanel.add(centerPanel);
         

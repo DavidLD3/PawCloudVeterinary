@@ -5,7 +5,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import model.Cita;
 import DB.CitaDAO;
-import UISwing.ventanas.DialogoListaHospitalizados.PaddingTableCellRenderer;
 
 public class DialogoListaCitas extends JDialog implements CitaActualizadaListener{
     private JTable table;
@@ -44,7 +42,7 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (component instanceof JLabel) {
-                ((JLabel) component).setBorder(new EmptyBorder(0, 15, 0, 15)); // Añade padding izquierdo y derecho
+                ((JLabel) component).setBorder(new EmptyBorder(0, 15, 0, 15));
             }
             return component;
         }
@@ -55,12 +53,10 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
         model = new DefaultTableModel(null, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Hace que ninguna celda sea editable directamente en la tabla
                 return false;
             }
         };
         table = new JTable(model) {
-            // Sobrescribe el método para mostrar tooltips personalizados
             public String getToolTipText(MouseEvent e) {
                 String tip = null;
                 java.awt.Point p = e.getPoint();
@@ -68,15 +64,12 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
                 int colIndex = columnAtPoint(p);
 
                 try {
-                    // Verifica si el índice de columna es el de las notas
                     if (colIndex == this.getColumn("Notas").getModelIndex()) {
                         tip = getValueAt(rowIndex, colIndex).toString();
                     } else {
-                        // Usa el tooltip predeterminado para otras columnas si es necesario
                         tip = super.getToolTipText(e);
                     }
                 } catch (RuntimeException ex) {
-                    // En caso de una excepción, no establece un tooltip
                 }
 
                 return tip;
@@ -89,8 +82,7 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
                 if (e.getClickCount() == 2) {
                     int row = table.rowAtPoint(e.getPoint());
                     if (row != -1) {
-                        // Obtiene el ID de la cita desde la columna oculta (índice 0)
-                        int idCita = (Integer) model.getValueAt(row, 0); // Ahora es seguro asumir que se obtendrá un Integer
+                        int idCita = (Integer) model.getValueAt(row, 0);
                         abrirVentanaModificarCita(idCita);
                     }
                 }
@@ -98,16 +90,13 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
         });
         table.setFillsViewportHeight(true);
         table.setIntercellSpacing(new Dimension(10, 4));
-        // Aplicar color de fondo al panel y color de texto a las celdas de la tabla
-        table.setBackground(Color.decode("#5694F9")); // Color de fondo de las filas
-        table.setForeground(Color.WHITE); // Color del texto de las filas
-        table.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Ajuste del tamaño de fuente para las filas
-        table.setRowHeight(table.getRowHeight() + 10); // Aumenta la altura de las filas para más espacio
-        table.getTableHeader().setBackground(Color.decode("#0483FF")); // Color de fondo del encabezado de la tabla
-        table.getTableHeader().setForeground(Color.WHITE); // Color del texto del encabezado de la tabla
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16)); // Ajuste del tamaño de fuente para el encabezado
-
-        // Implementación y aplicación del PaddingTableCellRenderer para el padding en las celdas
+        table.setBackground(Color.decode("#5694F9"));
+        table.setForeground(Color.WHITE);
+        table.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        table.setRowHeight(table.getRowHeight() + 10);
+        table.getTableHeader().setBackground(Color.decode("#0483FF")); 
+        table.getTableHeader().setForeground(Color.WHITE); 
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16));
         PaddingTableCellRenderer cellRenderer = new PaddingTableCellRenderer();
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
@@ -123,8 +112,7 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
         Cita cita = citaDAO.obtenerCitaPorId(idCita);
         if (cita != null) {
             VentanaModificarCitaDialog ventanaModificar = new VentanaModificarCitaDialog(null, true, cita);
-            // Registra este DialogoListaCitas como listener
-            ventanaModificar.addCitaActualizadaListener(citaActualizadaListener); // Pasar el listener de PanelHome
+            ventanaModificar.addCitaActualizadaListener(citaActualizadaListener);
             ventanaModificar.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Error al cargar los datos de la cita.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -135,21 +123,19 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
 
     private void cargarCitas() {
         List<Cita> citas = citaDAO.recuperarCitas();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Formato para la fecha
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Formato para la hora si es necesario
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); 
 
-        model.setRowCount(0); // Limpia la tabla antes de cargar datos nuevos
-        for (Cita cita : citas) {
-            String fechaFormateada = cita.getFecha().format(dateFormatter); // Formatear la fecha
-            String horaFormateada = cita.getHora().format(timeFormatter); // Formatear la hora
+        model.setRowCount(0);
+        for (Cita cita : citas) { //formatea la fecha y la hora
+            String fechaFormateada = cita.getFecha().format(dateFormatter);
+            String horaFormateada = cita.getHora().format(timeFormatter);
 
             model.addRow(new Object[]{
-                cita.getId(), // ID de la cita (se ocultará más adelante)
+                cita.getId(),
                 cita.getTitulo(), fechaFormateada, horaFormateada, cita.getNombreCliente(), cita.getNombreMascota(), cita.getNotas()
             });
         }
-
-        // Opción para ocultar la columna del ID si no lo has hecho aún
         table.getColumnModel().getColumn(0).setMinWidth(0);
         table.getColumnModel().getColumn(0).setMaxWidth(0);
         table.getColumnModel().getColumn(0).setWidth(0);
@@ -160,12 +146,11 @@ public class DialogoListaCitas extends JDialog implements CitaActualizadaListene
     }
     @Override
     public void onCitaActualizada() {
-        cargarCitas(); // Recargar la lista de citas
+        cargarCitas(); 
     }
     
     @Override
     public void dispose() {
-        // Notificar a PanelHome que debe actualizar su UI porque podría haber cambios
         if (citaActualizadaListener != null) {
             citaActualizadaListener.onCitaActualizada();
         }

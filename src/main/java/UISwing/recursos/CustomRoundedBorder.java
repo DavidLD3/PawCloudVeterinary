@@ -24,7 +24,7 @@ public class CustomRoundedBorder extends AbstractBorder {
 
         // Modificar aquí para ajustar el dibujo del borde
         int offset = borderThickness;
-        int inset = 1;  // Reduce ligeramente las dimensiones para asegurar la visibilidad completa del borde
+        int inset = 1; 
         g2d.drawRoundRect(x + offset / 2, y + offset / 2, width - offset - inset, height - offset - inset, cornerRadius, cornerRadius);
         g2d.dispose();
     }

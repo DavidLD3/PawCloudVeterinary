@@ -8,7 +8,7 @@ public class RegistroMascota extends JPanel {
     private static final long serialVersionUID = 1L;
 
     public RegistroMascota() {
-        setLayout(new BorderLayout(10, 10)); // Añade espacio entre componentes
+        setLayout(new BorderLayout(10, 10));
         initializeUI();
     }
 
@@ -126,7 +126,7 @@ public class RegistroMascota extends JPanel {
         PMascotas.add(lbEsterilizado);
         PMascotas.add(cbEsterilizado);
 
-        // Ajusta el tamaño del panel automáticamente
+        
         PMascotas.setPreferredSize(PMascotas.getPreferredSize());
 
         return PMascotas;
@@ -138,8 +138,8 @@ public class RegistroMascota extends JPanel {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(new RegistroMascota());
-        frame.pack(); // Ajusta el tamaño de la ventana a los componentes
-        frame.setLocationRelativeTo(null); // Centra la ventana
+        frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }

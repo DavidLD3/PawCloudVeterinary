@@ -20,38 +20,36 @@ import model.Mascota;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import UISwing.recursos.RoundedPanel;
-import UISwing.recursos.CustomPanelOpaco;
+
 
 public class PanelClienteMascota extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTextField txtBuscarClientemascota;
     private JTextField txtBuscarCliente;
-    private JTable tablaClientes;  // JTable para clientes
-    private JTable tablaMascotas;  // JTable para mascotas
+    private JTable tablaClientes; 
+    private JTable tablaMascotas; 
     private DefaultTableModel modeloTablaClientes;
     private ClienteDAO clienteDao;
-    private DefaultTableModel modeloTablaMascotas; // Nuevo modelo para mascotas
+    private DefaultTableModel modeloTablaMascotas;
     private MascotaDAO mascotaDAO;
-    private JScrollPane scrollPaneClientes; // Declaración de la variable scrollPaneClientes como una variable de instancia
-    /**
-     * Create the panel.
-     */
+    private JScrollPane scrollPaneClientes;
+ 
     public PanelClienteMascota() {
-    	  setLayout(new BorderLayout());  // Cambio aquí para usar BorderLayout
-          setBackground(new Color(255, 255, 255, 0));  // Transparente
+    	  setLayout(new BorderLayout());
+          setBackground(new Color(255, 255, 255, 0));
 
           clienteDao = new ClienteDAO();
           mascotaDAO = new MascotaDAO();
 
           RoundedPanel roundedBackground = new RoundedPanel(20);
-          roundedBackground.setLayout(new BorderLayout());  // Usando BorderLayout en el panel redondeado
+          roundedBackground.setLayout(new BorderLayout());
           roundedBackground.setBackground(Color.decode("#577BD1"));
           roundedBackground.setOpaque(false);
-          add(roundedBackground, BorderLayout.CENTER);  // Asegurándose de que ocupe todo el espacio disponible
+          add(roundedBackground, BorderLayout.CENTER);
 
           JPanel panel = new JPanel();
-          panel.setLayout(null);  // Layout null para un posicionamiento absoluto de los componentes
+          panel.setLayout(null);
           panel.setOpaque(false);
           roundedBackground.add(panel, BorderLayout.CENTER);
 
@@ -64,13 +62,11 @@ public class PanelClienteMascota extends JPanel {
         btnAnadir.setBorderPainted(false);
         btnAnadir.setContentAreaFilled(false);
         btnAnadir.setOpaque(true);
-
-        // Personalización del efecto rollover
         btnAnadir.setRolloverEnabled(true);
         btnAnadir.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAnadir.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnAnadir.setBackground(Color.decode("#003366"));
                 btnAnadir.setForeground(Color.WHITE);
             }
 
@@ -81,37 +77,30 @@ public class PanelClienteMascota extends JPanel {
             }
         });
         panel.setLayout(null);
-
-        // Añadir a tu panel
         panel.add(btnAnadir);
         btnAnadir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Crear el diálogo de registro de cliente como un JDialog modal
+                
                 PanelRegistroCliente dialog = new PanelRegistroCliente((Frame) SwingUtilities.getWindowAncestor(PanelClienteMascota.this), "Registro de Cliente", true);
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Configurar la acción de cierre
-                dialog.setSize(578, 450); // Configurar tamaño, ajustable según necesidad
-                dialog.setLocationRelativeTo(null); // Centrar el diálogo en pantalla
-                dialog.setVisible(true); // Hacer visible el diálogo
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setSize(578, 450);
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
             }
         });
 
 
-        txtBuscarClientemascota = new JTextField("Escribe el nombre de la mascota"); // Crea un JTextField con texto predeterminado
-        txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establece la fuente del texto
-        txtBuscarClientemascota.setBounds(579, 43, 235, 30); // Establece la posición y el tamaño del campo de texto
-
-        // Agrega un MouseListener para detectar clics en el campo de texto
+        txtBuscarClientemascota = new JTextField("Escribe el nombre de la mascota");
+        txtBuscarClientemascota.setFont(new Font("Segoe UI", Font.PLAIN, 14)); 
+        txtBuscarClientemascota.setBounds(579, 43, 235, 30);
         txtBuscarClientemascota.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Verificar si el texto actual es igual al mensaje predeterminado
                 if (txtBuscarClientemascota.getText().equals("Escribe el nombre de la mascota")) {
-                    txtBuscarClientemascota.setText(""); // Borra el texto solo si es el mensaje predeterminado
+                    txtBuscarClientemascota.setText("");
                 }
             }
         });
-
-        // Agrega un FocusListener para detectar cuando el campo de texto pierde el foco
         txtBuscarClientemascota.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -122,17 +111,15 @@ public class PanelClienteMascota extends JPanel {
             }
         });
         txtBuscarClientemascota.addActionListener(e -> {
-            String searchText = txtBuscarClientemascota.getText().trim().toLowerCase(); // Obtenemos el texto y lo convertimos a minúsculas para una búsqueda insensible a mayúsculas
+            String searchText = txtBuscarClientemascota.getText().trim().toLowerCase();
 
-            // Recorremos las filas de la tabla para buscar coincidencias
             boolean found = false;
             for (int row = 0; row < tablaMascotas.getRowCount(); row++) {
                 String nombreMascota = tablaMascotas.getValueAt(row, 0).toString().toLowerCase();
                 if (nombreMascota.equals(searchText)) {
-                    // Si encuentra una coincidencia, seleccionar la fila
+
                     tablaMascotas.setRowSelectionInterval(row, row);
                     
-                    // Hacemos que la fila seleccionada sea visible
                     Rectangle rect = tablaMascotas.getCellRect(row, 0, true);
                     tablaMascotas.scrollRectToVisible(rect);
                     found = true;
@@ -145,28 +132,26 @@ public class PanelClienteMascota extends JPanel {
                 tablaMascotas.clearSelection();
             }
         });
-        panel.add(txtBuscarClientemascota); // Agrega el campo de texto al panel
+        panel.add(txtBuscarClientemascota);
 
-        txtBuscarCliente = new JTextField("Escribe el nombre del cliente"); 			// Creamos un JTextField con texto predeterminado
-        txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Establecemos la fuente del texto
-        txtBuscarCliente.setBounds(10, 43, 235, 30);					// Establecemos la posición y el tamaño del campo de texto
-     // Agregamos un MouseListener para detectar clics en el campo de texto
+        txtBuscarCliente = new JTextField("Escribe el nombre del cliente"); 
+        txtBuscarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 14)); 
+        txtBuscarCliente.setBounds(10, 43, 235, 30);
         txtBuscarCliente.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Verificar si el texto actual es igual al mensaje predeterminado
+                
                 if (txtBuscarCliente.getText().equals("Escribe el nombre del cliente")) {
-                    txtBuscarCliente.setText(""); // Borra el texto solo si es el mensaje predeterminado
+                    txtBuscarCliente.setText("");
                 }
             }
         });
-     // Agregamos un FocusListener para detectar cuando el campo de texto pierde el foco
         txtBuscarCliente.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                if (txtBuscarCliente.getText().isEmpty()) { 	 // Comprueba si el campo de texto está vacío
-                    txtBuscarCliente.setText("Escribe el nombre del cliente");	 // Restablece el texto predeterminado si está vacío
-                    cargarDatosClientes(); //Metodo para cargar los datos de los cientes
+                if (txtBuscarCliente.getText().isEmpty()) {
+                    txtBuscarCliente.setText("Escribe el nombre del cliente");
+                    cargarDatosClientes();
                 }
             }
         });
@@ -180,7 +165,7 @@ public class PanelClienteMascota extends JPanel {
             }
 
             public void changedUpdate(DocumentEvent e) {
-                // Esta no se llama en texto plano
+              
             }
 
             private void realizarBusqueda() {
@@ -189,7 +174,7 @@ public class PanelClienteMascota extends JPanel {
                      List<Mascota> resultados = mascotaDAO.buscarMascotasPorNombreConDueño(searchText);
                      actualizarTablaMascotas(resultados);
                  } else {
-                     cargarDatosMascotas();  // Asegúrate de que este método carga todos los datos necesarios
+                     cargarDatosMascotas();
                  }
              }
          });
@@ -202,13 +187,13 @@ public class PanelClienteMascota extends JPanel {
                 List<Cliente> clientesFiltrados = clienteDao.buscarClientes(searchText);
                 actualizarTablaClientes(clientesFiltrados);
 
-                // Si hay resultados, seleccionamos la primera coincidencia y aseguramos que sea visible
+                
                 if (!clientesFiltrados.isEmpty()) {
                     tablaClientes.setRowSelectionInterval(0, 0);
                     Rectangle rect = tablaClientes.getCellRect(0, 0, true);
                     tablaClientes.scrollRectToVisible(rect);
                 } else {
-                    // Si no hay coincidencias, aseguramos despejar cualquier selección previa
+                    
                     tablaClientes.clearSelection();
                 }
             }
@@ -226,7 +211,7 @@ public class PanelClienteMascota extends JPanel {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                // Esta función no se llama en campos de texto plano
+                
             }
 
             private void buscarCliente() {
@@ -241,20 +226,16 @@ public class PanelClienteMascota extends JPanel {
             }
         });
 
-        panel.add(txtBuscarCliente);  // Agrega el campo de texto al pane
+        panel.add(txtBuscarCliente);  
 
-        inicializarComponentesClientes(panel); // Agregar inicialización de componentes de mascotas
+        inicializarComponentesClientes(panel);
         inicializarComponentesMascotas(panel); 
-        /* Asi tambien se puede
-        JScrollPane scrollPaneClientes = new JScrollPane();
-        scrollPaneClientes.setBounds(10, 105, 549, 537);
-        panel.add(scrollPaneClientes); */
         scrollPaneClientes = new JScrollPane();
-        scrollPaneClientes.setBounds(10, 105, 549, 537); // Ajusta las dimensiones según necesites
-        panel.add(scrollPaneClientes); // Asegúrate de agregarlo al panel adecuado
+        scrollPaneClientes.setBounds(10, 105, 549, 537); 
+        panel.add(scrollPaneClientes); 
 
-        JScrollPane scrollPaneMascotas = new JScrollPane(); // Nuevo JScrollPane para mascotas
-        scrollPaneMascotas.setBounds(579, 105, 518, 537); // Ajusta las dimensiones según necesites
+        JScrollPane scrollPaneMascotas = new JScrollPane(); 
+        scrollPaneMascotas.setBounds(579, 105, 518, 537);
         panel.add(scrollPaneMascotas);
         
         JLabel lblBuscarCliente = new JLabel("Buscar Cliente:");
@@ -272,11 +253,10 @@ public class PanelClienteMascota extends JPanel {
     }
 
     private void inicializarComponentesClientes(JPanel panel) {
-    	 // Configuramos el modelo de la tabla sin mostrar el ID
         modeloTablaClientes = new DefaultTableModel(new Object[]{"Nombre", "Apellidos", "DNI"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;  // Hacer que la tabla no sea editable
+                return false;
             }
         };
 
@@ -286,7 +266,7 @@ public class PanelClienteMascota extends JPanel {
         tablaClientes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {  // Doble clic
+                if (e.getClickCount() == 2) {
                     int filaSeleccionada = tablaClientes.getSelectedRow();
                     if (filaSeleccionada != -1) {
                         String dni = (String) modeloTablaClientes.getValueAt(filaSeleccionada, 2); 
@@ -297,18 +277,18 @@ public class PanelClienteMascota extends JPanel {
         });
 
         JScrollPane scrollPane = new JScrollPane(tablaClientes);
-        scrollPane.setBounds(10, 105, 549, 537); // Ajustamos las dimensiones según necesitamos
+        scrollPane.setBounds(10, 105, 549, 537); 
         panel.add(scrollPane);
 
-        cargarDatosClientes(); // Cargamos los datos de los clientes después de inicializar la tabla
+        cargarDatosClientes();
     }
     
     private void inicializarComponentesMascotas(JPanel panel) {
-    	 // Configuramos el modelo de la tabla para mascotas
+    	 
     	modeloTablaMascotas = new DefaultTableModel(new Object[]{"Nombre", "Microchip", "Dueño"}, 0) {
     
     	    public boolean isCellEditable(int row, int column) {
-    	        return false;  // Hacer que la tabla no sea editable
+    	        return false;  
     	    }
     	};
 
@@ -318,7 +298,7 @@ public class PanelClienteMascota extends JPanel {
         tablaMascotas.addMouseListener(new MouseAdapter() {
   
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {  // Doble clic
+                if (e.getClickCount() == 2) {
                     int filaSeleccionada = tablaMascotas.getSelectedRow();
                     if (filaSeleccionada != -1) {
                         String microchip = (String) modeloTablaMascotas.getValueAt(filaSeleccionada, 1);  
@@ -329,17 +309,17 @@ public class PanelClienteMascota extends JPanel {
         });
 
         JScrollPane scrollPaneMascotas = new JScrollPane(tablaMascotas);
-        scrollPaneMascotas.setBounds(579, 105, 518, 537); // Ajustamos las dimensiones según necesitamos
+        scrollPaneMascotas.setBounds(579, 105, 518, 537);
         panel.add(scrollPaneMascotas);
         panel.add(scrollPaneMascotas);
 
-        cargarDatosMascotas(); // Cargamos los datos de las mascotas en la tabla
+        cargarDatosMascotas();
     }
 
     private void cargarDatosClientes() {
-        List<Cliente> listaClientes = clienteDao.obtenerTodosLosClientes(); // Obtiene los datos desde la base de datos a través del DAO
+        List<Cliente> listaClientes = clienteDao.obtenerTodosLosClientes();
         DefaultTableModel modelo = (DefaultTableModel) tablaClientes.getModel();
-        modelo.setRowCount(0); // Limpiamos la tabla antes de agregar nuevos datos
+        modelo.setRowCount(0);
 
         for (Cliente cliente : listaClientes) {
             modelo.addRow(new Object[]{
@@ -356,7 +336,7 @@ public class PanelClienteMascota extends JPanel {
             actualizarTablaMascotas(listaMascotas);
         } catch (SQLException e) {
             e.printStackTrace(); 
-            // Aquí podríamos mostrar un mensaje de error al usuario si la carga de datos falla.
+            
         }
     }
 
@@ -371,7 +351,7 @@ public class PanelClienteMascota extends JPanel {
     }
     // Método para abrir el panel de detalles de la mascota por microchip
     private void abrirPanelDetalleMascotaPorMicrochip(String microchip) {
-        Mascota mascota = mascotaDAO.obtenerMascotaPorMicrochip(microchip); // Agregamos este método al DAO
+        Mascota mascota = mascotaDAO.obtenerMascotaPorMicrochip(microchip);
         if (mascota != null) {
             JFrame frame = new JFrame("Detalles de la Mascota");
             PanelInfoMascota panelInfoMascota = new PanelInfoMascota(mascota.getId());
@@ -383,7 +363,7 @@ public class PanelClienteMascota extends JPanel {
     }
     private void actualizarTablaClientes(List<Cliente> listaClientes) {
         DefaultTableModel modelo = (DefaultTableModel) tablaClientes.getModel();
-        modelo.setRowCount(0); // Limpiamos la tabla antes de agregar nuevos datos
+        modelo.setRowCount(0);
         for (Cliente cliente : listaClientes) {
             modelo.addRow(new Object[]{
                 cliente.getNombre(),
@@ -394,7 +374,7 @@ public class PanelClienteMascota extends JPanel {
     }
     private void actualizarTablaMascotas(List<Mascota> listaMascotas) {
         DefaultTableModel modelo = (DefaultTableModel) tablaMascotas.getModel();
-        modelo.setRowCount(0);  // Limpiar la tabla antes de agregar nuevos datos
+        modelo.setRowCount(0);
         for (Mascota mascota : listaMascotas) {
             modelo.addRow(new Object[]{
                 mascota.getNombre(),
@@ -410,37 +390,37 @@ public class PanelClienteMascota extends JPanel {
 
             PanelClienteMascota panel = new PanelClienteMascota();
             frame.getContentPane().add(panel);
-            frame.pack();  // Usar pack para respetar las dimensiones preferidas
+            frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
     }
     private void configurarEstiloTablas() {
-        // Configura el estilo del encabezado de la tabla
-        UIManager.put("TableHeader.background", new Color(75, 110, 175));  // Color de fondo
-        UIManager.put("TableHeader.foreground", Color.WHITE);  // Color de texto
-        UIManager.put("TableHeader.font", new Font("Segoe UI", Font.BOLD, 14));  // Fuente
+        
+        UIManager.put("TableHeader.background", new Color(75, 110, 175));
+        UIManager.put("TableHeader.foreground", Color.WHITE); 
+        UIManager.put("TableHeader.font", new Font("Segoe UI", Font.BOLD, 14)); 
 
-        // Configura el estilo de las celdas de la tabla
-        UIManager.put("Table.background", new Color(245, 245, 245));  // Color de fondo de las celdas
-        UIManager.put("Table.foreground", Color.BLACK);  // Color del texto
-        UIManager.put("Table.font", new Font("Segoe UI", Font.PLAIN, 14));  // Fuente
-        UIManager.put("Table.selectionBackground", new Color(183, 207, 237));  // Fondo al seleccionar
-        UIManager.put("Table.selectionForeground", Color.DARK_GRAY);  // Texto al seleccionar
-        UIManager.put("Table.gridColor", new Color(200, 200, 200));  // Color de la rejilla
+        
+        UIManager.put("Table.background", new Color(245, 245, 245)); 
+        UIManager.put("Table.foreground", Color.BLACK);
+        UIManager.put("Table.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("Table.selectionBackground", new Color(183, 207, 237));
+        UIManager.put("Table.selectionForeground", Color.DARK_GRAY);
+        UIManager.put("Table.gridColor", new Color(200, 200, 200));
     }
     private void personalizarTabla(JTable table) {
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));  // Establece la fuente de las celdas
-        table.setRowHeight(22);  // Establece la altura de las filas
-        table.setBackground(new Color(245, 245, 245));  // Color de fondo de las celdas
-        table.setForeground(Color.BLACK);  // Color del texto de las celdas
-        table.setSelectionBackground(new Color(183, 207, 237));  // Fondo al seleccionar
-        table.setSelectionForeground(Color.DARK_GRAY);  // Texto al seleccionar
-        table.setGridColor(new Color(200, 200, 200));  // Color de la rejilla
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        table.setRowHeight(22);
+        table.setBackground(new Color(245, 245, 245));
+        table.setForeground(Color.BLACK);
+        table.setSelectionBackground(new Color(183, 207, 237));
+        table.setSelectionForeground(Color.DARK_GRAY);
+        table.setGridColor(new Color(200, 200, 200));
 
         JTableHeader header = table.getTableHeader();
-        header.setBackground(new Color(75, 110, 175));  // Color de fondo del encabezado
-        header.setForeground(Color.WHITE);  // Color de texto del encabezado
-        header.setFont(new Font("Segoe UI", Font.BOLD, 14));  // Fuente del encabezado
+        header.setBackground(new Color(75, 110, 175));
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
     }
 }

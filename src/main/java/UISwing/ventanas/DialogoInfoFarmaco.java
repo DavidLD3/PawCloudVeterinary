@@ -29,7 +29,7 @@ public class DialogoInfoFarmaco extends JDialog {
         getContentPane().add(roundedBackground, BorderLayout.CENTER);
 
         contentPanel.setLayout(new GridLayout(0, 2));
-        contentPanel.setOpaque(false);  // Esto asegura que el panel no afecte la visibilidad de los componentes dentro de él.
+        contentPanel.setOpaque(false);  
         roundedBackground.add(contentPanel, BorderLayout.CENTER);
 
         // Configuración de campos de texto
@@ -54,36 +54,29 @@ public class DialogoInfoFarmaco extends JDialog {
         jLabel.setForeground(Color.WHITE);
         JTextField textField = new JTextField(value);
         textField.setEditable(false);
-        textField.setOpaque(true); // Asegura que el fondo sea visible
-        textField.setBackground(Color.WHITE); // Fondo blanco para los campos de texto
+        textField.setOpaque(true);
+        textField.setBackground(Color.WHITE);
         contentPanel.add(jLabel);
         contentPanel.add(textField);
         return textField;
     }
 
     private JPanel setupButtonPanel() {
-        // Panel principal para los botones con disposición BorderLayout
         JPanel buttonPane = new JPanel(new BorderLayout());
-        buttonPane.setOpaque(true);  // Asegura que el panel de botones sea opaco
-        buttonPane.setBackground(Color.decode("#577BD1")); // Fondo azul para coincidir con el roundedBackground
-
-        // Adjust the horizontal gap to move the button slightly to the right
-        JPanel leftPane = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 5)); // Increase the horizontal gap
-        leftPane.setOpaque(false); // Hacer que el panel izquierdo sea transparente para no ver su fondo
+        buttonPane.setOpaque(true);
+        buttonPane.setBackground(Color.decode("#577BD1"));
+        JPanel leftPane = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 5));
+        leftPane.setOpaque(false);
         JButton deleteButton = new JButton("Eliminar");
         deleteButton.addActionListener(e -> eliminarFarmaco());
         personalizarBoton(deleteButton);
         leftPane.add(deleteButton);
-
-        // Adjust the horizontal gap to move the button slightly to the left
-        JPanel rightPane = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 5)); // Increase the horizontal gap
-        rightPane.setOpaque(false); // Hacer que el panel derecho sea transparente
+        JPanel rightPane = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 5));
+        rightPane.setOpaque(false);
         JButton closeButton = new JButton("Cerrar");
         closeButton.addActionListener(e -> dispose());
         personalizarBoton(closeButton);
         rightPane.add(closeButton);
-
-        // Agregar los subpaneles al panel principal de botones
         buttonPane.add(leftPane, BorderLayout.WEST);
         buttonPane.add(rightPane, BorderLayout.EAST);
 
@@ -133,29 +126,18 @@ public class DialogoInfoFarmaco extends JDialog {
             JOptionPane.showMessageDialog(this, "No se encontró el fármaco para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    /**
-     * Método principal para pruebas.
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                // Crear un objeto Farmaco para prueba
                 Farmaco testFarmaco = new Farmaco(1, "F001", "Paracetamol", "Analgésico", 100, "500 mg", "mg", 
                 Date.valueOf(LocalDate.now().plusYears(1)), new BigDecimal("5.99"));
-                
-                // Crear un JFrame temporal para usar como owner
                 JFrame frame = new JFrame("Test Frame");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                frame.setSize(200, 200); // Dimensiones mínimas para que sea visible
-                frame.setLocationRelativeTo(null); // Centrar en la pantalla
-
-                // Crear y mostrar el diálogo
+                frame.setSize(200, 200);
+                frame.setLocationRelativeTo(null);
                 DialogoInfoFarmaco dialog = new DialogoInfoFarmaco(frame, testFarmaco);
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
-                
-                // Asegurarse de que el JFrame se cierra cuando cerramos el diálogo
                 frame.dispose();
             } catch (Exception e) {
                 e.printStackTrace();

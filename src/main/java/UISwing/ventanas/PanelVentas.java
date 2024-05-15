@@ -11,12 +11,15 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
+import java.text.NumberFormat;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.event.TableModelEvent;
 import java.util.List;
+import java.util.Locale;
+
 import model.Almacen;
 import model.Cliente;
 import model.Farmaco;
@@ -122,7 +125,7 @@ public class PanelVentas extends JPanel {
                 if (text.length() >= 4) {
                     updateClientList(text);
                 } else {
-                    comboBoxMascota.removeAllItems(); // Limpia también las mascotas asociadas
+                    comboBoxMascota.removeAllItems();
                 }
             }
         });
@@ -136,7 +139,7 @@ public class PanelVentas extends JPanel {
                         Cliente selectedClient = (Cliente) selectedItem;
                         updatePetList(selectedClient.getId());
                     } else {
-                        comboBoxMascota.removeAllItems(); // Limpia el comboBox de mascotas si el objeto seleccionado no es un Cliente
+                        comboBoxMascota.removeAllItems();
                     }
                 } else if (e.getStateChange() == ItemEvent.DESELECTED) {
                     comboBoxMascota.removeAllItems();
@@ -156,8 +159,8 @@ public class PanelVentas extends JPanel {
         chckbxefectivo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         chckbxefectivo.setForeground(Color.WHITE);
         chckbxefectivo.setBounds(748, 523, 72, 23);
-        chckbxefectivo.setOpaque(false); // Hacer el fondo del checkbox transparente
-        chckbxefectivo.setBackground(new Color(0, 0, 0, 0)); // Asegurarse de que el fondo es completamente transparente
+        chckbxefectivo.setOpaque(false);
+        chckbxefectivo.setBackground(new Color(0, 0, 0, 0));
         panelVentas.add(chckbxefectivo);
       
         
@@ -165,8 +168,8 @@ public class PanelVentas extends JPanel {
         chckbxTarjeta.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         chckbxTarjeta.setForeground(Color.WHITE);
         chckbxTarjeta.setBounds(821, 523, 65, 23);
-        chckbxTarjeta.setOpaque(false); // Hacer el fondo del checkbox transparente
-        chckbxTarjeta.setBackground(new Color(0, 0, 0, 0)); // Asegurarse de que el fondo es completamente transparente
+        chckbxTarjeta.setOpaque(false);
+        chckbxTarjeta.setBackground(new Color(0, 0, 0, 0));
         panelVentas.add(chckbxTarjeta);
     }
 
@@ -261,13 +264,11 @@ public class PanelVentas extends JPanel {
          btnLimpiarDatos.setFont(new Font("Segoe UI", Font.BOLD, 12));
          btnLimpiarDatos.setBounds(34, 590, 148, 31);
          btnLimpiarDatos.setBackground(Color.WHITE);
-         btnLimpiarDatos.setForeground(Color.decode("#0057FF")); // Letras en color azul
-         btnLimpiarDatos.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-         btnLimpiarDatos.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-         btnLimpiarDatos.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+         btnLimpiarDatos.setForeground(Color.decode("#0057FF"));
+         btnLimpiarDatos.setFocusPainted(false);
+         btnLimpiarDatos.setBorderPainted(false);
+         btnLimpiarDatos.setContentAreaFilled(false);
          btnLimpiarDatos.setOpaque(true); 
-
-         // Personalización del efecto rollover
          btnLimpiarDatos.setRolloverEnabled(true);
          btnLimpiarDatos.addMouseListener(new java.awt.event.MouseAdapter() {
              @Override
@@ -294,13 +295,11 @@ public class PanelVentas extends JPanel {
          });
          btnValidar.setFont(new Font("Segoe UI", Font.BOLD, 12));
          btnValidar.setBackground(Color.WHITE);
-         btnValidar.setForeground(Color.decode("#0057FF")); // Letras en color azul
-         btnValidar.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-         btnValidar.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-         btnValidar.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-         btnValidar.setOpaque(true); 
-
-         // Personalización del efecto rollover
+         btnValidar.setForeground(Color.decode("#0057FF"));
+         btnValidar.setFocusPainted(false);
+         btnValidar.setBorderPainted(false);
+         btnValidar.setContentAreaFilled(false);
+         btnValidar.setOpaque(true);
          btnValidar.setRolloverEnabled(true);
          btnValidar.addMouseListener(new java.awt.event.MouseAdapter() {
              @Override
@@ -326,7 +325,6 @@ public class PanelVentas extends JPanel {
     }
 
     private void setUpLabels(JPanel panel) {
-        // Configuración de etiquetas
     	JLabel lbltextoVentas = new JLabel("Ventas");
         lbltextoVentas.setForeground(Color.WHITE);
         lbltextoVentas.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -437,29 +435,35 @@ public class PanelVentas extends JPanel {
     private void actualizarTotal() {
         BigDecimal totalGeneral = BigDecimal.ZERO;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
-            BigDecimal totalFila = new BigDecimal(tableModel.getValueAt(i, 6).toString());
+            BigDecimal totalFila = (BigDecimal) tableModel.getValueAt(i, 6);
             totalGeneral = totalGeneral.add(totalFila);
         }
         lblTotalPrecio.setText(totalGeneral.setScale(2, RoundingMode.HALF_UP).toString() + " €");
     }
 
+
     private void limpiarTabla() {
-        tableModel.setRowCount(0); // Elimina todas las filas
-        actualizarTotal(); // Actualiza el total para reflejar que la tabla está vacía
+        tableModel.setRowCount(0);
+        actualizarTotal();
     }
     
     private void registrarVenta() {
-    	
-    	 if (tableModel.getRowCount() == 0) {
-    	        JOptionPane.showMessageDialog(this, "Debe agregar productos para validar la operación.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
-    	        return; // Terminar la ejecución del método si no hay productos
-    	    }
+        if (tableModel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Debe agregar productos para validar la operación.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String metodoPago = obtenerMetodoPagoSeleccionado();
+        if (metodoPago.equals("Desconocido")) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un método de pago.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         try {
             Integer idCliente = null;
             Integer idMascota = null;
             BigDecimal total = new BigDecimal(lblTotalPrecio.getText().replace(" €", ""));
             Date fechaVenta = new Date(System.currentTimeMillis());
-            String metodoPago = obtenerMetodoPagoSeleccionado();
 
             Cliente cliente = (Cliente) comboBoxCliente.getSelectedItem();
             if (cliente != null) {
@@ -491,22 +495,21 @@ public class PanelVentas extends JPanel {
             e.printStackTrace();
         }
     }
+
     
     private void setupTableRenderers() {
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
-        leftRenderer.setHorizontalAlignment(JLabel.LEFT); // Alinea el texto a la izquierda
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
 
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(JLabel.RIGHT); // Alinea el texto a la derecha
+        EuroCellRenderer euroRenderer = new EuroCellRenderer();
+        euroRenderer.setHorizontalAlignment(JLabel.RIGHT);
 
         table.getColumnModel().getColumn(tableModel.findColumn("Descripción")).setCellRenderer(leftRenderer);
-        table.getColumnModel().getColumn(tableModel.findColumn("Total")).setCellRenderer(rightRenderer);
-        table.getColumnModel().getColumn(tableModel.findColumn("Precio Unitario")).setCellRenderer(rightRenderer);
-
-        // Asegúrate de aplicar el renderizador izquierdo a cualquier otra columna que deba estar alineada a la izquierda
-        // Por ejemplo, si la columna "Producto" también debe estar alineada a la izquierda
+        table.getColumnModel().getColumn(tableModel.findColumn("Precio Unitario")).setCellRenderer(euroRenderer);
+        table.getColumnModel().getColumn(tableModel.findColumn("Total")).setCellRenderer(euroRenderer);
         table.getColumnModel().getColumn(tableModel.findColumn("Producto")).setCellRenderer(leftRenderer);
     }
+
     
 
     private String obtenerMetodoPagoSeleccionado() {
@@ -517,6 +520,22 @@ public class PanelVentas extends JPanel {
         }
         return "Desconocido";
     }
+    public class EuroCellRenderer extends DefaultTableCellRenderer {
+        private final NumberFormat euroFormat;
+
+        public EuroCellRenderer() {
+            euroFormat = NumberFormat.getCurrencyInstance(new Locale("es", "ES"));
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value instanceof BigDecimal) {
+                value = euroFormat.format(((BigDecimal) value).doubleValue());
+            }
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+    }
+
     
     
     

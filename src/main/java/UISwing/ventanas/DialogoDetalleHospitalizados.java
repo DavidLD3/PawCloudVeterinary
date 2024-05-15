@@ -44,7 +44,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        this.actualizacionListener = actualizacionListener;
 	    setTitle("Hospitalizaciones");
 	    farmacoDAO = new FarmacoDAO();
-	    hospitalizacionDAO = new HospitalizacionDAO(); // Asegúrate de que esta línea esté agregada
+	    hospitalizacionDAO = new HospitalizacionDAO(); 
 	    setUndecorated(true);
 	    setSize(new Dimension(888,455));    
 	    setLocationRelativeTo(null);
@@ -68,7 +68,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        txtMascotaNombre.setBounds(40, 55, 244, 30);
 	        txtMascotaNombre.setEditable(false);
 	        txtMascotaNombre.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 11));
-	        txtMascotaNombre.setOpaque(true); // Fondo transparente
+	        txtMascotaNombre.setOpaque(true);
 	        txtMascotaNombre.setBorder(null);
 	        roundedPanel.add(txtMascotaNombre);
 
@@ -180,7 +180,6 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	       JPanel centerPanel = new JPanel() {
 	            @Override
 	            protected void paintComponent(Graphics g) {
-	                // Personaliza aquí tu componente
 	                Graphics2D g2 = (Graphics2D) g.create();
 	                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
 	                g2.setColor(getBackground());
@@ -193,9 +192,7 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        centerPanel.setOpaque(false);
 	        centerPanel.setBounds(21, 21, 846, 414);
 	        
-	        // Agregar los componentes al panel
-	        
-	          
+	        // Agregar los componentes al panel	       
 	        roundedPanel.add(dateChooserIngreso);
 	        roundedPanel.add(dateChooserSalida);
 	        roundedPanel.add(scrollPaneMotivo);
@@ -224,13 +221,13 @@ public class DialogoDetalleHospitalizados extends JDialog {
 	        lblMotivo.setBounds(568, 26, 79, 30);
 	        roundedPanel.add(lblMotivo);
 	        
-	        JLabel lblFechaIngreso = new JLabel("Fecha ingreso:");
+	        JLabel lblFechaIngreso = new JLabel("Fecha de ingreso:");
 	        lblFechaIngreso.setForeground(new Color(255, 255, 255));
 	        lblFechaIngreso.setFont(new Font("Segoe UI", Font.BOLD, 13));
 	        lblFechaIngreso.setBounds(40, 96, 111, 30);
 	        roundedPanel.add(lblFechaIngreso);
 	        
-	        JLabel lblFechaSalida = new JLabel("Fecha salida:");
+	        JLabel lblFechaSalida = new JLabel("Fecha de salida:");
 	        lblFechaSalida.setForeground(new Color(255, 255, 255));
 	        lblFechaSalida.setFont(new Font("Segoe UI", Font.BOLD, 13));
 	        lblFechaSalida.setBounds(329, 94, 111, 30);

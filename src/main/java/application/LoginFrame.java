@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import UISwing.recursos.GradientPanel;
@@ -81,8 +80,8 @@ public class LoginFrame extends JFrame {
         gradientPanel.add(lblLogoVertical);
 
         Border roundedBorder = BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.WHITE, 1, true), // Borde blanco
-                BorderFactory.createEmptyBorder(5, 10, 5, 10) // Espacio interno
+                BorderFactory.createLineBorder(Color.WHITE, 1, true),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
         );
 
         textUsuario = new JTextField();
@@ -126,12 +125,12 @@ public class LoginFrame extends JFrame {
         lbllogocerrar.setIcon(new ImageIcon(getClass().getResource("/imagenes/cerrar.png")));
         lbllogocerrar.setBounds(445, 11, 26, 30);
         gradientPanel.add(lbllogocerrar);
-        // Añade un MouseListener a lbllogocerrar para cerrar la aplicación
+        
         lbllogocerrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Cierra la ventana y termina la aplicación
-                System.exit(0); // O puedes usar LoginFrame.this.dispose(); si prefieres solo cerrar la ventana
+                
+                System.exit(0);
             }
         });
 
@@ -144,9 +143,9 @@ public class LoginFrame extends JFrame {
         lblolvidaste.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                RecuperarCuenta recuperarCuenta = new RecuperarCuenta(); // Crear una instancia de RegistrosLogin
-                recuperarCuenta.setVisible(true); // Hacer visible RegistrosLogin
-                LoginFrame.this.setVisible(false); // Ocultar LoginFrame
+                RecuperarCuenta recuperarCuenta = new RecuperarCuenta();
+                recuperarCuenta.setVisible(true);
+                LoginFrame.this.setVisible(false);
             }
         });
 
@@ -165,25 +164,25 @@ public class LoginFrame extends JFrame {
         lblRegistrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                RegistrosLogin registro = new RegistrosLogin(); // Crear una instancia de RegistrosLogin
-                registro.setVisible(true); // Hacer visible RegistrosLogin
-                LoginFrame.this.setVisible(false); // Ocultar LoginFrame
+                RegistrosLogin registro = new RegistrosLogin();
+                registro.setVisible(true);
+                LoginFrame.this.setVisible(false);
             }
         });
         JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                // Personaliza aquí tu componente
+               
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
                 g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
-        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+        centerPanel.setBackground(new Color(255, 255, 255, 80));
+        centerPanel.setOpaque(false);
         centerPanel.setBounds(95, 53, 308, 392);
         gradientPanel.add(centerPanel);
     }
@@ -197,7 +196,6 @@ public class LoginFrame extends JFrame {
         if (auth.authenticateUser(username, password)) {
             JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
-            // Va a la ventana MainFrame
             MainFrame mainFrame = new MainFrame();
             mainFrame.setNombreUsuario(username);
             mainFrame.setVisible(true);

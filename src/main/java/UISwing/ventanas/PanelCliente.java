@@ -1,6 +1,5 @@
 package UISwing.ventanas;
 
-// file path: package UISwing.ventanas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -116,7 +115,6 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
         scrollPane.setPreferredSize(new Dimension(500, 400));
         panelMascotas.add(scrollPane, BorderLayout.CENTER);
 
-        // Ocultar la columna de ID Mascota en la vista
         TableColumn idColumn = tablaMascotas.getColumn("ID Mascota");
         tablaMascotas.removeColumn(idColumn);
 
@@ -132,7 +130,6 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
                 if (e.getClickCount() == 2) {
                     int filaSeleccionada = tablaMascotas.getSelectedRow();
                     if (filaSeleccionada != -1) {
-                        // Aquí accedemos al modelo directamente para obtener el ID de la mascota
                         int idMascota = (Integer) modeloTabla.getValueAt(tablaMascotas.convertRowIndexToModel(filaSeleccionada), 0);
                         abrirPanelInfoMascota(idMascota);
                     }
@@ -230,10 +227,10 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
 
         if (cliente != null && cliente.getId() > 0) {
             try {
-                // Fetch all sales
+                
                 List<VentaDetalle> listaVentas = ventasDAO.obtenerUltimasVentas();
                 for (VentaDetalle venta : listaVentas) {
-                    // Check if the sale matches the client's ID
+                    
                     if (ventasDAO.obtenerIdClientePorIdVenta(venta.getIdVenta()) == cliente.getId()) {
                         Object[] fila = {
                             timeFormat.format(venta.getFechaVenta()),
@@ -296,10 +293,10 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
     }
 
     private void abrirPanelRegistroMascota() {
-        // Crea un diálogo de registro de mascota pasando el ID del cliente
+
         DialogoRegistroMascota dialogoRegistroMascota = new DialogoRegistroMascota((Frame) SwingUtilities.getWindowAncestor(this), true, this.cliente.getId());
 
-        // Añade un listener para cuando el diálogo se cierre y actualice la tabla de mascotas
+       
         dialogoRegistroMascota.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -307,7 +304,7 @@ public class PanelCliente extends JPanel implements CitaActualizadaListener {
             }
         });
 
-        // Muestra el diálogo
+
         dialogoRegistroMascota.setVisible(true);
     }
 

@@ -53,8 +53,6 @@ public class DialogoListaUsosFarmacos extends JDialog {
         table.getTableHeader().setBackground(Color.decode("#0483FF"));
         table.getTableHeader().setForeground(Color.WHITE);
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16));
-
-        // Configurar el modelo de columnas para ocultar la columna de ID
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setMinWidth(0);
         columnModel.getColumn(0).setMaxWidth(0);

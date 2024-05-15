@@ -22,16 +22,16 @@ public class UserModel {
 	        } catch (SQLException e) {
 	            System.err.println("Error al contar los usuarios: " + e.getMessage());
 	        }
-	        return 0;  // Retorna 0 en caso de error para evitar nuevos registros
+	        return 0;  
 	    }
 
     public int registerUser(String username, String email, String password) {
         // Verificar si se ha alcanzado el límite antes de intentar registrar
         if (getUserCount() >= ConfiguracionClinica.getLimiteUsuarios()) {
-            return -1; // Código de error para "límite alcanzado"
+            return -1; 
         }
 
-        // Resto de la lógica de registro...
+       
         try (Connection conn = new Conexion().getConexion()) {
             String sql = "INSERT INTO usuarios (Username, Email, PasswordHash) VALUES (?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -41,9 +41,9 @@ public class UserModel {
 
                 int affectedRows = pstmt.executeUpdate();
                 if (affectedRows > 0) {
-                    return 1; // Código para "registro exitoso"
+                    return 1;
                 }
-                return 0; // Código para "error en el registro"
+                return 0; 
             }
         } catch (SQLException ex) {
             System.err.println("Error al obtener la conexión o al ejecutar la consulta: " + ex.getMessage());

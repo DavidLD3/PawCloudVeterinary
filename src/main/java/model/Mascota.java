@@ -8,7 +8,7 @@ public class Mascota {
     private String nombre;
     private String especie;
     private String raza;
-    private String pasaporte;  // Cambiado de int a String
+    private String pasaporte;
     private int idCliente;
     private String microchip;
     private LocalDate fechaNacimiento;
@@ -17,7 +17,7 @@ public class Mascota {
     private String tipoPelo;
     private Sexo sexo;
     private boolean esterilizado;
-    private String nombreDueño; // Nuevo campo para el nombre del dueño
+    private String nombreDueño;
     
     public enum Sexo {
         MACHO, HEMBRA
@@ -31,7 +31,7 @@ public class Mascota {
         this.nombre = nombre;
         this.especie = especie;
         this.raza = raza;
-        this.pasaporte = pasaporte;  // Tipo String
+        this.pasaporte = pasaporte;
         this.idCliente = idCliente;
         this.microchip = microchip;
         this.fechaNacimiento = fechaNacimiento;
@@ -43,7 +43,7 @@ public class Mascota {
     } 
 
     public Mascota() {
-        // Constructor vacío
+       
     }
 
     public void setSexo(Sexo sexo) {
@@ -83,11 +83,11 @@ public class Mascota {
     }
 
     public void setPasaporte(String pasaporte) {
-        this.pasaporte = pasaporte; // Método para establecer el pasaporte
+        this.pasaporte = pasaporte; 
     }
 
     public String getPasaporte() {
-        return pasaporte; // Método para obtener el pasaporte
+        return pasaporte; 
     }
     
     public int getIdCliente() {
@@ -178,7 +178,7 @@ public class Mascota {
 
         @Override
         public String toString() {
-            return mascota.getNombre(); // Suponiendo que quieres mostrar solo el nombre en el comboBox
+            return mascota.getNombre();
         }
     }
 
@@ -190,7 +190,7 @@ public class Mascota {
                 ", nombre='" + nombre + '\'' +
                 ", especie='" + especie + '\'' +
                 ", raza='" + raza + '\'' +
-                ", pasaporte='" + pasaporte + '\'' +  // Mostrar como String
+                ", pasaporte='" + pasaporte + '\'' + 
                 ", idCliente=" + idCliente +
                 ", microchip='" + microchip + '\'' +
                 ", fechaNacimiento=" + fechaNacimiento +

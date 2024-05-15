@@ -16,10 +16,42 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.BorderFactory;
 
+class RoundedPanel extends JPanel {
+    private int radius;
+    private Color backgroundColor;
+
+    public RoundedPanel(int radius, Color backgroundColor) {
+        super();
+        this.radius = radius;
+        this.backgroundColor = backgroundColor;
+        setOpaque(false);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Dimension arcs = new Dimension(radius, radius);
+        int width = getWidth();
+        int height = getHeight();
+        Graphics2D graphics = (Graphics2D) g;
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+       
+        if (backgroundColor != null) {
+            graphics.setColor(backgroundColor);
+        } else {
+            graphics.setColor(getBackground());
+        }
+        graphics.fillRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height);
+        graphics.setColor(getForeground());
+        graphics.drawRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height);
+    }
+}
+
 public class PanelRegistroCliente extends JDialog {
-    private JTextField tfRcliente_Nombre, tfRcliente_Apellidos, 
-    tfRcliente_DNI, tfRcliente_NIF, tfRcliente_Direccion, tfRcliente_Poblacion,
-    tfRcliente_Provincia, tfRcliente_Tfijo, tfRcliente_Tmovil, tfRcliente_Email;
+    private JTextField tfRcliente_Nombre, tfRcliente_Apellidos,
+            tfRcliente_DNI, tfRcliente_NIF, tfRcliente_Direccion, tfRcliente_Poblacion,
+            tfRcliente_Provincia, tfRcliente_Tfijo, tfRcliente_Tmovil, tfRcliente_Email;
     private JTextComponent tfRcliente_Fnacimiento;
     private JDateChooser dateChooser;
 
@@ -30,73 +62,101 @@ public class PanelRegistroCliente extends JDialog {
         setModal(true);
         initializeUI();
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        this.setSize(578, 393); // Tamaño ajustado según necesidad
+        this.setSize(620, 420);
         this.setLocationRelativeTo(null);
     }
 
     private void initializeUI() {
-        setBackground(new Color(147, 112, 219)); // Tono azul suave
-        getContentPane().setLayout(new BorderLayout());
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(147, 112, 219));
-        mainPanel.setOpaque(false); // Transparencia
-        mainPanel.add(crearPanelClientes(), BorderLayout.CENTER);
-        mainPanel.add(crearPanelBotones(), BorderLayout.SOUTH);
+        
+        RoundedPanel mainPanel = new RoundedPanel(30, new Color(147, 112, 219));
+        mainPanel.setLayout(null);
+
+        
+        JPanel centerPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); 
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); 
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        centerPanel.setBackground(new Color(255, 255, 255, 70)); 
+        centerPanel.setOpaque(false); 
+        centerPanel.setBounds(15, 15, 570, 394);
+        centerPanel.setLayout(null);
+
+        
+        JPanel panelClientes = crearPanelClientes();
+        panelClientes.setBounds(10, 10, 548, 381);
+        centerPanel.add(panelClientes);
+
+        JPanel panelBotones = crearPanelBotones();
+        panelBotones.setBounds(22, 341, 522, 50);
+        centerPanel.add(panelBotones);
+
+        mainPanel.add(centerPanel);
         getContentPane().add(mainPanel, BorderLayout.CENTER);
+        JButton btnCerrar = new JButton("Cerrar");
+        btnCerrar.setBounds(57, 363, 87, 23);
+        mainPanel.add(btnCerrar);
+        initButton(btnCerrar, "#0057FF", "#003366");
+        JButton btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.setBounds(343, 363, 87, 23);
+        mainPanel.add(btnLimpiar);
+        
+                
+                initButton(btnLimpiar, "#0057FF", "#003366");
+                JButton btnGuardar = new JButton("Guardar");
+                btnGuardar.setBounds(463, 364, 87, 23);
+                mainPanel.add(btnGuardar);
+                initButton(btnGuardar, "#0057FF", "#003366");
+                
+                        btnGuardar.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                guardarDatos();
+                            }
+                        });
+                
+                        btnLimpiar.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere limpiar todos los campos?", "Limpiar", JOptionPane.YES_NO_OPTION);
+                                if (confirm == JOptionPane.YES_OPTION) {
+                                    limpiarCampos();
+                                }
+                            }
+                        });
+        
+                btnCerrar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        
+                        JPanel confirmPanel = new JPanel();
+                        confirmPanel.add(new JLabel("¿Está seguro de que quiere cerrar sin guardar?"));
+        
+                       
+                        String[] options = {"Sí", "No"};
+        
+                        
+                        int confirm = JOptionPane.showOptionDialog(null, confirmPanel, "Cerrar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            dispose();
+                        }
+                    }
+                });
     }
 
     private JPanel crearPanelBotones() {
-        JButton btnLimpiar = new JButton("Limpiar");
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCerrar = new JButton("Cerrar");
 
-        // Aplicar estilos de botones al estilo de VentanaRegistroVeterinarioDialog
-        initButton(btnLimpiar, "#0057FF", "#003366");
-        initButton(btnGuardar, "#0057FF", "#003366");
-        initButton(btnCerrar, "#0057FF", "#003366");
-
-        btnLimpiar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere limpiar todos los campos?", "Limpiar", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    limpiarCampos();
-                }
-            }
-        });
-
-
-        btnGuardar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                guardarDatos();
-            }
-        });
-
-        btnCerrar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Creación de un JPanel personalizado para el contenido del diálogo
-                JPanel confirmPanel = new JPanel();
-                confirmPanel.add(new JLabel("¿Está seguro de que quiere cerrar sin guardar?"));
-
-                // Opciones personalizadas para los botones
-                String[] options = {"Sí", "No"};
-
-                // Mostrar el diálogo personalizado
-                int confirm = JOptionPane.showOptionDialog(null, confirmPanel, "Cerrar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    dispose(); // Uso directo de dispose() para cerrar la ventana actual
-                }
-            }
-        });
-
-
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(147, 112, 219));
-        panelBotones.add(btnLimpiar);
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCerrar);
+        panelBotones.setOpaque(false);
+        panelBotones.setLayout(null);
 
         return panelBotones;
     }
@@ -125,9 +185,8 @@ public class PanelRegistroCliente extends JDialog {
             }
         });
     }
-    
+
     private void limpiarCampos() {
-        // Resetear campos de texto
         tfRcliente_Nombre.setText("");
         tfRcliente_Apellidos.setText("");
         tfRcliente_DNI.setText("");
@@ -138,34 +197,31 @@ public class PanelRegistroCliente extends JDialog {
         tfRcliente_Tfijo.setText("");
         tfRcliente_Tmovil.setText("");
         tfRcliente_Email.setText("");
-
-        // Resetear el componente JDateChooser
-        dateChooser.setCalendar(null);  // Esto asegura que la selección de fecha también se limpie
+        dateChooser.setCalendar(null);
     }
 
-    
     private void guardarDatos() {
         try {
             LocalDate fechaNacimiento = null;
             if (dateChooser.getDate() != null) {
                 fechaNacimiento = dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             }
-            
+
             Cliente cliente = new Cliente(
-                0,
-                tfRcliente_Nombre.getText().trim(),
-                tfRcliente_Apellidos.getText().trim(),
-                fechaNacimiento,
-                tfRcliente_DNI.getText().trim(),
-                tfRcliente_NIF.getText().trim(),
-                tfRcliente_Direccion.getText().trim(),
-                tfRcliente_Poblacion.getText().trim(),
-                tfRcliente_Provincia.getText().trim(),
-                tfRcliente_Tfijo.getText().trim(),
-                tfRcliente_Tmovil.getText().trim(),
-                tfRcliente_Email.getText().trim()
+                    0,
+                    tfRcliente_Nombre.getText().trim(),
+                    tfRcliente_Apellidos.getText().trim(),
+                    fechaNacimiento,
+                    tfRcliente_DNI.getText().trim(),
+                    tfRcliente_NIF.getText().trim(),
+                    tfRcliente_Direccion.getText().trim(),
+                    tfRcliente_Poblacion.getText().trim(),
+                    tfRcliente_Provincia.getText().trim(),
+                    tfRcliente_Tfijo.getText().trim(),
+                    tfRcliente_Tmovil.getText().trim(),
+                    tfRcliente_Email.getText().trim()
             );
-            
+
             ClienteDAO clienteDao = new ClienteDAO();
             boolean exito = clienteDao.insertarCliente(cliente);
             if (exito) {
@@ -179,145 +235,147 @@ public class PanelRegistroCliente extends JDialog {
         }
     }
 
+    private JPanel crearPanelClientes() {
+        tfRcliente_Nombre = new JTextField(10);
+        tfRcliente_Apellidos = new JTextField(10);
+        tfRcliente_Fnacimiento = new JTextField(10);
+        tfRcliente_DNI = new JTextField(10);
+        tfRcliente_NIF = new JTextField(10);
+        tfRcliente_Direccion = new JTextField(10);
+        tfRcliente_Poblacion = new JTextField(10);
+        tfRcliente_Provincia = new JTextField(10);
+        tfRcliente_Tfijo = new JTextField(10);
+        tfRcliente_Tmovil = new JTextField(10);
+        tfRcliente_Email = new JTextField(10);
 
+        Border bordeExterior = BorderFactory.createLineBorder(Color.BLACK);
+        Border bordeInterior = BorderFactory.createEmptyBorder(30, 30, 30, 30);
+        Border bordeCompuesto = new CompoundBorder(bordeExterior, bordeInterior);
 
-	
-		private JPanel crearPanelClientes() {
-			 
-			tfRcliente_Nombre = new JTextField(10);
-			tfRcliente_Apellidos = new JTextField(10);
-			tfRcliente_Fnacimiento = new JTextField(10); // Asegúrate de que este campo se maneje correctamente como una fecha
-			tfRcliente_DNI = new JTextField(10);
-			tfRcliente_NIF = new JTextField(10);
-			tfRcliente_Direccion = new JTextField(10);
-			tfRcliente_Poblacion = new JTextField(10);
-			tfRcliente_Provincia = new JTextField(10);
-			tfRcliente_Tfijo = new JTextField(10);
-			tfRcliente_Tmovil = new JTextField(10);
-			tfRcliente_Email = new JTextField(10);
-			
-			Border bordeExterior = BorderFactory.createLineBorder(Color.BLACK); // Puedes cambiar el color y el estilo del borde exterior
-		    Border bordeInterior = BorderFactory.createEmptyBorder(30, 30, 30, 30); // Espacio interior para separar los componentes del borde
-		    Border bordeCompuesto = new CompoundBorder(bordeExterior, bordeInterior);
-		    
-			  JPanel Pcliente = new JPanel();
-		        Pcliente.setLayout(null);
-		        Pcliente.setOpaque(false);
+        JPanel Pcliente = new JPanel();
+        Pcliente.setLayout(null);
+        Pcliente.setOpaque(false);
 
-		    // Nombre
-		    JLabel lbRCliente_Nombre = new JLabel("Nombre");
-		    lbRCliente_Nombre.setBounds(22, 39, 50, 14);
-		    Pcliente.add(lbRCliente_Nombre);
-		 
-		    tfRcliente_Nombre.setBounds(22, 64, 86, 20);
-		    Pcliente.add(tfRcliente_Nombre);
+        // Nombre
+        JLabel lbRCliente_Nombre = new JLabel("Nombre:");
+        lbRCliente_Nombre.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_Nombre.setForeground(new Color(255, 255, 255));
+        lbRCliente_Nombre.setBounds(31, 23, 86, 25);
+        Pcliente.add(lbRCliente_Nombre);
 
-		    // Apellidos
-		    JLabel lbRCliente_Apellidos = new JLabel("Apellidos");
-		    lbRCliente_Apellidos.setBounds(180, 39, 60, 14);
-		    Pcliente.add(lbRCliente_Apellidos);
-		  
-		    tfRcliente_Apellidos.setBounds(189, 64, 218, 20);
-		    Pcliente.add(tfRcliente_Apellidos);
+        tfRcliente_Nombre.setBounds(31, 53, 200, 25);
+        Pcliente.add(tfRcliente_Nombre);
 
-		    // NIF
-		    JLabel lbRCliente_NIF = new JLabel("NIF");
-		    lbRCliente_NIF.setBounds(416, 120, 46, 14);
-		    Pcliente.add(lbRCliente_NIF);
-		   
-		    tfRcliente_NIF.setBounds(416, 136, 86, 20);
-		    Pcliente.add(tfRcliente_NIF);
+        // Apellidos
+        JLabel lbRCliente_Apellidos = new JLabel("Apellidos");
+        lbRCliente_Apellidos.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_Apellidos.setForeground(new Color(255, 255, 255));
+        lbRCliente_Apellidos.setBounds(324, 23, 195, 25);
+        Pcliente.add(lbRCliente_Apellidos);
 
-		    // DNI
-		    JLabel lbRCliente_DNI = new JLabel("DNI");
-		    lbRCliente_DNI.setBounds(283, 120, 46, 14);
-		    Pcliente.add(lbRCliente_DNI);
-		
-		    tfRcliente_DNI.setBounds(283, 136, 86, 20);
-		    Pcliente.add(tfRcliente_DNI);
+        tfRcliente_Apellidos.setBounds(324, 53, 200, 25);
+        Pcliente.add(tfRcliente_Apellidos);
 
-		    // Fecha de Nacimiento
-		    JLabel lbRCliente_Fnacimiento = new JLabel("Fecha de Nacimiento");
-		    lbRCliente_Fnacimiento.setBounds(22, 104, 130, 14);
-		    Pcliente.add(lbRCliente_Fnacimiento);
-		    
-		    // Inicialización de JDateChooser
-		    dateChooser = new JDateChooser();
-		    dateChooser.setBounds(22, 136, 120, 20); // Ajusta según sea necesario
-		    Pcliente.add(dateChooser);
-		    
+        // NIF
+        JLabel lbRCliente_NIF = new JLabel("NIF");
+        lbRCliente_NIF.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_NIF.setForeground(new Color(255, 255, 255));
+        lbRCliente_NIF.setBounds(427, 89, 92, 25);
+        Pcliente.add(lbRCliente_NIF);
 
-		    // Dirección
-		    JLabel lbRCliente_Direccion = new JLabel("Direccion");
-		    lbRCliente_Direccion.setBounds(22, 188, 60, 14);
-		    Pcliente.add(lbRCliente_Direccion);
+        tfRcliente_NIF.setBounds(427, 119, 100, 25);
+        Pcliente.add(tfRcliente_NIF);
 
-		    tfRcliente_Direccion.setBounds(22, 213, 218, 20);
-		    Pcliente.add(tfRcliente_Direccion);
+        // DNI
+        JLabel lbRCliente_DNI = new JLabel("DNI:");
+        lbRCliente_DNI.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_DNI.setForeground(new Color(255, 255, 255));
+        lbRCliente_DNI.setBounds(248, 89, 103, 25);
+        Pcliente.add(lbRCliente_DNI);
 
-		    // Población
-		    JLabel lbRCliente_Poblacion = new JLabel("Poblacion");
-		    lbRCliente_Poblacion.setBounds(283, 188, 60, 14);
-		    Pcliente.add(lbRCliente_Poblacion);
-	
-		    tfRcliente_Poblacion.setBounds(283, 213, 86, 20);
-		    Pcliente.add(tfRcliente_Poblacion);
+        tfRcliente_DNI.setBounds(248, 119, 103, 25);
+        Pcliente.add(tfRcliente_DNI);
 
-		    // Provincia
-		    JLabel lbRCliente_Provincia = new JLabel("Provincia");
-		    lbRCliente_Provincia.setBounds(442, 188, 60, 14);
-		    Pcliente.add(lbRCliente_Provincia);
-		 
-		    tfRcliente_Provincia.setBounds(442, 213, 86, 20);
-		    Pcliente.add(tfRcliente_Provincia);
+        // Fecha de Nacimiento
+        JLabel lbRCliente_Fnacimiento = new JLabel("Fecha de Nacimiento:");
+        lbRCliente_Fnacimiento.setForeground(new Color(255, 255, 255));
+        lbRCliente_Fnacimiento.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_Fnacimiento.setBounds(31, 92, 149, 25);
+        Pcliente.add(lbRCliente_Fnacimiento);
 
-		    // Teléfono Fijo
-		    JLabel lbRCliente_Tfijo = new JLabel("Telefono Fijo");
-		    lbRCliente_Tfijo.setBounds(21, 273, 75, 14);
-		    Pcliente.add(lbRCliente_Tfijo);
-		
-		    tfRcliente_Tfijo.setBounds(22, 308, 86, 20);
-		    Pcliente.add(tfRcliente_Tfijo);
+        // Inicialización de JDateChooser
+        dateChooser = new JDateChooser();
+        dateChooser.setDateFormatString("dd/MM/yyyy");
+        dateChooser.setBounds(31, 119, 149, 25);
+        Pcliente.add(dateChooser);
 
-		    // Teléfono Móvil
-		    JLabel lbRCliente_Tmovil = new JLabel("Telefono Movil");
-		    lbRCliente_Tmovil.setBounds(158, 273, 85, 14);
-		    Pcliente.add(lbRCliente_Tmovil);
-		
-		    tfRcliente_Tmovil.setBounds(158, 308, 86, 20);
-		    Pcliente.add(tfRcliente_Tmovil);
+        // Dirección
+        JLabel lbRCliente_Direccion = new JLabel("Direccion:");
+        lbRCliente_Direccion.setForeground(new Color(255, 255, 255));
+        lbRCliente_Direccion.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_Direccion.setBounds(29, 177, 103, 25);
+        Pcliente.add(lbRCliente_Direccion);
 
-		    // Correo Electrónico
-		    JLabel lbRCliente_email = new JLabel("Correo Electronico");
-		    lbRCliente_email.setBounds(310, 273, 120, 14);
-		    Pcliente.add(lbRCliente_email);
-		  
-		    tfRcliente_Email.setBounds(310, 308, 186, 20);
-		    Pcliente.add(tfRcliente_Email);
-		    
-		    JPanel panel = new JPanel();
-		    panel.setBackground(new Color(147, 112, 219));
-		    panel.setBounds(0, 0, 744, 20);
-		    Pcliente.add(panel);
-		    panel.setLayout(null);
-		    
-		    JLabel lbRegistroCliente = new JLabel("Registro Cliente");
-		    lbRegistroCliente.setBounds(10, 0, 125, 20);
-		    panel.add(lbRegistroCliente);
+        tfRcliente_Direccion.setBounds(29, 202, 218, 25);
+        Pcliente.add(tfRcliente_Direccion);
 
-		    return Pcliente;
-		
-	}
-	
-	
-	
-	
-		 public static void main(String[] args) {
-		        SwingUtilities.invokeLater(() -> {
-		            PanelRegistroCliente dialog = new PanelRegistroCliente(null, "Panel de Registro del Cliente", true);
-		            dialog.setVisible(true);
-		        });
-		    }
-			
+        // Población
+        JLabel lbRCliente_Poblacion = new JLabel("Poblacion:");
+        lbRCliente_Poblacion.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_Poblacion.setForeground(new Color(255, 255, 255));
+        lbRCliente_Poblacion.setBounds(286, 177, 103, 25);
+        Pcliente.add(lbRCliente_Poblacion);
+
+        tfRcliente_Poblacion.setBounds(286, 202, 103, 25);
+        Pcliente.add(tfRcliente_Poblacion);
+
+        // Provincia
+        JLabel lbRCliente_Provincia = new JLabel("Provincia:");
+        lbRCliente_Provincia.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_Provincia.setForeground(new Color(255, 255, 255));
+        lbRCliente_Provincia.setBounds(427, 177, 92, 25);
+        Pcliente.add(lbRCliente_Provincia);
+
+        tfRcliente_Provincia.setBounds(427, 202, 100, 25);
+        Pcliente.add(tfRcliente_Provincia);
+
+        // Teléfono Fijo
+        JLabel lbRCliente_Tfijo = new JLabel("Teléfono Fijo:");
+        lbRCliente_Tfijo.setForeground(new Color(255, 255, 255));
+        lbRCliente_Tfijo.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_Tfijo.setBounds(31, 258, 86, 25);
+        Pcliente.add(lbRCliente_Tfijo);
+
+        tfRcliente_Tfijo.setBounds(31, 284, 86, 25);
+        Pcliente.add(tfRcliente_Tfijo);
+
+        // Teléfono Móvil
+        JLabel lbRCliente_Tmovil = new JLabel("Teléfono Movil");
+        lbRCliente_Tmovil.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_Tmovil.setForeground(new Color(255, 255, 255));
+        lbRCliente_Tmovil.setBounds(164, 259, 110, 25);
+        Pcliente.add(lbRCliente_Tmovil);
+
+        tfRcliente_Tmovil.setBounds(167, 284, 92, 25);
+        Pcliente.add(tfRcliente_Tmovil);
+
+        // Correo Electrónico
+        JLabel lbRCliente_email = new JLabel("Correo Electronico");
+        lbRCliente_email.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbRCliente_email.setForeground(new Color(255, 255, 255));
+        lbRCliente_email.setBounds(330, 259, 120, 24);
+        Pcliente.add(lbRCliente_email);
+
+        tfRcliente_Email.setBounds(330, 284, 197, 25);
+        Pcliente.add(tfRcliente_Email);
+
+        return Pcliente;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            PanelRegistroCliente dialog = new PanelRegistroCliente(null, "Panel de Registro del Cliente", true);
+            dialog.setVisible(true);
+        });
+    }
 }
-
