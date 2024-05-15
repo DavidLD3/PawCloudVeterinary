@@ -142,7 +142,7 @@ public class RegistrosLogin extends JFrame {
         lblcontraseña.setBounds(148, 340, 126, 14);
         gradientPanel.add(lblcontraseña);
         
-        JButton btnRegistrarse = new JButton("Registrarse");
+        JButton btnRegistrarse = new JButton("Regístrarse");
         btnRegistrarse.setForeground(Color.WHITE);
         btnRegistrarse.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnRegistrarse.setBorder(new LineBorder(new Color(30, 144, 255), 2, true));

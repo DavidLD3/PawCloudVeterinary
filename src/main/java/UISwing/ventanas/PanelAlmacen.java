@@ -68,7 +68,7 @@ public class PanelAlmacen extends JPanel {
         JPanel gestionProductos = new JPanel();
         gestionProductos.setBackground(new Color(204, 229, 255));
         gestionProductos.setOpaque(true);
-        tabbedPane.addTab("Gestion de Productos", null, gestionProductos, null);
+        tabbedPane.addTab("Gestión de Productos", null, gestionProductos, null);
         gestionProductos.setLayout(null);
 
         buscarProducto = new JTextField();
@@ -119,7 +119,7 @@ public class PanelAlmacen extends JPanel {
             }
         });
 
-        JButton añadirProductoServicio = new JButton("Añadir al almacen");
+        JButton añadirProductoServicio = new JButton("Añadir al almacén");
         añadirProductoServicio.setBounds(183, 10, 153, 23);
         añadirProductoServicio.setFont(new Font("Tahoma", Font.BOLD, 12));
         añadirProductoServicio.setBackground(Color.WHITE);
@@ -160,7 +160,7 @@ public class PanelAlmacen extends JPanel {
         scrollPaneProductos.setViewportView(tablaProductos);
 
         JPanel gestionServicios = new JPanel();
-        tabbedPane.addTab("Gestion de Servicios", null, gestionServicios, null);
+        tabbedPane.addTab("Gestión de Servicios", null, gestionServicios, null);
         gestionServicios.setLayout(null);
 
         inicializarComponentesServicios(gestionServicios);
@@ -220,7 +220,7 @@ public class PanelAlmacen extends JPanel {
 
         JPanel gestionFarmacos = new JPanel();
         gestionFarmacos.setToolTipText("");
-        tabbedPane.addTab("Gestion de Farmacos", null, gestionFarmacos, null);
+        tabbedPane.addTab("Gestión de Fármacos", null, gestionFarmacos, null);
         gestionFarmacos.setLayout(null);
 
         inicializarComponentesFarmacos(gestionFarmacos);
@@ -274,7 +274,7 @@ public class PanelAlmacen extends JPanel {
                 }
             }
         });
-        JButton añadirFarmaco = new JButton("Añadir Farmaco");
+        JButton añadirFarmaco = new JButton("Añadir Fármaco");
         añadirFarmaco.setBounds(180, 10, 130, 23);
         añadirFarmaco.setFont(new Font("Tahoma", Font.BOLD, 12));
         añadirFarmaco.setBackground(Color.WHITE);

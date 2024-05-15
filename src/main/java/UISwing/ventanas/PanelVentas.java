@@ -355,7 +355,7 @@ public class PanelVentas extends JPanel {
 
     
 
-        JLabel lblNewLabel = new JLabel("Metodo de pago:");
+        JLabel lblNewLabel = new JLabel("Método de pago:");
         lblNewLabel.setForeground(new Color(255, 255, 255));
         lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblNewLabel.setBounds(631, 527, 111, 14);

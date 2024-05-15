@@ -35,7 +35,7 @@ public class DialogoListaUsosFarmacos extends JDialog {
     }
 
     private void initUI() {
-        String[] columnNames = {"ID Uso", "Nombre Farmaco", "Cantidad Usada", "Fecha de Uso", "Frecuencia", "Mascota"};
+        String[] columnNames = {"ID Uso", "Nombre Fármaco", "Cantidad Usada", "Fecha de Uso", "Frecuencia", "Mascota"};
         model = new DefaultTableModel(null, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {

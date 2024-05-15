@@ -482,7 +482,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
         
         
-        JLabel lbltextoUltimosFarmacos = new JLabel("Ultimos fármacos utilizados");
+        JLabel lbltextoUltimosFarmacos = new JLabel("Últimos fármacos utilizados");
         lbltextoUltimosFarmacos.setForeground(new Color(255, 255, 255));
         lbltextoUltimosFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lbltextoUltimosFarmacos.setBounds(54, 11, 259, 28);
@@ -546,7 +546,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         panelEncabezados.setPreferredSize(new Dimension(1000, 30));
         panelEncabezados.setOpaque(false);
 
-        String[] encabezados = {"Hora", "Fecha", "Nombre Farmaco", "Paciente", "Dosis", "Frecuencia"};
+        String[] encabezados = {"Hora", "Fecha", "Nombre Fármaco", "Paciente", "Dosis", "Frecuencia"};
         for (String encabezado : encabezados) {
             JLabel label = new JLabel(encabezado, SwingConstants.CENTER);
             label.setForeground(Color.WHITE);

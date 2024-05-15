@@ -310,7 +310,7 @@ public class PanelRegistroCliente extends JDialog {
         Pcliente.add(dateChooser);
 
         // Dirección
-        JLabel lbRCliente_Direccion = new JLabel("Direccion:");
+        JLabel lbRCliente_Direccion = new JLabel("Dirección:");
         lbRCliente_Direccion.setForeground(new Color(255, 255, 255));
         lbRCliente_Direccion.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lbRCliente_Direccion.setBounds(29, 177, 103, 25);
@@ -320,7 +320,7 @@ public class PanelRegistroCliente extends JDialog {
         Pcliente.add(tfRcliente_Direccion);
 
         // Población
-        JLabel lbRCliente_Poblacion = new JLabel("Poblacion:");
+        JLabel lbRCliente_Poblacion = new JLabel("Población:");
         lbRCliente_Poblacion.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lbRCliente_Poblacion.setForeground(new Color(255, 255, 255));
         lbRCliente_Poblacion.setBounds(286, 177, 103, 25);
@@ -350,7 +350,7 @@ public class PanelRegistroCliente extends JDialog {
         Pcliente.add(tfRcliente_Tfijo);
 
         // Teléfono Móvil
-        JLabel lbRCliente_Tmovil = new JLabel("Teléfono Movil");
+        JLabel lbRCliente_Tmovil = new JLabel("Teléfono Móvil");
         lbRCliente_Tmovil.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lbRCliente_Tmovil.setForeground(new Color(255, 255, 255));
         lbRCliente_Tmovil.setBounds(164, 259, 110, 25);
@@ -360,7 +360,7 @@ public class PanelRegistroCliente extends JDialog {
         Pcliente.add(tfRcliente_Tmovil);
 
         // Correo Electrónico
-        JLabel lbRCliente_email = new JLabel("Correo Electronico");
+        JLabel lbRCliente_email = new JLabel("Correo Electrónico");
         lbRCliente_email.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lbRCliente_email.setForeground(new Color(255, 255, 255));
         lbRCliente_email.setBounds(330, 259, 120, 24);

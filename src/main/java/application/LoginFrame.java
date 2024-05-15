@@ -156,7 +156,7 @@ public class LoginFrame extends JFrame {
         lblnotienescuenta.setBounds(173, 445, 121, 21);
         gradientPanel.add(lblnotienescuenta);
 
-        JLabel lblRegistrar = new JLabel("Registrate");
+        JLabel lblRegistrar = new JLabel("Regístrate");
         lblRegistrar.setForeground(new Color(255, 255, 255));
         lblRegistrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblRegistrar.setBounds(279, 448, 63, 14);

@@ -197,7 +197,7 @@ public class PanelInfoMascota extends JPanel {
         panelVacunas.setLayout(new BorderLayout());
         panelVacunas.setBackground(Color.decode("#7E88E2"));
 
-        String[] columnasVacunas = {"Fecha", "Tipo de Intervención", "Farmaco"};
+        String[] columnasVacunas = {"Fecha", "Tipo de Intervención", "Fármaco"};
         DefaultTableModel modeloVacunas = new DefaultTableModel(columnasVacunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
