@@ -137,7 +137,7 @@ public class MainFrame extends JFrame  {
         JLabel lblclientemascotas = new JLabel("Cliente/Mascotas");
         lblclientemascotas.setForeground(new Color(255, 255, 255));
         lblclientemascotas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblclientemascotas.setBounds(55, 144, 130, 28);
+        lblclientemascotas.setBounds(55, 144, 150, 28);
         panelMenu.add(lblclientemascotas);
         lblclientemascotas.addMouseListener(new MouseAdapter() {
             @Override
@@ -214,7 +214,7 @@ public class MainFrame extends JFrame  {
         JLabel lblAdministracion = new JLabel("Administración");
         lblAdministracion.setForeground(new Color(255, 255, 255));
         lblAdministracion.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblAdministracion.setBounds(55, 300, 102, 28);
+        lblAdministracion.setBounds(55, 300, 150, 28);
         panelMenu.add(lblAdministracion);
         lblAdministracion.addMouseListener(new MouseAdapter() {
             @Override
