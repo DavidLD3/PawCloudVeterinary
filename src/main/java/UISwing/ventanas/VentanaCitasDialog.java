@@ -317,25 +317,6 @@ public class VentanaCitasDialog extends JDialog {
 	    roundedPanel.add(timeSpinner);
 	}
 
-
-	/*private void mostrarCalendario() {
-	    JDialog dialog = new JDialog();
-	    dialog.setModal(true); 
-	    dialog.setTitle("Seleccionar Fecha");
-	    dialog.setSize(300, 300);
-	    dialog.setLocationRelativeTo(null); 
-	    JCalendar calendar = new JCalendar();
-	    dialog.getContentPane().add(calendar, BorderLayout.CENTER);
-	    
-	    JButton okButton = new JButton("OK");
-	    okButton.addActionListener(e -> {
-	        dateSpinner.setValue(calendar.getDate());
-	        dialog.dispose(); 
-	    });
-	    dialog.getContentPane().add(okButton, BorderLayout.SOUTH);
-
-	    dialog.setVisible(true);
-	}*/
 	
 
 
@@ -393,36 +374,6 @@ public class VentanaCitasDialog extends JDialog {
 
     
     
-
-	/*private void actualizarListaClientes(String texto) {
-	    
-	    if (!cargaInicialCompleta) return;
-
-	    new SwingWorker<List<Cliente>, Void>() {
-	        @Override
-	        protected List<Cliente> doInBackground() throws Exception {
-	           
-	            return clienteDAO.buscarClientesPorNombre(texto);
-	        }
-
-	        @Override
-	        protected void done() {
-	            try {
-	                // Obtiene el resultado de la búsqueda
-	                List<Cliente> clientes = get();
-	                comboBoxClientes.removeAllItems();
-	                for (Cliente cliente : clientes) {
-	                    comboBoxClientes.addItem(cliente);
-	                }
-	                if (!clientes.isEmpty()) {
-	                    comboBoxClientes.showPopup();
-	                }
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }.execute();
-	}*/
 
 	private void guardarCita() {
 	    try {

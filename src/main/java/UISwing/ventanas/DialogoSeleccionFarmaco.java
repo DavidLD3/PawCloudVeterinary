@@ -27,8 +27,8 @@ public class DialogoSeleccionFarmaco extends JDialog {
         setBackground(new Color(0, 0, 0, 0));
         
         RoundedPanel roundedBackground = new RoundedPanel(20);
-        roundedBackground.setLayout(null);  // Usar layout null para control manual
-        roundedBackground.setBackground(new Color(91, 123, 213));  // Color de fondo
+        roundedBackground.setLayout(null);
+        roundedBackground.setBackground(new Color(91, 123, 213));
         roundedBackground.setOpaque(false);
         setContentPane(roundedBackground);
 
@@ -117,17 +117,16 @@ public class DialogoSeleccionFarmaco extends JDialog {
         JPanel centerPanel = new JPanel() {
         @Override
         protected void paintComponent(Graphics g) {
-            // Personaliza aquí tu componente
             Graphics2D g2 = (Graphics2D) g.create();
-            g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+            g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
             g2.setColor(getBackground());
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
             g2.dispose();
             super.paintComponent(g);
 	        }
 	    };
-	    centerPanel.setBackground(new Color(255, 255, 255, 70)); // Color de fondo con opacidad
-	    centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+	    centerPanel.setBackground(new Color(255, 255, 255, 70)); 
+	    centerPanel.setOpaque(false);
 	    centerPanel.setBounds(21, 21, 275, 227);
 
 	    getContentPane().add(centerPanel);
@@ -159,10 +158,7 @@ public class DialogoSeleccionFarmaco extends JDialog {
     }
     
     public static void main(String[] args) {
-        // Crear instancia de FarmacoDAO (supongamos que ya está inicializado correctamente)
         FarmacoDAO farmacoDAO = new FarmacoDAO();
-
-        // Crear un nuevo diálogo de selección de fármaco y mostrarlo
         DialogoSeleccionFarmaco dialogo = new DialogoSeleccionFarmaco(null, true, farmacoDAO);
         dialogo.setVisible(true);
     }

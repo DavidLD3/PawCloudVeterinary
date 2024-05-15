@@ -35,10 +35,8 @@ import DB.FarmacoDAO;
 import model.Almacen;
 import model.Farmaco;
 import javax.swing.event.DocumentListener;
-import UISwing.ventanas.DialogoRegistroAlmacen;
 import javax.swing.table.TableModel;
 import javax.swing.SwingUtilities;
-import UISwing.ventanas.DialogoRegistroFarmaco;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class PanelAlmacen extends JPanel {
@@ -53,28 +51,24 @@ public class PanelAlmacen extends JPanel {
     private JScrollPane scrollPaneProductos;
     private DefaultTableModel modeloTablaProductos;
     private AlmacenDAO almacenDao;
-    private DefaultTableModel modeloTablaServicios; // Modelo para la tabla de servicios
+    private DefaultTableModel modeloTablaServicios;
     private DefaultTableModel modeloTablaFarmacos;
     private FarmacoDAO farmacoDao;
 
-    /**
-     * Create the panel.
-     */
     public PanelAlmacen() {
 
         setPreferredSize(new Dimension(1112, 653));
         setLayout(null);
         setOpaque(false);
         farmacoDao = new FarmacoDAO();
-        // Crea el JTabbedPane y le asigna un tamaño y posición
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.setBounds(0, 0, 1112, 653); // Tamaño ampliado para incluir el área de contenido
+        tabbedPane.setBounds(0, 0, 1112, 653);
         add(tabbedPane);
 
-        JPanel gestionProductos = new JPanel(); // Crea el panel para la pestaña "Gestión de Almacén"
-        gestionProductos.setBackground(new Color(204, 229, 255)); // Un azul claro, cambia este valor por el color que prefieras
+        JPanel gestionProductos = new JPanel();
+        gestionProductos.setBackground(new Color(204, 229, 255));
         gestionProductos.setOpaque(true);
-        tabbedPane.addTab("Gestion de Productos", null, gestionProductos, null); // Agrega la pestaña "Gestión de Almacén" y su contenido al JTabbedPane
+        tabbedPane.addTab("Gestion de Productos", null, gestionProductos, null);
         gestionProductos.setLayout(null);
 
         buscarProducto = new JTextField();
@@ -110,8 +104,6 @@ public class PanelAlmacen extends JPanel {
                 }
             }
         });
-
-        // Agregando el FocusListener a txtBuscarProducto
         buscarProducto.addFocusListener(new FocusAdapter() {
 
             public void focusGained(FocusEvent e) {
@@ -131,22 +123,22 @@ public class PanelAlmacen extends JPanel {
         añadirProductoServicio.setBounds(183, 10, 153, 23);
         añadirProductoServicio.setFont(new Font("Tahoma", Font.BOLD, 12));
         añadirProductoServicio.setBackground(Color.WHITE);
-        añadirProductoServicio.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        añadirProductoServicio.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        añadirProductoServicio.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        añadirProductoServicio.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        añadirProductoServicio.setForeground(Color.decode("#0057FF"));
+        añadirProductoServicio.setFocusPainted(false);
+        añadirProductoServicio.setBorderPainted(false);
+        añadirProductoServicio.setContentAreaFilled(false);
         añadirProductoServicio.setOpaque(true);
         añadirProductoServicio.setRolloverEnabled(true);
         añadirProductoServicio.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                añadirProductoServicio.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                añadirProductoServicio.setBackground(Color.decode("#003366"));
                 añadirProductoServicio.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                añadirProductoServicio.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                añadirProductoServicio.setBackground(Color.WHITE);
                 añadirProductoServicio.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -158,17 +150,17 @@ public class PanelAlmacen extends JPanel {
 
         gestionProductos.add(añadirProductoServicio);
 
-        scrollPaneProductos = new JScrollPane(); // Usar la versión de clase aquí
+        scrollPaneProductos = new JScrollPane();
         scrollPaneProductos.setBounds(0, 48, 1107, 577);
-        scrollPaneProductos.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
+        scrollPaneProductos.getViewport().setBackground(new Color(230, 242, 255));
         scrollPaneProductos.setBackground(new Color(200, 220, 255));
         gestionProductos.add(scrollPaneProductos);
 
         tablaProductos = new JTable();
         scrollPaneProductos.setViewportView(tablaProductos);
 
-        JPanel gestionServicios = new JPanel(); // Crea otro panel para la pestaña "Gestión de Servicios"
-        tabbedPane.addTab("Gestion de Servicios", null, gestionServicios, null); // Agrega la pestaña "Gestión de Servicios" y su contenido al JTabbedPane
+        JPanel gestionServicios = new JPanel();
+        tabbedPane.addTab("Gestion de Servicios", null, gestionServicios, null);
         gestionServicios.setLayout(null);
 
         inicializarComponentesServicios(gestionServicios);
@@ -178,7 +170,6 @@ public class PanelAlmacen extends JPanel {
         gestionServicios.add(buscarServicio);
         buscarServicio.setColumns(10);
 
-        // Agregando el FocusListener a txtBuscarServicio
         buscarServicio.addFocusListener(new FocusAdapter() {
 
             public void focusGained(FocusEvent e) {
@@ -210,7 +201,7 @@ public class PanelAlmacen extends JPanel {
                 try {
                     String nombreServicio = buscarServicio.getText().trim();
                     if (!nombreServicio.isEmpty() && !nombreServicio.equals("Buscar Servicio")) {
-                        List<Almacen> servicios = almacenDao.buscarServiciosPorNombre(nombreServicio); // Usamos el mismo método para buscar servicios
+                        List<Almacen> servicios = almacenDao.buscarServiciosPorNombre(nombreServicio);
                         actualizarTablaServicios(servicios);
                     } else {
                         cargarDatosServicios();
@@ -263,10 +254,10 @@ public class PanelAlmacen extends JPanel {
             private void buscarFarmaco() {
                 String texto = buscarFarmaco.getText().trim();
                 if (!texto.isEmpty() && !texto.equals("Buscar Farmaco")) {
-                    List<Farmaco> farmacos = farmacoDao.buscarFarmacos(texto); // Asume que este método existe en FarmacoDAO
+                    List<Farmaco> farmacos = farmacoDao.buscarFarmacos(texto);
                     actualizarTablaFarmacos(farmacos);
                 } else {
-                    cargarDatosFarmacos(); // Recargar todos los datos si el campo de búsqueda está vacío
+                    cargarDatosFarmacos();
                 }
             }
         });
@@ -287,22 +278,22 @@ public class PanelAlmacen extends JPanel {
         añadirFarmaco.setBounds(180, 10, 130, 23);
         añadirFarmaco.setFont(new Font("Tahoma", Font.BOLD, 12));
         añadirFarmaco.setBackground(Color.WHITE);
-        añadirFarmaco.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        añadirFarmaco.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        añadirFarmaco.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        añadirFarmaco.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+        añadirFarmaco.setForeground(Color.decode("#0057FF"));
+        añadirFarmaco.setFocusPainted(false);
+        añadirFarmaco.setBorderPainted(false);
+        añadirFarmaco.setContentAreaFilled(false);
         añadirFarmaco.setOpaque(true);
         añadirFarmaco.setRolloverEnabled(true);
         añadirFarmaco.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                añadirFarmaco.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                añadirFarmaco.setBackground(Color.decode("#003366"));
                 añadirFarmaco.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                añadirFarmaco.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                añadirFarmaco.setBackground(Color.WHITE);
                 añadirFarmaco.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -313,15 +304,13 @@ public class PanelAlmacen extends JPanel {
         });
 
         gestionFarmacos.add(añadirFarmaco);
-
-        // Resto de la configuración del PanelAlmacen...
         inicializarComponentesProductos(gestionProductos);
     }
 
     private void inicializarComponentesProductos(JPanel panel) {
         modeloTablaProductos = new DefaultTableModel(new Object[]{"Nombre Producto", "Categoría", "Fecha Última Compra", "Fecha Caducidad", "Cantidad Stock"}, 0) {
             public boolean isCellEditable(int row, int column) {
-                return false; // Hacer que la tabla no sea editable
+                return false;
             }
         };
 
@@ -329,39 +318,32 @@ public class PanelAlmacen extends JPanel {
         tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaProductos.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Verificar si fue un doble clic
+                if (e.getClickCount() == 2) { 
                     JTable target = (JTable)e.getSource();
                     int row = target.getSelectedRow();
                     TableModel model = target.getModel();
-                    String nombreProducto = (String) model.getValueAt(row, 0); // Obtener el nombre del producto seleccionado
+                    String nombreProducto = (String) model.getValueAt(row, 0);
                     abrirDialogoInfoAlmacen(nombreProducto);
                 }
             }
         });
-
-        // Crear el renderizador centrado para la columna "Fecha Última Compra"
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tablaProductos.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 
-        // Aplicar el renderizador a la columna "Fecha Caducidad"
         tablaProductos.getColumnModel().getColumn(3).setCellRenderer(new FechaCaducidadRenderer());
-
-        // Configurar la columna "Cantidad Stock" para estar alineada a la derecha
         tablaProductos.getColumnModel().getColumn(4).setCellRenderer(new RightAlignedRenderer());
 
         JTableHeader header = tablaProductos.getTableHeader();
-        header.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
-        header.setForeground(Color.WHITE); // Color del texto blanco
+        header.setBackground(new Color(75, 110, 175)); 
+        header.setForeground(Color.WHITE);
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         scrollPaneProductos.setViewportView(tablaProductos);
         almacenDao = new AlmacenDAO();
         cargarDatosProductos();
-
-        // Agregar leyendas con colores
         JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        legendPanel.setBounds(800, 10, 300, 30); // Ajusta según tus necesidades
+        legendPanel.setBounds(800, 10, 300, 30);
         legendPanel.setOpaque(false);
 
         addColorLegend(legendPanel, Color.RED, "Caducado");
@@ -374,13 +356,12 @@ public class PanelAlmacen extends JPanel {
 
 
     // Método para abrir el DialogoInfoAlmacen con la información del producto seleccionado
-    // Reutilizamos el método abrirDialogoInfoAlmacen para mostrar la información tanto de productos como de servicios
     private void abrirDialogoInfoAlmacen(String nombreProducto) {
         try {
-            Almacen producto = almacenDao.obtenerProductoPorNombre(nombreProducto); // Obtener el producto por su nombre
+            Almacen producto = almacenDao.obtenerProductoPorNombre(nombreProducto);
             if (producto != null) {
-                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // Buscar el JFrame ancestro
-                DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(frame, producto); // Corrección aquí
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                DialogoInfoAlmacen dialogo = new DialogoInfoAlmacen(frame, producto);
                 dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialogo.setVisible(true);
             }
@@ -390,39 +371,36 @@ public class PanelAlmacen extends JPanel {
     }
 
     private void inicializarComponentesServicios(JPanel panel) {
-        panel.setBackground(new Color(204, 229, 255)); // Un color azul claro para el fondo del panel
+        panel.setBackground(new Color(204, 229, 255));
         panel.setOpaque(true);
         modeloTablaServicios = new DefaultTableModel(new Object[] { "Nombre Servicio", "Categoría", "Precio Bruto" }, 0) {
             public boolean isCellEditable(int row, int column) {
-                return false; // Hacer que la tabla no sea editable
+                return false;
             }
         };
 
         tablaServicios = new JTable(modeloTablaServicios);
         tablaServicios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JTableHeader headerServicios = tablaServicios.getTableHeader();
-        headerServicios.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
-        headerServicios.setForeground(Color.WHITE); // Color de texto blanco
+        headerServicios.setBackground(new Color(75, 110, 175));
+        headerServicios.setForeground(Color.WHITE);
         headerServicios.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
-        // Asignar un renderizador para la columna "Precio Bruto", alineándolo a la derecha y formateando el precio
         tablaServicios.getColumnModel().getColumn(2).setCellRenderer(new PrecioRenderer());
 
         JScrollPane scrollPaneServicios = new JScrollPane(tablaServicios);
         scrollPaneServicios.setBounds(0, 48, 1107, 578);
-        scrollPaneServicios.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
+        scrollPaneServicios.getViewport().setBackground(new Color(230, 242, 255)); 
         scrollPaneServicios.setBackground(new Color(200, 220, 255));
         panel.add(scrollPaneServicios);	
 
-        // Añadir MouseListener para doble clic
         tablaServicios.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Verificar si fue un doble clic
+                if (e.getClickCount() == 2) { 
                     JTable target = (JTable) e.getSource();
                     int row = target.getSelectedRow();
-                    if (row != -1) { // Asegurar que una fila está seleccionada
-                        String nombreServicio = (String) target.getModel().getValueAt(row, 0); // Obtener el nombre del servicio
-                        abrirDialogoInfoAlmacen(nombreServicio); // Usar el mismo método que para los productos
+                    if (row != -1) {
+                        String nombreServicio = (String) target.getModel().getValueAt(row, 0);
+                        abrirDialogoInfoAlmacen(nombreServicio);
                     }
                 }
             }
@@ -435,52 +413,46 @@ public class PanelAlmacen extends JPanel {
 
 
     private void inicializarComponentesFarmacos(JPanel panel) {
-        panel.setBackground(new Color(204, 229, 255)); // Un color azul claro para el fondo del panel
+        panel.setBackground(new Color(204, 229, 255));
         panel.setOpaque(true);
         modeloTablaFarmacos = new DefaultTableModel(new Object[] { "Nombre", "Cantidad", "Fecha Caducidad", "Precio" }, 0) {
             public boolean isCellEditable(int row, int column) {
-                return false; // Hacer que la tabla no sea editable
+                return false;
             }
         };
 
         tablaFarmacos = new JTable(modeloTablaFarmacos);
         tablaFarmacos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Asigna el renderer personalizado solo a la columna de "Fecha Caducidad"
         tablaFarmacos.getColumnModel().getColumn(2).setCellRenderer(new FechaCaducidadRenderer());
 
         JTableHeader headerFarmacos = tablaFarmacos.getTableHeader();
-        headerFarmacos.setBackground(new Color(75, 110, 175)); // Color de fondo azul oscuro
-        headerFarmacos.setForeground(Color.WHITE); // Color de texto blanco
+        headerFarmacos.setBackground(new Color(75, 110, 175));
+        headerFarmacos.setForeground(Color.WHITE);
         headerFarmacos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
-        // Asignar renderizadores personalizados para "Cantidad" y "Precio"
-        tablaFarmacos.getColumnModel().getColumn(1).setCellRenderer(new RightAlignedRenderer()); // Cantidad
-        tablaFarmacos.getColumnModel().getColumn(3).setCellRenderer(new PrecioRenderer()); // Precio
+        tablaFarmacos.getColumnModel().getColumn(1).setCellRenderer(new RightAlignedRenderer());
+        tablaFarmacos.getColumnModel().getColumn(3).setCellRenderer(new PrecioRenderer());
 
         JScrollPane scrollPaneFarmacos = new JScrollPane(tablaFarmacos);
         scrollPaneFarmacos.setBounds(0, 48, 1107, 578);
-        scrollPaneFarmacos.getViewport().setBackground(new Color(230, 242, 255)); // Un color azul muy claro para el fondo del contenido
+        scrollPaneFarmacos.getViewport().setBackground(new Color(230, 242, 255));
         scrollPaneFarmacos.setBackground(new Color(200, 220, 255));
         panel.add(scrollPaneFarmacos);
-
-        // Añadir MouseListener para doble clic
         tablaFarmacos.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Verificar si fue un doble clic
+                if (e.getClickCount() == 2) { 
                     JTable target = (JTable) e.getSource();
                     int row = target.getSelectedRow();
-                    if (row != -1) { // Asegurar que una fila está seleccionada
-                        abrirDialogoInfoFarmaco(row); // Pasar el índice de la fila seleccionada
+                    if (row != -1) { 
+                        abrirDialogoInfoFarmaco(row);
                     }
                 }
             }
         });
 
-        cargarDatosFarmacos(); // Cargar datos en la tabla
-        // Agregar leyendas de colores
+        cargarDatosFarmacos();
         JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        legendPanel.setBounds(800, 10, 300, 30); // Ajusta según tus necesidades
+        legendPanel.setBounds(800, 10, 300, 30);
         legendPanel.setOpaque(false);
 
         addColorLegend(legendPanel, Color.RED, "Caducado");
@@ -494,8 +466,7 @@ public class PanelAlmacen extends JPanel {
 
     private void cargarDatosFarmacos() {
         try {
-            // Usar farmacoDao para obtener los farmacos ordenados
-            List<Farmaco> farmacos = farmacoDao.obtenerFarmacosOrdenados(); // Asegúrate de que este método existe en FarmacoDAO
+            List<Farmaco> farmacos = farmacoDao.obtenerFarmacosOrdenados();
             actualizarTablaFarmacos(farmacos);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar datos de fármacos: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
@@ -510,7 +481,7 @@ public class PanelAlmacen extends JPanel {
             fila[1] = farmaco.getCantidad();
 
             LocalDate fechaCaducidad = farmaco.getFechaCaducidad() != null ? farmaco.getFechaCaducidad().toLocalDate() : null;
-            fila[2] = (fechaCaducidad != null) ? fechaCaducidad.toString() : ""; // Mostrar "" si la fecha es null
+            fila[2] = (fechaCaducidad != null) ? fechaCaducidad.toString() : "";
 
             fila[3] = farmaco.getPrecio().toPlainString();
             modeloTablaFarmacos.addRow(fila);
@@ -518,16 +489,14 @@ public class PanelAlmacen extends JPanel {
     }
 
     private void abrirDialogoInfoFarmaco(int rowIndex) {
-        // Obtener los datos de la fila seleccionada
         String nombre = (String) modeloTablaFarmacos.getValueAt(rowIndex, 0);
 
         try {
-            // Buscar el objeto Farmaco por nombre (o por otro criterio si es más adecuado)
-            Farmaco farmaco = farmacoDao.buscarFarmacoPorNombre(nombre); // Debes implementar este método en FarmacoDAO
+            Farmaco farmaco = farmacoDao.buscarFarmacoPorNombre(nombre);
 
             if (farmaco != null) {
-                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // Obtener el JFrame padre
-                DialogoInfoFarmaco dialogo = new DialogoInfoFarmaco(frame, farmaco); // Crear el diálogo con el Farmaco
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                DialogoInfoFarmaco dialogo = new DialogoInfoFarmaco(frame, farmaco);
                 dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialogo.setVisible(true);
             }
@@ -557,7 +526,7 @@ public class PanelAlmacen extends JPanel {
     // Método para buscar productos por nombre y cargarlos en la tabla
     private void buscarProductosPorNombre(String nombre) throws SQLException {
         List<Almacen> productos = almacenDao.buscarProductosPorNombre(nombre);
-        modeloTablaProductos.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+        modeloTablaProductos.setRowCount(0);
 
         for (Almacen almacen : productos) {
             modeloTablaProductos.addRow(new Object[] {
@@ -596,12 +565,12 @@ public class PanelAlmacen extends JPanel {
     }
 
     private void actualizarTablaServicios(List<Almacen> servicios) {
-        modeloTablaServicios.setRowCount(0); // Limpiar la tabla antes de agregar nuevos datos
+        modeloTablaServicios.setRowCount(0);
         for (Almacen servicio : servicios) {
             Object[] fila = new Object[] {
-                    servicio.getNombreProducto(), // Nombre del servicio
-                    servicio.getCategoria().name(), // Categoría del servicio
-                    servicio.getPrecioBruto().toPlainString() // Precio bruto del servicio
+                    servicio.getNombreProducto(),
+                    servicio.getCategoria().name(),
+                    servicio.getPrecioBruto().toPlainString()
             };
             modeloTablaServicios.addRow(fila);
         }
@@ -618,8 +587,6 @@ public class PanelAlmacen extends JPanel {
         dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialogo.setVisible(true);
     }
-
-    // Renderer personalizado para la columna Fecha Caducidad
     class FechaCaducidadRenderer extends DefaultTableCellRenderer {
         private DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -630,20 +597,18 @@ public class PanelAlmacen extends JPanel {
                     LocalDate fecha = LocalDate.parse(value.toString());
                     value = fecha.format(formatoFecha);
                     LocalDate ahora = LocalDate.now();
-
-                    // Establecer colores de fondo según la fecha de caducidad
                     if (fecha.isBefore(ahora)) {
-                        setBackground(Color.RED); // Caducado
+                        setBackground(Color.RED);
                     } else if (fecha.isBefore(ahora.plusWeeks(1))) {
-                        setBackground(Color.YELLOW); // Cerca de caducar
+                        setBackground(Color.YELLOW);
                     } else {
-                        setBackground(Color.GREEN); // Todavía válido
+                        setBackground(Color.GREEN);
                     }
                 } catch (DateTimeParseException e) {
-                    setBackground(Color.WHITE); // Si la fecha no se puede parsear, usa el color blanco
+                    setBackground(Color.WHITE);
                 }
             } else {
-                setBackground(Color.WHITE); // Valor nulo
+                setBackground(Color.WHITE);
             }
 
             setHorizontalAlignment(JLabel.CENTER);
@@ -663,7 +628,7 @@ public class PanelAlmacen extends JPanel {
                     LocalDate fecha = LocalDate.parse(value.toString());
                     value = fecha.format(formatoFecha);
                 } catch (DateTimeParseException e) {
-                    // Manejar el caso en que la fecha no pueda ser parseada
+                    
                 }
             }
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -680,16 +645,15 @@ public class PanelAlmacen extends JPanel {
                     double precio = Double.parseDouble(value.toString());
                     value = String.format("%s €", formatoPrecio.format(precio).replace("€", "").trim());
                 } catch (NumberFormatException e) {
-                    // Manejar el caso en que el valor no pueda ser parseado como número
+                
                 }
             }
-            setHorizontalAlignment(JLabel.RIGHT); // Alinear a la derecha
+            setHorizontalAlignment(JLabel.RIGHT);
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
     }
 
 
-    // Renderizador para alinear el texto a la derecha
     class RightAlignedRenderer extends DefaultTableCellRenderer {
         public RightAlignedRenderer() {
             setHorizontalAlignment(JLabel.RIGHT);
@@ -727,19 +691,13 @@ public class PanelAlmacen extends JPanel {
         }
     }
 
-    // Agregamos el método main para ejecutar y probar la interfaz
     public static void main(String[] args) {
-        // Creamos el marco de la ventana principal
         JFrame frame = new JFrame("Gestión de Almacén");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1200, 700); // Tamaño del marco
-        frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
-
-        // Creamos una instancia del panel
+        frame.setSize(1200, 700);
+        frame.setLocationRelativeTo(null);
         PanelAlmacen panelAlmacen = new PanelAlmacen();
-        frame.getContentPane().add(panelAlmacen); // Añade el panel al marco
-
-        // Hace visible la ventana
+        frame.getContentPane().add(panelAlmacen);
         frame.setVisible(true);
     }
 }

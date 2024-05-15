@@ -108,10 +108,10 @@ public class FarmacoDAO {
         try (Connection connection = Conexion.getConexion();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, nombre); // Setear el parámetro de la consulta SQL
+            statement.setString(1, nombre); 
             ResultSet resultSet = statement.executeQuery();
 
-            if (resultSet.next()) { // Si se encuentra un registro
+            if (resultSet.next()) { 
                 return new Farmaco(
                     resultSet.getInt("id"),
                     resultSet.getString("codigo"),
@@ -124,7 +124,7 @@ public class FarmacoDAO {
                     resultSet.getBigDecimal("precio")
                 );
             }
-            return null; // Retorna null si no hay coincidencia
+            return null; 
         }
     }
     
@@ -150,7 +150,7 @@ public class FarmacoDAO {
             pstmt.setInt(2, uso.getIdHospitalizacion());
             pstmt.setInt(3, uso.getCantidadUsada());
             pstmt.setTimestamp(4, Timestamp.valueOf(uso.getFechaHoraUso()));
-            pstmt.setString(5, uso.getFrecuencia());  // Guardar la frecuencia
+            pstmt.setString(5, uso.getFrecuencia()); 
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -164,7 +164,7 @@ public class FarmacoDAO {
     
     public List<UsoFarmaco> obtenerUltimosUsosFarmacos() {
         List<UsoFarmaco> usos = new ArrayList<>();
-        // Asegúrate de incluir la frecuencia en la selección
+       
         String sql = "SELECT uf.id_farmaco, f.nombre AS nombre_farmaco, uf.cantidad_usada, uf.fecha_hora_uso, " +
                      "m.nombre AS nombre_mascota, uf.frecuencia " +
                      "FROM uso_farmacos uf " +
@@ -182,7 +182,7 @@ public class FarmacoDAO {
                 uso.setCantidadUsada(rs.getInt("cantidad_usada"));
                 uso.setFechaHoraUso(rs.getTimestamp("fecha_hora_uso").toLocalDateTime());
                 uso.setNombreMascota(rs.getString("nombre_mascota"));
-                uso.setFrecuencia(rs.getString("frecuencia"));  // Agregar la frecuencia recuperada de la base de datos
+                uso.setFrecuencia(rs.getString("frecuencia")); 
                 usos.add(uso);
             }
         } catch (SQLException e) {

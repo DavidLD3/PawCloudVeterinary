@@ -105,7 +105,7 @@ public class Veterinario {
     
     @Override
     public String toString() {
-        return nombre + " " + apellidos; // Asegúrate de tener los campos nombre y apellidos.
+        return nombre + " " + apellidos;
     }
 
     

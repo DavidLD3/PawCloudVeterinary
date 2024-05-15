@@ -1,34 +1,24 @@
 package UISwing.ventanas;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 import com.toedter.calendar.JDateChooser;
-import DB.CitaDAO;
 import DB.ClienteDAO;
 import DB.FarmacoDAO;
 import DB.HospitalizacionDAO;
 import DB.MascotaDAO;
 import DB.VeterinarioDAO;
-import model.Cita;
-import model.Cliente;
 import model.Farmaco;
 import model.Hospitalizacion;
-import model.Mascota;
-import model.Mascota.MascotaContenedor;
 import model.Veterinario;
 import UISwing.recursos.RoundedPanel;
 import java.util.List;
-import java.sql.Timestamp;
 import javax.swing.JOptionPane;
-import java.sql.Timestamp;
-import java.time.ZoneId;
-import java.time.LocalDateTime;
+
 
 public class VentanaHospitalizadosDialogMascota extends JDialog {
 
@@ -56,21 +46,18 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	private int idMascota;
 	private HospitalizacionDAO hospitalizacionDao;
 	private int idHospitalizacion = -1;
-	/**
-	 * @wbp.parser.constructor
-	 */
 
     
 	public VentanaHospitalizadosDialogMascota(Frame owner, boolean modal, int idMascota, String nombreMascota) {
 	    super(owner, modal);
-	    this.idMascota = idMascota; // Almacena el ID de la mascota
+	    this.idMascota = idMascota;
 	    this.nombreMascota = nombreMascota;
 	    
 	    
 	    setTitle("Hospitalizaciones - " + nombreMascota);
 	        setTitle("Hospitalizaciones");
 	        farmacoDAO = new FarmacoDAO();
-	        setUndecorated(true); // Esto elimina la decoración de la ventana
+	        setUndecorated(true);
 	        setSize(new Dimension(888,455));
 	        
 	        setLocationRelativeTo(null);
@@ -79,8 +66,8 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        
 	        roundedPanel = new RoundedPanel(30, Color.decode("#5694F9"));
 	        roundedPanel.setLayout(null);
-	        roundedPanel.setBounds(0, 0, 888, 399); // Ajustar al tamaño del JDialog
-	        roundedPanel.setOpaque(false); // Hacer el fondo transparente
+	        roundedPanel.setBounds(0, 0, 888, 399); 
+	        roundedPanel.setOpaque(false);
 	        setBackground(new java.awt.Color(0, 0, 0, 0));
 	        clienteDAO = new ClienteDAO();
 	        mascotaDAO = new MascotaDAO();
@@ -94,7 +81,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	
 	 private void initDialogComponents() {
 	     	
-			 // Configura el JTextField utilizado para la entrada de búsqueda
+			
 		  JLabel labelNombreMascota = new JLabel(nombreMascota);
 		  labelNombreMascota.setForeground(new Color(255, 255, 255));
 		  labelNombreMascota.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
@@ -104,19 +91,19 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 
 	        // Selector de fecha de ingreso
 			dateChooserIngreso = new JDateChooser();
-			dateChooserIngreso.setDate(new Date()); // Establecer a la fecha actual
+			dateChooserIngreso.setDate(new Date()); 
 			dateChooserIngreso.setBounds(40, 127, 244, 30);
 	        // Selector de fecha de salida (opcional al inicio)
 	        dateChooserSalida = new JDateChooser();
 	        dateChooserSalida.setBounds(319, 127, 200, 30);
 
-	     // Reemplazo de JTextField por JTextArea para el motivo de la hospitalización
+	    
 	        textAreaMotivo = new JTextArea();
 	        textAreaMotivo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 	        textAreaMotivo.setLineWrap(true);
 	        textAreaMotivo.setWrapStyleWord(true);
 	        JScrollPane scrollPaneMotivo = new JScrollPane(textAreaMotivo);
-	        scrollPaneMotivo.setBounds(568, 55, 280, 30); // Mismo tamaño y ubicación que textFieldMotivo
+	        scrollPaneMotivo.setBounds(568, 55, 280, 30);
 	        
 
 	     
@@ -140,13 +127,13 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
 	            @Override
 	            public void mouseEntered(java.awt.event.MouseEvent evt) {
-	                saveButton.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+	                saveButton.setBackground(Color.decode("#003366"));
 	                saveButton.setForeground(Color.WHITE);
 	            }
 
 	            @Override
 	            public void mouseExited(java.awt.event.MouseEvent evt) {
-	                saveButton.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+	                saveButton.setBackground(Color.WHITE);
 	                saveButton.setForeground(Color.decode("#0057FF"));
 	            }
 	        });
@@ -167,18 +154,18 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
 	            @Override
 	            public void mouseEntered(java.awt.event.MouseEvent evt) {
-	                cancelButton.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+	                cancelButton.setBackground(Color.decode("#003366"));
 	                cancelButton.setForeground(Color.WHITE);
 	            }
 
 	            @Override
 	            public void mouseExited(java.awt.event.MouseEvent evt) {
-	                cancelButton.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+	                cancelButton.setBackground(Color.WHITE); 
 	                cancelButton.setForeground(Color.decode("#0057FF"));
 	            }
 	        });
 	        cancelButton.addActionListener(e -> {
-	            dispose(); // Cerrar el diálogo
+	            dispose(); 
 	        });
 
 	       
@@ -188,7 +175,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        textAreaTratamiento.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 	        textAreaTratamiento.setLineWrap(true);
 	        textAreaTratamiento.setWrapStyleWord(true);
-	        JScrollPane scrollPaneTratamiento = new JScrollPane(textAreaTratamiento); // Asocias el JTextArea al JScrollPane
+	        JScrollPane scrollPaneTratamiento = new JScrollPane(textAreaTratamiento);
 	        scrollPaneTratamiento.setBounds(40, 200, 808, 87);
 	        roundedPanel.add(scrollPaneTratamiento);
 	        	        
@@ -197,29 +184,29 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        textAreaNotas.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 	        textAreaNotas.setLineWrap(true);
 	        textAreaNotas.setWrapStyleWord(true);
-	        JScrollPane scrollPaneNotas = new JScrollPane(textAreaNotas); // Asocias el JTextArea al JScrollPane
+	        JScrollPane scrollPaneNotas = new JScrollPane(textAreaNotas);
 	        scrollPaneNotas.setBounds(40, 320, 808, 50);
 	        roundedPanel.add(scrollPaneNotas);
 	        
 	        comboBoxVeterinarios = new JComboBox<>();
-	        comboBoxVeterinarios.setBounds(569, 127, 279, 30); // Ajusta según tus necesidades
+	        comboBoxVeterinarios.setBounds(569, 127, 279, 30);
 	        roundedPanel.add(comboBoxVeterinarios);
 	        llenarComboBoxVeterinarios();
 	        
 	       JPanel centerPanel = new JPanel() {
 	            @Override
 	            protected void paintComponent(Graphics g) {
-	                // Personaliza aquí tu componente
+	                
 	                Graphics2D g2 = (Graphics2D) g.create();
-	                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Ajusta la opacidad aquí
+	                g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
 	                g2.setColor(getBackground());
-	                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); // Puedes ajustar el radio de las esquinas si es necesario
+	                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 	                g2.dispose();
 	                super.paintComponent(g);
 	            }
 	        };
-	        centerPanel.setBackground(new Color(255, 255, 255, 80)); // Color de fondo con opacidad
-	        centerPanel.setOpaque(false); // Hace que el panel no pinte todos sus píxeles, lo que permite que se vea el fondo.
+	        centerPanel.setBackground(new Color(255, 255, 255, 80));
+	        centerPanel.setOpaque(false); 
 	        centerPanel.setBounds(21, 21, 846, 414);
 	        
 	        // Agregar los componentes al panel
@@ -279,24 +266,24 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	        
 	        btnAddFarmaco = new JButton("Añadir Fármaco");
 	        btnAddFarmaco.setFont(new Font("Tahoma", Font.BOLD, 12));
-	        btnAddFarmaco.setBounds(369, 396, 150, 25); // Ajusta la posición como necesites
+	        btnAddFarmaco.setBounds(369, 396, 150, 25); 
 	        btnAddFarmaco.setBackground(Color.WHITE);
-	        btnAddFarmaco.setForeground(Color.decode("#0057FF")); // Letras en color azul
-	        btnAddFarmaco.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-	        btnAddFarmaco.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-	        btnAddFarmaco.setContentAreaFilled(false); // Evita que se pinte el área de contenido
+	        btnAddFarmaco.setForeground(Color.decode("#0057FF"));
+	        btnAddFarmaco.setFocusPainted(false); 
+	        btnAddFarmaco.setBorderPainted(false);
+	        btnAddFarmaco.setContentAreaFilled(false);
 	        btnAddFarmaco.setOpaque(true);
 	        btnAddFarmaco.setRolloverEnabled(true);
 	        btnAddFarmaco.addMouseListener(new java.awt.event.MouseAdapter() {
 	            @Override
 	            public void mouseEntered(java.awt.event.MouseEvent evt) {
-	                btnAddFarmaco.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+	                btnAddFarmaco.setBackground(Color.decode("#003366"));
 	                btnAddFarmaco.setForeground(Color.WHITE);
 	            }
 
 	            @Override
 	            public void mouseExited(java.awt.event.MouseEvent evt) {
-	                btnAddFarmaco.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+	                btnAddFarmaco.setBackground(Color.WHITE);
 	                btnAddFarmaco.setForeground(Color.decode("#0057FF"));
 	            }
 	        });
@@ -312,22 +299,22 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	    }
 	 public VentanaHospitalizadosDialogMascota(Frame owner, boolean modal, int idMascota, String nombreMascota, int idHospitalizacion) {
 		    super(owner, modal);
-		    this.idMascota = idMascota; // Almacena el ID de la mascota
+		    this.idMascota = idMascota;
 		    this.nombreMascota = nombreMascota;
-		    this.idHospitalizacion = idHospitalizacion; // Almacena el ID de la hospitalización
+		    this.idHospitalizacion = idHospitalizacion;
 		    this.hospitalizacionDao = new HospitalizacionDAO();
 
 		    setTitle("Hospitalizaciones - " + nombreMascota);
 		    farmacoDAO = new FarmacoDAO();
-		    setUndecorated(true); // Esto elimina la decoración de la ventana
+		    setUndecorated(true);
 		    setSize(new Dimension(888,455));
 		    
 		    setLocationRelativeTo(null);
 		    
 		    roundedPanel = new RoundedPanel(30, Color.decode("#5694F9"));
 		    roundedPanel.setLayout(null);
-		    roundedPanel.setBounds(0, 0, 888, 399); // Ajustar al tamaño del JDialog
-		    roundedPanel.setOpaque(false); // Hacer el fondo transparente
+		    roundedPanel.setBounds(0, 0, 888, 399); 
+		    roundedPanel.setOpaque(false);
 		    setBackground(new java.awt.Color(0, 0, 0, 0));
 		    clienteDAO = new ClienteDAO();
 		    mascotaDAO = new MascotaDAO();
@@ -336,20 +323,20 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 		    getContentPane().add(roundedPanel);
 		    initDialogComponents();
 
-		    // Ahora, esta lógica se puede aplicar correctamente ya que idHospitalizacion está definido
+		   
 		    if (idHospitalizacion > 0) {
-		        // Modo edición
+		        
 		        cargarDatosHospitalizacion(idHospitalizacion);
 		        saveButton.setText("Modificar");
-		        // Asegurarse de eliminar action listeners previos para evitar acciones duplicadas
+		        
 		        for (ActionListener al : saveButton.getActionListeners()) {
 		            saveButton.removeActionListener(al);
 		        }
 		        saveButton.addActionListener(e -> actualizarHospitalizacion());
 		    } else {
-		        // Modo creación
+		        
 		        saveButton.setText("Guardar");
-		        // Asegurarse de eliminar action listeners previos para evitar acciones duplicadas
+		        
 		        for (ActionListener al : saveButton.getActionListeners()) {
 		            saveButton.removeActionListener(al);
 		        }
@@ -359,7 +346,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	 private void cargarDatosHospitalizacion(int idHospitalizacion) {
 		    Hospitalizacion hospitalizacion = hospitalizacionDao.obtenerHospitalizacionPorId(idHospitalizacion);
 		    if (hospitalizacion != null) {
-		        // Ahora, rellena los campos del diálogo con los datos de la hospitalización
+		        
 		        dateChooserIngreso.setDate(Date.from(hospitalizacion.getFechaIngreso().atZone(ZoneId.systemDefault()).toInstant()));
 		        if (hospitalizacion.getFechaSalida() != null) {
 		            dateChooserSalida.setDate(Date.from(hospitalizacion.getFechaSalida().atZone(ZoneId.systemDefault()).toInstant()));
@@ -368,44 +355,44 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 		        textAreaTratamiento.setText(hospitalizacion.getTratamiento());
 		        comboBoxEstado.setSelectedItem(hospitalizacion.getEstado()); // Asegúrate de que los valores coincidan con los de tu ComboBox
 		        textAreaNotas.setText(hospitalizacion.getNotas());
-		        // Asegúrate de manejar adecuadamente el comboBox de veterinarios si necesitas mostrar el veterinario que atendió la hospitalización.
+		        
 		    } else {
 		        JOptionPane.showMessageDialog(this, "No se pudo cargar la información de la hospitalización.", "Error", JOptionPane.ERROR_MESSAGE);
 		    }
 		}
 	
 	 private void actualizarHospitalizacion() {
-		    // Crear una nueva instancia de Hospitalizacion.
+		    
 		    Hospitalizacion hospitalizacion = new Hospitalizacion();
 		    
-		    // Establecer el ID de la hospitalización a actualizar.
+		    
 		    hospitalizacion.setId(this.idHospitalizacion);
 		    
-		    // Convertir la fecha de ingreso de Date a LocalDateTime directamente.
+		    
 		    LocalDateTime fechaIngresoLocalDateTime = dateChooserIngreso.getDate().toInstant()
 		        .atZone(ZoneId.systemDefault()).toLocalDateTime();
 		    hospitalizacion.setFechaIngreso(fechaIngresoLocalDateTime);
 		    
-		    // Si la fecha de salida no es null, convertirla a LocalDateTime directamente.
+		   
 		    if (dateChooserSalida.getDate() != null) {
 		        LocalDateTime fechaSalidaLocalDateTime = dateChooserSalida.getDate().toInstant()
 		            .atZone(ZoneId.systemDefault()).toLocalDateTime();
 		        hospitalizacion.setFechaSalida(fechaSalidaLocalDateTime);
 		    } else {
-		        hospitalizacion.setFechaSalida(null); // Manejar correctamente el valor null.
+		        hospitalizacion.setFechaSalida(null);
 		    }
 		    
-		    // Establecer el resto de los datos recogidos del formulario.
+		   
 		    hospitalizacion.setMotivo(textAreaMotivo.getText());
 		    hospitalizacion.setTratamiento(textAreaTratamiento.getText());
 		    hospitalizacion.setEstado(comboBoxEstado.getSelectedItem().toString());
 		    hospitalizacion.setNotas(textAreaNotas.getText());
 		    
-		    // Llamar al método de actualización en el DAO y manejar la respuesta.
+		   
 		    boolean exito = hospitalizacionDao.actualizarHospitalizacion(hospitalizacion);
 		    if (exito) {
 		        JOptionPane.showMessageDialog(this, "Hospitalización actualizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-		        this.dispose(); // Cierra el diálogo/modal.
+		        this.dispose();
 		    } else {
 		        JOptionPane.showMessageDialog(this, "No se pudo actualizar la hospitalización.", "Error", JOptionPane.ERROR_MESSAGE);
 		    }
@@ -421,18 +408,9 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 		            
 		            textAreaTratamiento.append(farmacoSeleccionado.getNombre() + " - Dosis: " + dosis + ", Frecuencia: " + frecuencia + "\n");
 		            
-		            boolean stockActualizado = farmacoDAO.actualizarStockFarmaco(farmacoSeleccionado.getId(), 1); // Asumiendo que se usa una unidad
+		            boolean stockActualizado = farmacoDAO.actualizarStockFarmaco(farmacoSeleccionado.getId(), 1); 
 		            
-		            /*/ Aquí necesitas obtener el idHospitalizacion y el idVeterinario. Estos son solo ejemplos.
-		            int idHospitalizacion = obtenerIdHospitalizacionActual();
-		            int idVeterinario = obtenerIdVeterinario();
-		            LocalDateTime fechaHoraUso = LocalDateTime.now(); // O la fecha y hora que sea relevante
-		            
-		            boolean usoRegistrado = farmacoDAO.registrarUsoFarmaco(farmacoSeleccionado.getId(), idHospitalizacion, idVeterinario, 1, fechaHoraUso);
-		            
-		            if (!stockActualizado || !usoRegistrado) {
-		                JOptionPane.showMessageDialog(this, "Error al actualizar el stock del fármaco o registrar su uso.", "Error", JOptionPane.ERROR_MESSAGE);
-		            }*/
+		           
 		        }
 		    } catch (Exception e) {
 		        e.printStackTrace();
@@ -444,7 +422,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	 private void llenarComboBoxVeterinarios() {
 		    VeterinarioDAO veterinarioDAO = new VeterinarioDAO();
 		    List<Veterinario> veterinarios = veterinarioDAO.obtenerTodosLosVeterinarios();
-		    comboBoxVeterinarios.removeAllItems(); // Limpia el comboBox antes de llenarlo
+		    comboBoxVeterinarios.removeAllItems();
 		    for (Veterinario veterinario : veterinarios) {
 		        comboBoxVeterinarios.addItem(veterinario);
 		    }
@@ -458,19 +436,19 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 	 
 	 private void guardarHospitalizacion() {
 		    try {
-		        LocalDateTime fechaIngreso = LocalDateTime.now(); // Asumiendo uso de LocalDateTime
+		        LocalDateTime fechaIngreso = LocalDateTime.now();
 		        LocalDateTime fechaSalida = (dateChooserSalida.getDate() != null) ? dateChooserSalida.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
 		        String motivo = textAreaMotivo.getText();
 		        String tratamiento = textAreaTratamiento.getText();
-		        String estado = (String) comboBoxEstado.getSelectedItem(); // Asegúrate de que comboBoxEstado se está utilizando correctamente
+		        String estado = (String) comboBoxEstado.getSelectedItem();
 		        String notas = textAreaNotas.getText();
 
 		        Veterinario veterinarioSeleccionado = (Veterinario) comboBoxVeterinarios.getSelectedItem();
 		        int idVeterinarioSeleccionado = veterinarioSeleccionado != null ? veterinarioSeleccionado.getId() : -1; // Asegúrate de que esto se maneja correctamente
 
 		        Hospitalizacion hospitalizacion = new Hospitalizacion(
-		            0, // Suponiendo que este es un campo de 'id' autoincrementable o no necesario en el constructor
-		            idMascota, // Usando el idMascota pasado al diálogo
+		            0,
+		            idMascota,
 		            fechaIngreso,
 		            fechaSalida,
 		            motivo,
@@ -494,7 +472,7 @@ public class VentanaHospitalizadosDialogMascota extends JDialog {
 
 
 		private void actualizarFechaSalida(int idMascota, Date fechaSalida) {
-		    // Aquí necesitarías un método en tu HospitalizacionDAO que te permita actualizar la fecha de salida
+		    
 		    boolean resultado = hospitalizacionDAO.actualizarFechaSalidaHospitalizacion(idMascota, new java.sql.Date(fechaSalida.getTime()));
 		    if (resultado) {
 		        JOptionPane.showMessageDialog(this, "Fecha de salida actualizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);

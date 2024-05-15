@@ -10,9 +10,9 @@ public class Cita {
     private LocalDate fecha;
     private LocalTime hora;
     private String notas;
-    private int clienteId; // ID del cliente
-    private int mascotaId; // ID de la mascota
-    private String nombreCliente; // Opcional: Para mostrar en la UI
+    private int clienteId; 
+    private int mascotaId; 
+    private String nombreCliente; 
     private String nombreMascota;
     private String tipo;
     private int veterinarioId;
@@ -79,7 +79,7 @@ public class Cita {
         this.mascotaId = mascotaId;
     }
 	public Cita(int id, String titulo, LocalDate fecha, LocalTime hora, String notas, int clienteId, int mascotaId, String nombreCliente, String nombreMascota) {
-        this(id, titulo, fecha, hora, notas, clienteId, mascotaId); // Llama al constructor anterior
+        this(id, titulo, fecha, hora, notas, clienteId, mascotaId);
         this.nombreCliente = nombreCliente;
         this.nombreMascota = nombreMascota;
     }
@@ -113,7 +113,7 @@ public class Cita {
         // Constructor sin argumentos
     }
     
-    // Constructor que incluye veterinarioId
+   // Constructor que incluye veterinarioId
     public Cita(int id, String titulo, LocalDate fecha, LocalTime hora, String notas, int clienteId, int mascotaId, int veterinarioId) {
         this.id = id;
         this.titulo = titulo;
@@ -122,7 +122,7 @@ public class Cita {
         this.notas = notas;
         this.clienteId = clienteId;
         this.mascotaId = mascotaId;
-        this.veterinarioId = veterinarioId; // Asigna el ID del veterinario
+        this.veterinarioId = veterinarioId;
     }
 
     

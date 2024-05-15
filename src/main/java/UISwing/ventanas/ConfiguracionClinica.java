@@ -10,7 +10,6 @@ public class ConfiguracionClinica {
     private static final int DEFAULT_LIMITE_USUARIOS = 3;
 
     static {
-        // Asegúrate de que el límite está configurado al iniciar la clase
         if (prefs.getInt(LIMITE_USUARIOS_KEY, -1) == -1) {
             prefs.putInt(LIMITE_USUARIOS_KEY, DEFAULT_LIMITE_USUARIOS);
         }

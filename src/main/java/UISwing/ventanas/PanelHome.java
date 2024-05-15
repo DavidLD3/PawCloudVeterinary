@@ -34,7 +34,7 @@ import java.util.List;
 public class PanelHome extends JPanel implements CitaActualizadaListener, HospitalizacionActualizadaListener  {
 	
 	private JPanel panelDatos;
-	private JPanel panelDatosVentas; // Declare as class-level variable
+	private JPanel panelDatosVentas;
 	private JLabel lblHoraCita;
 	private JLabel lblDiaCita;
 	private JLabel lblMascotaCita;
@@ -64,8 +64,8 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         mostrarCitasProximas(); 
         inicializarPanelHospitalizados();
         mostrarHospitalizacionesRecientes();
-        inicializarPanelVentas(); // Lo mismo que farmacos pero mas corto
-        inicializarPanelFarmacos(); // Panel fármacos sin bordes ni scrollbar visible
+        inicializarPanelVentas();
+        inicializarPanelFarmacos();
         actualizarTodo();
 
     }
@@ -192,14 +192,12 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         lblListadoCitas.setForeground(new Color(255, 255, 255));
         lblListadoCitas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblListadoCitas.setBounds(129, 359, 71, 14);
-        // Hacer que el cursor cambie a la forma de mano al pasar sobre el JLabel
         lblListadoCitas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        // Agregar MouseListener al JLabel
         lblListadoCitas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                DialogoListaCitas dialogoListaCitas = new DialogoListaCitas(JFrame.getFrames()[0]); // Asume que este es el frame principal
-                dialogoListaCitas.setCitaActualizadaListener(PanelHome.this); // Registra PanelHome como el listener
+                DialogoListaCitas dialogoListaCitas = new DialogoListaCitas(JFrame.getFrames()[0]); 
+                dialogoListaCitas.setCitaActualizadaListener(PanelHome.this);
                 dialogoListaCitas.setVisible(true);
             }
         });
@@ -216,24 +214,22 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         btnAñadirCita.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAñadirCita.setBounds(24, 297, 274, 31);
         btnAñadirCita.setBackground(Color.WHITE);
-        btnAñadirCita.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnAñadirCita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnAñadirCita.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnAñadirCita.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnAñadirCita.setOpaque(true); // El botón debe pintar cada pixel dentro de sus límites. Esto es necesario para ver el color de fondo.
-
-        // Personalización del efecto rollover
+        btnAñadirCita.setForeground(Color.decode("#0057FF")); 
+        btnAñadirCita.setFocusPainted(false); 
+        btnAñadirCita.setBorderPainted(false); 
+        btnAñadirCita.setContentAreaFilled(false); 
+        btnAñadirCita.setOpaque(true);
         btnAñadirCita.setRolloverEnabled(true);
         btnAñadirCita.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAñadirCita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnAñadirCita.setBackground(Color.decode("#003366"));
                 btnAñadirCita.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAñadirCita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnAñadirCita.setBackground(Color.WHITE);
                 btnAñadirCita.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -246,7 +242,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
                 dialog.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
-                        // Llama aquí al método para actualizar las citas pendientes en PanelHome
+                       
                         actualizarCitasPendientes();
                     }
                 });
@@ -393,24 +389,23 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         btnAñadirHospita.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAñadirHospita.setBounds(24, 297, 274, 31);
         btnAñadirHospita.setBackground(Color.WHITE);
-        btnAñadirHospita.setForeground(Color.decode("#0057FF")); // Letras en color azul
-        btnAñadirHospita.setFocusPainted(false); // Evita que se pinte el foco alrededor del botón
-        btnAñadirHospita.setBorderPainted(false); // Evita que se pinte el borde predeterminado
-        btnAñadirHospita.setContentAreaFilled(false); // Evita que se pinte el área de contenido
-        btnAñadirHospita.setOpaque(true); // El botón debe pintar cada pixel dentro de sus límites. Esto es necesario para ver el color de fondo.
+        btnAñadirHospita.setForeground(Color.decode("#0057FF"));
+        btnAñadirHospita.setFocusPainted(false);
+        btnAñadirHospita.setBorderPainted(false);
+        btnAñadirHospita.setContentAreaFilled(false);
+        btnAñadirHospita.setOpaque(true);
 
-        // Personalización del efecto rollover
         btnAñadirHospita.setRolloverEnabled(true);
         btnAñadirHospita.addMouseListener(new java.awt.event.MouseAdapter() {
         	@Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAñadirHospita.setBackground(Color.decode("#003366")); // Color azul oscuro para rollover
+                btnAñadirHospita.setBackground(Color.decode("#003366")); 
                 btnAñadirHospita.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAñadirHospita.setBackground(Color.WHITE); // Color blanco cuando el ratón sale
+                btnAñadirHospita.setBackground(Color.WHITE);
                 btnAñadirHospita.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -430,14 +425,11 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         lblListadoHospitalizaciones.setForeground(Color.WHITE);
         lblListadoHospitalizaciones.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblListadoHospitalizaciones.setBounds(129, 359, 71, 14);
-        // Hacer que el cursor cambie a la forma de mano al pasar sobre el JLabel
         lblListadoHospitalizaciones.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        // Agregar MouseListener al JLabel
         lblListadoHospitalizaciones.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Crea y muestra el diálogo de listado de citas al hacer clic en el JLabel
-                DialogoListaHospitalizados dialogoListaHospitalizados = new DialogoListaHospitalizados(JFrame.getFrames()[0]); // Asume que este es el frame principal
+                DialogoListaHospitalizados dialogoListaHospitalizados = new DialogoListaHospitalizados(JFrame.getFrames()[0]);
                 dialogoListaHospitalizados.setVisible(true);
             }
         });
@@ -462,22 +454,22 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
     private void inicializarPanelFarmacos() {
         // Panel principal de fármacos que contendrá todo
-    	RoundedPanel panelFarmacos = new RoundedPanel(20); // Radio Borde
+    	RoundedPanel panelFarmacos = new RoundedPanel(20);
         panelFarmacos.setLayout(null);
         panelFarmacos.setBackground(Color.decode("#5C8CCD"));
         panelFarmacos.setBounds(0, 413, 1112, 238); 
         add(panelFarmacos);
 
-        // Panel opaco que contendrá tanto el panel de encabezados como el panel de datos
+       
         CustomPanelOpaco panelOpaco = new CustomPanelOpaco();
         panelOpaco.setLayout(null); 
         panelOpaco.setBounds(24, 57, 1065, 160);
-        panelOpaco.setBackground(new Color(255, 255, 255, 70)); // El color se establece aquí pero la opacidad en paintComponent
+        panelOpaco.setBackground(new Color(255, 255, 255, 70));
         panelFarmacos.add(panelOpaco);
 
-        // Panel de encabezados
+        
         JPanel panelEncabezados = crearPanelEncabezadosFarmacos();
-        panelEncabezados.setBounds(10, 10, 1034, 30); // Asegura que los encabezados se colocan correctamente
+        panelEncabezados.setBounds(10, 10, 1034, 30);
         panelOpaco.add(panelEncabezados);
 
         panelDatos = new JPanel();
@@ -550,8 +542,8 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
     private JPanel crearPanelEncabezadosFarmacos() {
         JPanel panelEncabezados = new JPanel();
-        panelEncabezados.setLayout(new GridLayout(1, 6));  // Asegúrate de que el número de columnas aquí y en las filas de datos sea el mismo
-        panelEncabezados.setPreferredSize(new Dimension(1000, 30)); // Ajusta el tamaño según tus necesidades
+        panelEncabezados.setLayout(new GridLayout(1, 6));
+        panelEncabezados.setPreferredSize(new Dimension(1000, 30));
         panelEncabezados.setOpaque(false);
 
         String[] encabezados = {"Hora", "Fecha", "Nombre Farmaco", "Paciente", "Dosis", "Frecuencia"};
@@ -566,8 +558,8 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
     private void agregarFilaDatos(JPanel panelDatos, String[] datos) {
         JPanel panelFila = new JPanel();
-        panelFila.setLayout(new GridLayout(1, 6)); // Asegúrate de que el número de columnas sea el mismo que en los encabezados
-        panelFila.setPreferredSize(new Dimension(1000, 30)); // Ajusta el tamaño como sea necesario
+        panelFila.setLayout(new GridLayout(1, 6));
+        panelFila.setPreferredSize(new Dimension(1000, 30));
         panelFila.setOpaque(false);
 
         for (String dato : datos) {
@@ -583,7 +575,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
     private void agregarFilaDatos(String[] datos) {
         JPanel panelFila = new JPanel();
-        panelFila.setLayout(new GridLayout(1, 7, 0, 0)); // Ajustado a 7 columnas
+        panelFila.setLayout(new GridLayout(1, 7, 0, 0));
         panelFila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         panelFila.setOpaque(false);
 
@@ -598,16 +590,16 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
     
     private void cargarDatosFarmacos() {
         List<UsoFarmaco> usosFarmacos = farmacoDAO.obtenerUltimosUsosFarmacos();
-        panelDatos.removeAll(); // Limpia los datos existentes antes de cargar nuevos
+        panelDatos.removeAll();
 
         for (UsoFarmaco uso : usosFarmacos) {
             String[] datosFila = new String[]{
-                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("HH:mm")), // Hora de uso
-                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), // Fecha de uso
-                uso.getNombreFarmaco(), // Nombre del fármaco
-                uso.getNombreMascota(), // Nombre de la mascota tratada
-                String.valueOf(uso.getCantidadUsada()), // Cantidad usada (dosis administrada)
-                uso.getFrecuencia() // Frecuencia de administración del fármaco
+                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("HH:mm")),
+                uso.getFechaHoraUso().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                uso.getNombreFarmaco(), 
+                uso.getNombreMascota(), 
+                String.valueOf(uso.getCantidadUsada()), 
+                uso.getFrecuencia()
             };
             agregarFilaDatos(datosFila);
         }
@@ -635,12 +627,11 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         lblListadoVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblListadoVentas.setBounds(183, 359, 74, 14);
         lblListadoVentas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        // Agregar MouseListener al JLabel
         lblListadoVentas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Crea y muestra el diálogo de listado de citas al hacer clic en el JLabel
-                DialogoListaVentas dialogoListaVentas = new DialogoListaVentas(JFrame.getFrames()[0]); // Asume que este es el frame principal
+                
+                DialogoListaVentas dialogoListaVentas = new DialogoListaVentas(JFrame.getFrames()[0]);
                 dialogoListaVentas.setVisible(true);
             }
         });
@@ -649,13 +640,13 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         JButton btnAñadirVentas = new JButton("Añadir Venta");
         btnAñadirVentas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Lógica de añadir venta aquí
+                
             }
         });
         btnAñadirVentas.setBounds(24, 297, 374, 31);
         btnAñadirVentas.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnAñadirVentas.setBackground(Color.WHITE);
-        btnAñadirVentas.setForeground(Color.decode("#0057FF")); // Letras en azul
+        btnAñadirVentas.setForeground(Color.decode("#0057FF"));
         btnAñadirVentas.setFocusPainted(false);
         btnAñadirVentas.setBorderPainted(false);
         btnAñadirVentas.setContentAreaFilled(false);
@@ -664,7 +655,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         btnAñadirVentas.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAñadirVentas.setBackground(Color.decode("#003366")); // Azul oscuro para rollover
+                btnAñadirVentas.setBackground(Color.decode("#003366"));
                 btnAñadirVentas.setForeground(Color.WHITE);
             }
 
@@ -704,7 +695,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
         panelEncabezadosVentas.setBounds(0, 10, 376, 30);
         panelOpacoVentas.add(panelEncabezadosVentas);
 
-        panelDatosVentas = new JPanel(); // Inicialización correcta
+        panelDatosVentas = new JPanel();
         panelDatosVentas.setLayout(new BoxLayout(panelDatosVentas, BoxLayout.Y_AXIS));
         panelDatosVentas.setBounds(0, 40, 376, 152);
         panelDatosVentas.setOpaque(false);
@@ -716,7 +707,7 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
 
     private JPanel crearPanelEncabezadosVentas() {
         JPanel panelEncabezadosVentas = new JPanel();
-        panelEncabezadosVentas.setLayout(new GridLayout(1, 4, 0, 0)); // 4 columnas para las ventas
+        panelEncabezadosVentas.setLayout(new GridLayout(1, 4, 0, 0));
         panelEncabezadosVentas.setBackground(new Color(75, 75, 153));
 
         String[] encabezadosVentas = {"Hora", "Producto", "Cantidad", "Precio"};
@@ -808,12 +799,12 @@ public class PanelHome extends JPanel implements CitaActualizadaListener, Hospit
     }
     @Override
     public void onCitaActualizada() {
-        actualizarCitasPendientes(); // Suponiendo que este método actualiza la lista de citas pendientes
+        actualizarCitasPendientes();
         mostrarCitasProximas();
-        // Cualquier otra actualización de UI necesaria
+        
     }
     @Override
     public void onHospitalizacionActualizada() {
-        mostrarHospitalizacionesRecientes(); // Actualiza la UI con los nuevos datos
+        mostrarHospitalizacionesRecientes();
     }
 }

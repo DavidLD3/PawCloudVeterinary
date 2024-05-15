@@ -15,7 +15,7 @@ package DB;
 	    private Conexion conexion;
 	
 	    public HospitalizacionDAO() {
-	        this.conexion = new Conexion(); // Asumiendo que tienes una clase que maneja la conexión
+	        this.conexion = new Conexion();
 	    }
 	
 	    public boolean insertarHospitalizacion(Hospitalizacion hospitalizacion, int idVeterinario) {
@@ -105,7 +105,7 @@ package DB;
 	                Hospitalizacion hospitalizacion = new Hospitalizacion(
 	                    rs.getInt("id"),
 	                    rs.getInt("id_mascota"),
-	                    rs.getTimestamp("fecha_ingreso").toLocalDateTime(), // Convertido a LocalDateTime
+	                    rs.getTimestamp("fecha_ingreso").toLocalDateTime(),
 	                    rs.getTimestamp("fecha_salida") != null ? rs.getTimestamp("fecha_salida").toLocalDateTime() : null, // Manejo de null
 	                    rs.getString("motivo"),
 	                    rs.getString("tratamiento"),
@@ -143,7 +143,7 @@ package DB;
 	                hospitalizacion.setEstado(rs.getString("estado"));
 	                hospitalizacion.setNotas(rs.getString("notas"));
 	                hospitalizacion.setNombreMascota(rs.getString("nombre_mascota"));
-	                hospitalizacion.setNombreVeterinario(rs.getString("nombre_veterinario")); // Asumiendo que has añadido este campo a tu clase Hospitalizacion
+	                hospitalizacion.setNombreVeterinario(rs.getString("nombre_veterinario"));
 	
 	                hospitalizaciones.add(hospitalizacion);
 	            }
@@ -167,7 +167,7 @@ package DB;
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
-	        return -1; // Indica que no se encontró una hospitalización actual
+	        return -1;
 	    }
 	    
 	    public boolean actualizarHospitalizacion(Hospitalizacion hospitalizacion) {

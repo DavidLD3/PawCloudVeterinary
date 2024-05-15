@@ -28,16 +28,14 @@ public class DialogoRegistroMascota extends JDialog {
         setUndecorated(true);
         setSize(new Dimension(549, 649));
         setLocationRelativeTo(null);
-
-        // Configuración del fondo transparente
         getContentPane().setLayout(new BorderLayout());
         ((JPanel)getContentPane()).setOpaque(false);
         getRootPane().setOpaque(false);
-        setBackground(new Color(0, 0, 0, 0)); // Color transparente
+        setBackground(new Color(0, 0, 0, 0));
 
         roundedPanel = new RoundedPanel(30, new Color(112, 116, 178));
         roundedPanel.setLayout(new BorderLayout());
-        roundedPanel.setOpaque(false); // Hacer el panel redondeado no opaco
+        roundedPanel.setOpaque(false);
         getContentPane().add(roundedPanel);
 
         initComponents();
@@ -58,8 +56,6 @@ public class DialogoRegistroMascota extends JDialog {
         tfMascotaCaracter = new JTextField();
         tfMascotaColor = new JTextField();
         tfMascotaTipoPelo = new JTextField();
-        
-        // Crear el JComboBox antes de agregarlo al panelDatos
         cbMascotaSexo = new JComboBox<>(new String[] {"Macho", "Hembra"});
         cbMascotaEsterilizado = new JCheckBox("Esterilizado");
         
@@ -118,15 +114,13 @@ public class DialogoRegistroMascota extends JDialog {
         label.setForeground(new Color(255, 255, 255));
         panelDatos.add(label);
         panelDatos.add(tfMascotaTipoPelo);
-        panelDatos.add(new JLabel()); // Esta línea estaba duplicada
+        panelDatos.add(new JLabel());
         panelDatos.add(cbMascotaEsterilizado);
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 10));
         panelBotones.setOpaque(false);
         btnGuardar = new JButton("Guardar");
         btnLimpiar = new JButton("Limpiar");
         btnCerrar = new JButton("Cerrar");
-
-        // Configuración y eventos de los botones
         initButton(btnGuardar, "#0057FF", "#003366");
         initButton(btnLimpiar, "#0057FF", "#003366");
         initButton(btnCerrar, "#0057FF", "#003366");
@@ -139,7 +133,7 @@ public class DialogoRegistroMascota extends JDialog {
         panelBotones.add(btnLimpiar);
         panelBotones.add(btnGuardar);
 
-        roundedPanel.add(panelBotones, BorderLayout.SOUTH);  // Agrega el panel de botones al sur del roundedPanel
+        roundedPanel.add(panelBotones, BorderLayout.SOUTH); 
     }
 
 
@@ -153,32 +147,29 @@ public class DialogoRegistroMascota extends JDialog {
         tfMascotaCaracter.setText("");
         tfMascotaColor.setText("");
         tfMascotaTipoPelo.setText("");
-        cbMascotaSexo.setSelectedIndex(0); // Selecciona el primer elemento del combo box
+        cbMascotaSexo.setSelectedIndex(0);
         cbMascotaEsterilizado.setSelected(false);
     }
 
     private void guardarMascota() {
-        // Suponiendo que has validado la entrada del usuario
         Mascota nuevaMascota = new Mascota();
-        // Utiliza trim() en cada uno de los campos de texto para eliminar espacios innecesarios
         nuevaMascota.setNombre(tfMascotaNombre.getText().trim());
         nuevaMascota.setEspecie(tfMascotaEspecie.getText().trim());
         nuevaMascota.setRaza(tfMascotaRaza.getText().trim());
-        nuevaMascota.setPasaporte(tfMascotapasaporte.getText().trim()); // Aquí se ha cambiado para tratar el pasaporte como una cadena
+        nuevaMascota.setPasaporte(tfMascotapasaporte.getText().trim());
         nuevaMascota.setMicrochip(tfMascotaMicrochip.getText().trim());
         if (dateChooserNacimiento.getDate() != null) {
             nuevaMascota.setFechaNacimiento(dateChooserNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha de nacimiento.");
-            return; // Previene el cierre si la fecha de nacimiento no es válida
+            return;
         }
         nuevaMascota.setCaracter(tfMascotaCaracter.getText().trim());
         nuevaMascota.setColor(tfMascotaColor.getText().trim());
         nuevaMascota.setTipoPelo(tfMascotaTipoPelo.getText().trim());
-        // Asegúrate de que la conversión a enum aquí sea segura
         nuevaMascota.setSexo(Mascota.Sexo.valueOf(cbMascotaSexo.getSelectedItem().toString().toUpperCase()));
         nuevaMascota.setEsterilizado(cbMascotaEsterilizado.isSelected());
-        nuevaMascota.setIdCliente(this.idCliente); // Asegúrate de que esta línea esté correctamente implementada
+        nuevaMascota.setIdCliente(this.idCliente);
 
         MascotaDAO mascotaDao = new MascotaDAO();
         boolean exito = mascotaDao.insertarMascota(nuevaMascota);
@@ -186,7 +177,6 @@ public class DialogoRegistroMascota extends JDialog {
         if (exito) {
             JOptionPane.showMessageDialog(this, "Mascota guardada con éxito");
             limpiarCampos();
-            // Cierra la ventana después de un guardado exitoso
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             if (frame != null) {
                 frame.dispose();

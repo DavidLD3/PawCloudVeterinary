@@ -25,7 +25,7 @@ public class GradientPanel2 extends JPanel {
         MouseMotionAdapter mma = new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent me) {
-                // Comprueba si el componente padre (o ancestro) es una instancia de Window
+               
                 if (GradientPanel2.this.getTopLevelAncestor() instanceof java.awt.Window) {
                     java.awt.Window window = (java.awt.Window) GradientPanel2.this.getTopLevelAncestor();
                     window.setLocation(window.getX() + me.getX() - x, window.getY() + me.getY() - y);

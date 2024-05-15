@@ -18,7 +18,7 @@ public class BaseDatosServicio {
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, token);
                 pstmt.setString(2, correo);
-                // Establecer la expiración del token a 1 hora desde ahora
+                
                 LocalDateTime expiry = LocalDateTime.now().plusHours(1);
                 pstmt.setString(3, expiry.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 int affectedRows = pstmt.executeUpdate();
@@ -47,7 +47,7 @@ public class BaseDatosServicio {
     }
 
     public static boolean actualizarContraseña(String email, String nuevaContraseña) {
-        // Hash de la nueva contraseña
+       
         String hashedPassword = BCrypt.hashpw(nuevaContraseña, BCrypt.gensalt());
 
         try (Connection conn = new Conexion().getConexion()) {

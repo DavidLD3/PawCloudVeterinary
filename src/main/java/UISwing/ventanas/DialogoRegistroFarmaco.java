@@ -54,7 +54,7 @@ public class DialogoRegistroFarmaco extends JDialog {
         tfUnidadMedida = new JTextField();
         tfPrecio = new JTextField();
         tfFechaCaducidad = new JDateChooser();
-        tfFechaCaducidad.setDateFormatString("dd/MM/yyyy"); // Formato de fecha
+        tfFechaCaducidad.setDateFormatString("dd/MM/yyyy");
 
         JLabel lblCodigo = new JLabel("Código:");
         lblCodigo.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -110,13 +110,13 @@ public class DialogoRegistroFarmaco extends JDialog {
 
     private JPanel crearPanelBotones() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.decode("#577BD1"));  // Fondo azul para el panel completo
+        panel.setBackground(Color.decode("#577BD1"));
         panel.setOpaque(true);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 40, 15));
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 15));
 
-        rightPanel.setOpaque(false);  // Asegurar transparencia para ver el fondo azul
+        rightPanel.setOpaque(false);
         leftPanel.setOpaque(false);
 
         JButton btnGuardar = new JButton("Guardar");
@@ -131,7 +131,7 @@ public class DialogoRegistroFarmaco extends JDialog {
         personalizarBoton(btnLimpiar);
         personalizarBoton(btnCerrar);
 
-        rightPanel.add(btnGuardar);  // Cambio de orden: Guardar junto a Limpiar
+        rightPanel.add(btnGuardar);
         rightPanel.add(btnLimpiar);
         leftPanel.add(btnCerrar);
 
@@ -148,18 +148,18 @@ public class DialogoRegistroFarmaco extends JDialog {
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
-        button.setOpaque(true);  // Necesario para ver el color de fondo
+        button.setOpaque(true);
         button.setRolloverEnabled(true);
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(Color.decode("#003366"));  // Cambio a azul oscuro cuando el ratón está encima
+                button.setBackground(Color.decode("#003366"));
                 button.setForeground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(Color.WHITE);  // Restaurar a blanco cuando el ratón se aleja
+                button.setBackground(Color.WHITE);
                 button.setForeground(Color.decode("#0057FF"));
             }
         });
@@ -239,14 +239,14 @@ public class DialogoRegistroFarmaco extends JDialog {
             return false;
         }
 
-        return true; // Ajusta según las validaciones necesarias
+        return true;
     }
 
     private Farmaco recolectarDatos() {
         Date fechaCaducidad = (tfFechaCaducidad.getDate() != null) ? new Date(tfFechaCaducidad.getDate().getTime()) : null;
 
         return new Farmaco(
-            0, // ID es autoincremental en la base de datos
+            0,
             tfCodigo.getText().trim(),
             tfNombre.getText().trim(),
             tfDescripcion.getText().trim(),

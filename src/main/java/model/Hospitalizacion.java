@@ -43,7 +43,7 @@ public class Hospitalizacion {
     public Hospitalizacion(int id, int idMascota, int idVeterinario, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, String motivo, String tratamiento, String estado, String notas, String nombreMascota, String nombreVeterinario) {
         this.id = id;
         this.idMascota = idMascota;
-        this.idVeterinario = idVeterinario; // Agregar este parámetro
+        this.idVeterinario = idVeterinario;
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
         this.motivo = motivo;
@@ -149,7 +149,7 @@ public class Hospitalizacion {
         return "Hospitalizacion{" +
                 "id=" + id +
                 ", idMascota=" + idMascota +
-                ", idVeterinario=" + idVeterinario + // Mostrar idVeterinario en toString
+                ", idVeterinario=" + idVeterinario +
                 ", fechaIngreso=" + fechaIngreso +
                 ", fechaSalida=" + fechaSalida +
                 ", motivo='" + motivo + '\'' +

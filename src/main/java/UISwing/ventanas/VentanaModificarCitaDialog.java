@@ -296,7 +296,7 @@ public class VentanaModificarCitaDialog extends JDialog {
        JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                // Personaliza aquí tu componente
+               
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); 
                 g2.setColor(getBackground());
@@ -305,7 +305,7 @@ public class VentanaModificarCitaDialog extends JDialog {
                 super.paintComponent(g);
             }
         };
-        centerPanel.setBackground(new Color(255, 255, 255, 70)); // Color de fondo con opacidad
+        centerPanel.setBackground(new Color(255, 255, 255, 70));
         centerPanel.setOpaque(false); 
         centerPanel.setBounds(24, 24, 841, 352);
         roundedPanel.add(centerPanel);

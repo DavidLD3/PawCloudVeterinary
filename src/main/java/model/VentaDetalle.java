@@ -5,7 +5,7 @@ import java.sql.Timestamp;  // Cambio de Date a Timestamp
 
 public class VentaDetalle {
     private int idVenta;
-    private Timestamp fechaVenta;  // Cambio a Timestamp
+    private Timestamp fechaVenta; 
     private String metodoPago;
     private BigDecimal total;
     private String producto;

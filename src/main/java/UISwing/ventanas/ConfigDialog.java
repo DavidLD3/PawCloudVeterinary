@@ -13,9 +13,7 @@ public class ConfigDialog extends JDialog {
     public ConfigDialog(Frame parent, int currentLimit) {
         super(parent, "Configuración de Usuarios", true);
         setSize(300, 200);
-        setLocationRelativeTo(parent);
-        
-        // Establecer el color de fondo del contenedor
+        setLocationRelativeTo(parent);      
         getContentPane().setBackground(Color.decode("#577BD1"));
         getContentPane().setLayout(null);
 

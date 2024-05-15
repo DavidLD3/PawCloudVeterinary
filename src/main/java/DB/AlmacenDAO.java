@@ -16,25 +16,21 @@ public class AlmacenDAO {
 	private Conexion conexion;
 
     public AlmacenDAO() {
-        this.conexion = new Conexion(); // Inicializar la clase Conexion
+        this.conexion = new Conexion(); 
     }
     // Método para insertar un nuevo producto en la base de datos
     public void insertarAlmacen(Almacen almacen) throws SQLException {
         String sql = "INSERT INTO almacen (nombre_producto, descripcion, categoria, cantidad_stock, precio_bruto, proveedor, fecha_ultima_compra, numero_lote, fecha_caducidad, codigo_barras, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            // Campos obligatorios
+           
             statement.setString(1, almacen.getNombreProducto());
             statement.setString(2, almacen.getDescripcion());
             statement.setString(3, almacen.getCategoria().name());
             statement.setInt(4, almacen.getCantidadStock());
             statement.setBigDecimal(5, almacen.getPrecioBruto());
             statement.setString(6, almacen.getProveedor());
-
-            // La fecha de última compra es obligatoria
             statement.setDate(7, Date.valueOf(almacen.getFechaUltimaCompra()));
-
-            // Campos opcionales
             statement.setString(8, almacen.getNumeroLote());
 
             if (almacen.getFechaCaducidad() != null) {
@@ -51,7 +47,7 @@ public class AlmacenDAO {
                 throw new SQLException("Creating almacen failed, no rows affected.");
             }
 
-            // Capturar el ID generado para el nuevo registro
+     
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     almacen.setIdAlmacen(generatedKeys.getInt(1));
@@ -169,14 +165,14 @@ public class AlmacenDAO {
             statement.setString(1, "%" + nombre + "%");
             ResultSet resultados = statement.executeQuery();
             while (resultados.next()) {
-                // Verifica si las fechas son nulas antes de llamar a toLocalDate()
+                
                 java.sql.Date fechaUltimaCompraSql = resultados.getDate("fecha_ultima_compra");
                 LocalDate fechaUltimaCompra = (fechaUltimaCompraSql != null) ? fechaUltimaCompraSql.toLocalDate() : null;
 
                 java.sql.Date fechaCaducidadSql = resultados.getDate("fecha_caducidad");
                 LocalDate fechaCaducidad = (fechaCaducidadSql != null) ? fechaCaducidadSql.toLocalDate() : null;
 
-                // Crea el objeto Almacen con los valores obtenidos
+                
                 productos.add(new Almacen(
                     resultados.getInt("id_almacen"),
                     resultados.getString("nombre_producto"),
@@ -269,7 +265,7 @@ public class AlmacenDAO {
             statement.setString(1, nombre);
             ResultSet resultados = statement.executeQuery();
             if (resultados.next()) {
-                // Obtenemos las fechas asegurándonos de que no sean nulas antes de convertirlas
+                
                 Date fechaUltimaCompraSql = resultados.getDate("fecha_ultima_compra");
                 LocalDate fechaUltimaCompra = (fechaUltimaCompraSql != null) ? fechaUltimaCompraSql.toLocalDate() : null;
 

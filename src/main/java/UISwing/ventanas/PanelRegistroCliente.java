@@ -16,7 +16,6 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.BorderFactory;
 
-// Clase personalizada para un panel con bordes redondeados
 class RoundedPanel extends JPanel {
     private int radius;
     private Color backgroundColor;
@@ -37,7 +36,7 @@ class RoundedPanel extends JPanel {
         Graphics2D graphics = (Graphics2D) g;
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Dibujar fondo redondeado
+       
         if (backgroundColor != null) {
             graphics.setColor(backgroundColor);
         } else {
@@ -63,20 +62,20 @@ public class PanelRegistroCliente extends JDialog {
         setModal(true);
         initializeUI();
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        this.setSize(620, 420); // Tamaño ajustado según necesidad
+        this.setSize(620, 420);
         this.setLocationRelativeTo(null);
     }
 
     private void initializeUI() {
-        // Crear y configurar el mainPanel redondeado
+        
         RoundedPanel mainPanel = new RoundedPanel(30, new Color(147, 112, 219));
         mainPanel.setLayout(null);
 
-        // Crear y configurar el centerPanel opaco
+        
         JPanel centerPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                // Personaliza aquí tu componente
+                
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); 
                 g2.setColor(getBackground());
@@ -87,10 +86,10 @@ public class PanelRegistroCliente extends JDialog {
         };
         centerPanel.setBackground(new Color(255, 255, 255, 70)); 
         centerPanel.setOpaque(false); 
-        centerPanel.setBounds(15, 15, 570, 394); // Ajusta según sea necesario
+        centerPanel.setBounds(15, 15, 570, 394);
         centerPanel.setLayout(null);
 
-        // Agregar el panelClientes y el panelBotones directamente al centerPanel
+        
         JPanel panelClientes = crearPanelClientes();
         panelClientes.setBounds(10, 10, 548, 381);
         centerPanel.add(panelClientes);
@@ -109,7 +108,7 @@ public class PanelRegistroCliente extends JDialog {
         btnLimpiar.setBounds(343, 363, 87, 23);
         mainPanel.add(btnLimpiar);
         
-                // Aplicar estilos de botones
+                
                 initButton(btnLimpiar, "#0057FF", "#003366");
                 JButton btnGuardar = new JButton("Guardar");
                 btnGuardar.setBounds(463, 364, 87, 23);
@@ -136,17 +135,17 @@ public class PanelRegistroCliente extends JDialog {
                 btnCerrar.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // Creación de un JPanel personalizado para el contenido del diálogo
+                        
                         JPanel confirmPanel = new JPanel();
                         confirmPanel.add(new JLabel("¿Está seguro de que quiere cerrar sin guardar?"));
         
-                        // Opciones personalizadas para los botones
+                       
                         String[] options = {"Sí", "No"};
         
-                        // Mostrar el diálogo personalizado
+                        
                         int confirm = JOptionPane.showOptionDialog(null, confirmPanel, "Cerrar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
                         if (confirm == JOptionPane.YES_OPTION) {
-                            dispose(); // Uso directo de dispose() para cerrar la ventana actual
+                            dispose();
                         }
                     }
                 });
@@ -188,7 +187,6 @@ public class PanelRegistroCliente extends JDialog {
     }
 
     private void limpiarCampos() {
-        // Resetear campos de texto
         tfRcliente_Nombre.setText("");
         tfRcliente_Apellidos.setText("");
         tfRcliente_DNI.setText("");
@@ -199,9 +197,7 @@ public class PanelRegistroCliente extends JDialog {
         tfRcliente_Tfijo.setText("");
         tfRcliente_Tmovil.setText("");
         tfRcliente_Email.setText("");
-
-        // Resetear el componente JDateChooser
-        dateChooser.setCalendar(null);  // Esto asegura que la selección de fecha también se limpie
+        dateChooser.setCalendar(null);
     }
 
     private void guardarDatos() {
@@ -242,7 +238,7 @@ public class PanelRegistroCliente extends JDialog {
     private JPanel crearPanelClientes() {
         tfRcliente_Nombre = new JTextField(10);
         tfRcliente_Apellidos = new JTextField(10);
-        tfRcliente_Fnacimiento = new JTextField(10); // Asegúrate de que este campo se maneje correctamente como una fecha
+        tfRcliente_Fnacimiento = new JTextField(10);
         tfRcliente_DNI = new JTextField(10);
         tfRcliente_NIF = new JTextField(10);
         tfRcliente_Direccion = new JTextField(10);
@@ -252,8 +248,8 @@ public class PanelRegistroCliente extends JDialog {
         tfRcliente_Tmovil = new JTextField(10);
         tfRcliente_Email = new JTextField(10);
 
-        Border bordeExterior = BorderFactory.createLineBorder(Color.BLACK); // Puedes cambiar el color y el estilo del borde exterior
-        Border bordeInterior = BorderFactory.createEmptyBorder(30, 30, 30, 30); // Espacio interior para separar los componentes del borde
+        Border bordeExterior = BorderFactory.createLineBorder(Color.BLACK);
+        Border bordeInterior = BorderFactory.createEmptyBorder(30, 30, 30, 30);
         Border bordeCompuesto = new CompoundBorder(bordeExterior, bordeInterior);
 
         JPanel Pcliente = new JPanel();
@@ -309,8 +305,8 @@ public class PanelRegistroCliente extends JDialog {
 
         // Inicialización de JDateChooser
         dateChooser = new JDateChooser();
-        dateChooser.setDateFormatString("dd/MM/yyyy"); // Aquí estableces el formato deseado
-        dateChooser.setBounds(31, 119, 149, 25); // Ajusta según sea necesario
+        dateChooser.setDateFormatString("dd/MM/yyyy");
+        dateChooser.setBounds(31, 119, 149, 25);
         Pcliente.add(dateChooser);
 
         // Dirección

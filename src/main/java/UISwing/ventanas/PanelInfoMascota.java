@@ -14,8 +14,6 @@ import model.HistorialMedico;
 import model.Hospitalizacion;
 import model.Mascota;
 import java.util.List;
-
-import UISwing.recursos.GradientPanel2;
 import UISwing.recursos.RoundedPanel;
 
 public class PanelInfoMascota extends JPanel {

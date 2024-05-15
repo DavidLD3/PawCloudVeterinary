@@ -12,15 +12,15 @@ import java.util.Properties;
 
 public class ServicioRecuperacion {
 
-    private final String username = "pawcloudsoporte@gmail.com"; // Reemplaza con tu dirección de correo de Gmail
-    private final String password = "aipl xhpo rxsq nvxp"; // Usa la contraseña de aplicación generada en tu cuenta de Google
+    private final String username = "pawcloudsoporte@gmail.com";
+    private final String password = "aipl xhpo rxsq nvxp";
 
     public void enviarTokenRecuperacion(String correoDestino, String token) {
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true"); // TLS
+        prop.put("mail.smtp.starttls.enable", "true");
 
         Session session = Session.getInstance(prop,
                 new jakarta.mail.Authenticator() {
@@ -31,10 +31,10 @@ public class ServicioRecuperacion {
 
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("PawCloudSoporte@gmail.com")); // Tu correo
+            message.setFrom(new InternetAddress("PawCloudSoporte@gmail.com"));
             message.setRecipients(
                     Message.RecipientType.TO,
-                    InternetAddress.parse(correoDestino) // Correo del destinatario
+                    InternetAddress.parse(correoDestino)
             );
             message.setSubject("Recuperación de Contraseña de PawCloud");
             message.setText("Hola,\n\nHas solicitado restablecer tu contraseña en PawCloud."

@@ -62,7 +62,6 @@ public class ProductoSelectorDialog extends JDialog {
         productTable = new JTable(model);
         productTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
 
-        // Aplicar el renderizador a la columna "Precio"
         TableColumnModel columnModel = productTable.getColumnModel();
         columnModel.getColumn(1).setCellRenderer(new EuroCellRenderer());
 
@@ -142,7 +141,7 @@ public class ProductoSelectorDialog extends JDialog {
 
         public EuroCellRenderer() {
             euroFormat = NumberFormat.getCurrencyInstance(new Locale("es", "ES"));
-            setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
+            setHorizontalAlignment(JLabel.CENTER);
         }
 
         @Override
