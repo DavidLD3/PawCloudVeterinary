@@ -13,7 +13,7 @@ import java.util.Properties;
 public class ServicioRecuperacion {
 
     private final String username = "pawcloudsoporte@gmail.com"; // Reemplaza con tu dirección de correo de Gmail
-    private final String password = "aipl xhpo rxsq nvxp"; // Usa la contraseña de aplicación generada en tu cuenta de Google
+    private final String password = ""; // Usa la contraseña de aplicación generada en tu cuenta de Google
 
     public void enviarTokenRecuperacion(String correoDestino, String token) {
         Properties prop = new Properties();
